@@ -1,0 +1,69 @@
+{
+  "expo": {
+    "name": "trekies",
+    "slug": "trekies",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "entryPoint": "./app/(tabs)/index.js",
+    "icon": "./assets/images/icon.png",
+    "scheme": "trekies",
+    "userInterfaceStyle": "automatic",
+    "splash": {
+      "image": "./assets/images/splash.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#ffffff"
+    },
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.anonymous.trekies",
+      "infoPlist": {
+        "CFBundleURLTypes": [
+          {
+            "CFBundleURLSchemes": ["trekies"]
+          }
+        ]
+      }
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/images/adaptive-icon.png",
+        "backgroundColor": "#ffffff"
+      },
+      "package": "com.anonymous.trekies",
+      "intentFilters": [
+        {
+          "action": "VIEW",
+          "data": {
+            "scheme": "trekies",
+            "host": "trekies",
+            "pathPrefix": "/"
+          },
+          "category": ["BROWSABLE", "DEFAULT"]
+        }
+      ]
+    },
+    "web": {
+      "bundler": "metro",
+      "output": "static",
+      "favicon": "./assets/images/favicon.png"
+    },
+    "plugins": [
+      "expo-router"
+      
+    ],
+    "experiments": {
+      "typedRoutes": true
+    },
+    "extra": {
+      "googleMapsApiKey": "AIzaSyB8NGl5NogWAS1Pq928j3vlVnSUCTUq8VE",
+      "eas": {
+        "projectId": "492d9093-8144-4155-b019-962b57ee71b0"
+      },
+      "router": {
+        "origin": false
+      }
+    },
+    "owner": "prince_24"
+  }
+}
+
