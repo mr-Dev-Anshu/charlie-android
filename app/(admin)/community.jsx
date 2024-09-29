@@ -17,7 +17,7 @@ const community = () => {
           </Text>
         </View>
         <ScrollView
-          contentContainerStyle={{ paddingBottom: 14 }}
+          contentContainerStyle={{ paddingBottom: 28 }}
           showsVerticalScrollIndicator={false}
         >
           <View className="px-4 pt-4">

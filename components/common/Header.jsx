@@ -17,15 +17,15 @@ const Header = () => {
 
   const handleProfilePress = () => {
     if (user == null) {
-      router.push("/login");
+      router.push("/(admin)/tours");
       return;
     }
     router.push("/profile");
   };
 
   return (
-    <View className="absolute mt-[50px] w-full px-2 h-[60px]">
-      <View className="bg-white h-full py-3 flex justify-between items-center flex-row rounded-xl px-4 shadow-sm shadow-black/30">
+    <View className="absolute mt-[50px] w-full px-2 h-[60px] shadow-xl shadow-black ">
+      <View className="bg-white h-full py-3 flex justify-between items-center flex-row rounded-xl px-4 ">
         <TouchableOpacity
           onPress={() => router.push("/")}
           activeOpacity={0.6}

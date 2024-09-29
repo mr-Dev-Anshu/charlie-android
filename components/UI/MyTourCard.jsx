@@ -9,7 +9,7 @@ const MyTourCard = ({ tour }) => {
   const confirmed = 0;
   const pending = 1;
   return (
-    <Link href={`/mytour/${tour.id}`}>
+    <Link href={`/mytour/${tour.id}`} className="mt-4">
       <View className="w-[390px] h-[470px] mt-5 rounded-xl overflow-hidden bg-white shadow-xl shadow-black/50 border border-slate-400">
         <View className="h-[256px] w-full">
           <Carousel

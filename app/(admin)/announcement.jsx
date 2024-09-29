@@ -17,7 +17,7 @@ const announcement = () => {
         </View>
         <ScrollView
           showsVerticalScrollIndicator={false}
-          contentContainerStyle={{ paddingBottom: 150 }}
+          contentContainerStyle={{ paddingBottom: 120 }}
         >
           <View className="mt-1">
             <Announcement />
@@ -36,7 +36,7 @@ const announcement = () => {
           </View>
         </ScrollView>
       </View>
-      <View className="bottom-28 h-16 bg-white w-full justify-start items-center px-6">
+      <View className="bottom-28 py-2 bg-white w-full flex justify-center items-center px-6">
         <TouchableOpacity
           activeOpacity={0.7}
           onPress={() => addAnnounceMentRef?.current?.open()}
@@ -47,8 +47,8 @@ const announcement = () => {
             justifyContent: "center",
             alignItems: "center",
             backgroundColor: "#06992d",
-            paddingHorizontal: 40,
             borderRadius: 10,
+            marginBottom: 20,
           }}
         >
           <View className="flex flex-row justify-center items-center space-x-4">

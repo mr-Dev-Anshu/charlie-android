@@ -7,8 +7,8 @@ import CarouselImageRender from "./CarouselImageRender";
 
 const CarouselCard = ({ tour }) => {
   return (
-    <Link push href={`/details/${tour.id}`}>
-      <View className="h-[430px] w-80 rounded-xl ml-5 relative bg-white shadow-xl shadow-black/20">
+    <Link push href={`/details/${tour.id}`} className="ml-5">
+      <View className="h-[430px] w-80 rounded-xl relative bg-white shadow-xl shadow-black/20">
         <View className="h-full w-full rounded-xl overflow-hidden">
           <View className="h-[200px] w-full">
             <Carousel
@@ -23,7 +23,7 @@ const CarouselCard = ({ tour }) => {
             />
           </View>
           <View className="flex flex-row justify-between px-2 mt-1">
-            <View className="space-y-2">
+            <View className="space-y-0.5">
               <Text className="text-lg font-bold  text-gray-800 ">
                 {tour.name}
               </Text>
@@ -36,7 +36,7 @@ const CarouselCard = ({ tour }) => {
               <Text className="text-xs text-gray-800 text-right">per seat</Text>
             </View>
           </View>
-          <View className="p-3 space-y-4 mt-2">
+          <View className="p-3 space-y-3 mt-2">
             <View className="flex flex-row space-x-3">
               <Ionicons name="calendar-outline" size={16} color="green" />
               <Text>{tour.date}</Text>
@@ -56,7 +56,7 @@ const CarouselCard = ({ tour }) => {
           </View>
         </View>
         <View className="absolute -bottom-8 w-full z-50 ">
-          <View className="bg-green-700 shadow-md shadow-green-800/40 mx-8 flex justify-center items-center py-4 rounded-lg">
+          <View className="bg-green-700 shadow-md shadow-green-800/40 mx-12 flex justify-center items-center py-4 rounded-lg">
             <Text className="text-white">Explore more</Text>
           </View>
         </View>

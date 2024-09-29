@@ -16,7 +16,7 @@ const Notifications = () => {
         </View>
         <View className="mt-2 ">
           <Text className="tracking-wide text-justify">
-            {shorten(text, 200)}
+            {shorten(text, 160)}
           </Text>
         </View>
       </View>

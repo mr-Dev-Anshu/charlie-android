@@ -17,7 +17,7 @@ const PostComponent = ({ post }) => {
             <Image
               key={index}
               source={{ uri: image }}
-              className="h-[90px] w-[90] rounded-xl"
+              className="h-[80px] w-[80px] rounded-xl"
             />
           ))}
         </View>

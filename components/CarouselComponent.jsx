@@ -10,7 +10,7 @@ const CarouselComponent = () => {
   return (
     <View className="absolute top-[280px] flex justify-center items-center z-50 h-[500px]">
       <ScrollView horizontal showsHorizontalScrollIndicator={false} >
-        <View className="flex flex-row px-10 pt-2">
+        <View className="flex flex-row px-8 pt-2">
           {tours.map((tour, index) => (
             <CarouselCard key={index} tour={tour} />
           ))}

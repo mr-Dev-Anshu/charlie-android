@@ -7,30 +7,34 @@ import { router } from "expo-router";
 
 const tours = () => {
   return (
-    <View className="mt-28 px-4">
-      <ScrollView contentContainerStyle={{ height: "93%" }}>
-        <View className="bg-white h-full">
+    <View className="mt-28 h-full relative flex justify-center items-center">
+      <ScrollView
+        contentContainerStyle={{ paddingHorizontal: 16, paddingBottom: 10 }}
+        showsVerticalScrollIndicator={false}
+      >
+        <View>
+          {createdTours.map((tour, index) => (
+            <TourCard key={index} tour={tour} />
+          ))}
           {createdTours.map((tour, index) => (
             <TourCard key={index} tour={tour} />
           ))}
         </View>
       </ScrollView>
-      <View className="flex flex-row justify-between items-center w-full">
+      <View className="flex flex-row justify-between items-center w-full px-3 py-1 mx-1 bg-white absolute bottom-28">
         <TouchableOpacity
           activeOpacity={0.7}
           onPress={() => router.push("/addTours")}
         >
-          <View className="bg-green-600 py-2 rounded-xl flex justify-center items-center w-[190px]">
-            <Text className="text-white text-lg font-semibold">
-              Create New Tour
-            </Text>
+          <View className="bg-green-600 py-2 rounded-xl flex justify-center items-center w-[180px]">
+            <Text className="text-white text-lg font-semibold">Add Tour</Text>
           </View>
         </TouchableOpacity>
         <TouchableOpacity
           activeOpacity={0.7}
           onPress={() => router.push("/addRoles")}
         >
-          <View className="bg-green-600 py-2 rounded-xl flex justify-center items-center w-[190px]">
+          <View className="bg-green-600 py-2 rounded-xl flex justify-center items-center w-[180px]">
             <Text className="text-white text-lg font-semibold">Add Roles</Text>
           </View>
         </TouchableOpacity>

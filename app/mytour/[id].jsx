@@ -40,7 +40,7 @@ const MyTourDetails = () => {
 
   return (
     <View className="px-4 relative h-full flex items-center">
-      <View className="px-5 w-full flex justify-center items-center relative">
+       <View className="px-5 w-full flex justify-center items-center">
         <View className="flex flex-row justify-between">
           <Pressable onPress={() => handleTabPress("tourInfo")}>
             <View className="w-[200px] py-2">
@@ -59,7 +59,7 @@ const MyTourDetails = () => {
           <View className="bg-green-600 w-[160px] h-1.5 rounded-t-xl absolute bottom-0 left-5" />
         </Animated.View>
       </View>
-      <View className="mt-3">
+      <View className="">
         {activeTab === "tourInfo" ? (
           <MyTourInfo tour={tour} />
         ) : listView ? (
@@ -68,7 +68,7 @@ const MyTourDetails = () => {
           <MyTourCheckPoints />
         )}
       </View>
-      <View className="absolute bottom-6 w-full px-2 rounded-xl flex flex-row justify-between">
+      <View className="absolute bottom-2 w-full px-2 py-2 rounded-xl flex flex-row justify-between bg-white">
         {activeTab === "tourInfo" ? (
           <TouchableOpacity
             onPress={() => handleTabPress("checkPoints")}

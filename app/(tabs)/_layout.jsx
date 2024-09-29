@@ -3,9 +3,9 @@ import React from "react";
 import FontAwesome6 from "@expo/vector-icons/FontAwesome6";
 import Octicons from "@expo/vector-icons/Octicons";
 import Ionicons from "@expo/vector-icons/Ionicons";
-import Header  from "@/components/common/Header";
+import Header from "@/components/common/Header";
 
-export default function TabLayout() { 
+export default function TabLayout() {
   return (
     <Tabs
       screenOptions={({ route }) => ({
@@ -15,8 +15,17 @@ export default function TabLayout() {
         tabBarLabelStyle: {
           fontSize: 12,
           fontWeight: "bold",
+          paddingBottom: 5,
         },
-        header: ()=> <Header/>
+        tabBarStyle: {
+          height: 60,
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          borderTopColor: "green",
+          paddingVertical: 10,
+        },
+        header: () => <Header />,
       })}
     >
       <Tabs.Screen

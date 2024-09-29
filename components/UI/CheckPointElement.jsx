@@ -6,8 +6,8 @@ import LinearGradient from "react-native-linear-gradient";
 const CheckPointElement = ({ points }) => {
   const [check, setCheck] = useState(false);
   return (
-    <View className="h-[150px] flex flex-row px-4 justify-between w-full items-center mt-2 rounded-xl border-b-[1px] border-gray-400/50">
-      <View className="w-[300px]">
+    <View className="h-[150px] flex flex-row pr-2  justify-between w-full items-center mt-2 rounded-xl border-b-[1px] border-gray-400/50">
+      <View className="w-[330px]">
         <LinearGradient
           start={{ x: 0, y: 0 }}
           end={{ x: 1, y: 0 }}
