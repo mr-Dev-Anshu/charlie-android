@@ -1,4 +1,4 @@
-import { View, Text, Pressable } from "react-native";
+import { View, Text, Pressable, useColorScheme } from "react-native";
 import React, { useState } from "react";
 import { useLocalSearchParams } from "expo-router";
 import { tours } from "../../constants/tours";
@@ -20,6 +20,11 @@ const MyTourDetails = () => {
   const [activeTab, setActiveTab] = useState("tourInfo");
   const [listView, setListView] = useState(true);
 
+  const colorScheme = useColorScheme();
+
+  const textColor = colorScheme === "dark" ? "text-white" : "text-black";
+  const bgColor = colorScheme === "dark" ? "bg-gray-800" : "bg-white";
+
   const handleTabPress = (tabIndex) => {
     setActiveTab(tabIndex);
     translateX.value = tabIndex === "tourInfo" ? -200 : 0;
@@ -39,27 +44,27 @@ const MyTourDetails = () => {
   }));
 
   return (
-    <View className="px-4 relative h-full flex items-center">
-       <View className="px-5 w-full flex justify-center items-center">
-        <View className="flex flex-row justify-between">
+    <View className={`px-4 relative h-full flex items-center`}>
+      <View className={`px-5 w-full flex justify-center items-center`}>
+        <View className={`flex flex-row justify-between`}>
           <Pressable onPress={() => handleTabPress("tourInfo")}>
-            <View className="w-[200px] py-2">
-              <Text className="text-center text-[15px] font-semibold">
+            <View className={`w-[200px] py-2`}>
+              <Text className={`text-center text-[15px] font-semibold ${textColor}`}>
                 Tour Information
               </Text>
             </View>
           </Pressable>
           <Pressable onPress={() => handleTabPress("checkPoints")}>
-            <View className="w-[200px] py-2">
-              <Text className="text-center font-semibold">Checkpoints</Text>
+            <View className={`w-[200px] py-2`}>
+              <Text className={`text-center font-semibold ${textColor}`}>Checkpoints</Text>
             </View>
           </Pressable>
         </View>
         <Animated.View style={[animatedStyles]}>
-          <View className="bg-green-600 w-[160px] h-1.5 rounded-t-xl absolute bottom-0 left-5" />
+          <View className={`bg-green-600 w-[160px] h-1.5 rounded-t-xl absolute bottom-0 left-5`} />
         </Animated.View>
       </View>
-      <View className="">
+      <View className={``}>
         {activeTab === "tourInfo" ? (
           <MyTourInfo tour={tour} />
         ) : listView ? (
@@ -68,19 +73,19 @@ const MyTourDetails = () => {
           <MyTourCheckPoints />
         )}
       </View>
-      <View className="absolute bottom-2 w-full px-2 py-2 rounded-xl flex flex-row justify-between bg-white">
+      <View className={`absolute bottom-2 w-full px-2 py-2 rounded-xl flex flex-row justify-between ${bgColor}`}>
         {activeTab === "tourInfo" ? (
           <TouchableOpacity
             onPress={() => handleTabPress("checkPoints")}
             activeOpacity={0.8}
           >
-            <View className="flex flex-row justify-center items-center bg-gray-500 w-[180px] h-12 space-x-4 rounded-lg ">
+            <View className={`flex flex-row justify-center items-center bg-gray-500 w-[180px] h-12 space-x-4 rounded-lg`}>
               <Ionicons
                 name={"checkmark-circle-outline"}
                 size={20}
                 color="white"
               />
-              <Text className="text-white font-semibold">Check Points</Text>
+              <Text className={`${textColor} font-semibold`}>Check Points</Text>
             </View>
           </TouchableOpacity>
         ) : (
@@ -88,22 +93,22 @@ const MyTourDetails = () => {
             onPress={() => setListView(!listView)}
             activeOpacity={0.8}
           >
-            <View className="flex flex-row justify-center items-center bg-gray-500 w-[180px] h-12 space-x-4 rounded-lg ">
+            <View className={`flex flex-row justify-center items-center bg-gray-500 w-[180px] h-12 space-x-4 rounded-lg`}>
               <Ionicons
                 name={listView ? "compass" : "list"}
                 size={20}
                 color="white"
               />
-              <Text className="text-white font-semibold">
+              <Text className={`${textColor} font-semibold`}>
                 {listView ? "Map View" : "List View"}
               </Text>
             </View>
           </TouchableOpacity>
         )}
         <TouchableOpacity activeOpacity={0.8}>
-          <View className="flex flex-row justify-center items-center bg-green-700 w-[180px] h-12 space-x-4 rounded-lg ">
+          <View className={`flex flex-row justify-center items-center bg-green-700 w-[180px] h-12 space-x-4 rounded-lg`}>
             <Ionicons name="qr-code-outline" size={20} color="white" />
-            <Text className="text-white font-semibold">Check-In</Text>
+            <Text className={`${textColor} font-semibold`}>Check-In</Text>
           </View>
         </TouchableOpacity>
       </View>

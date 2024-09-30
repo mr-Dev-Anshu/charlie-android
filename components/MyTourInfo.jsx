@@ -12,7 +12,11 @@ import { router } from "expo-router";
 const MyTourInfo = ({ tour }) => {
   return (
     <View className="pb-14">
-      <ScrollView className="flex h-full" contentContainerStyle={{paddingBottom:56}} showsVerticalScrollIndicator={false}>
+      <ScrollView
+        className="flex h-full"
+        contentContainerStyle={{ paddingBottom: 56 }}
+        showsVerticalScrollIndicator={false}
+      >
         <View className="mt-5">
           <Text className="text-md font-bold">Tour Name</Text>
           <Text className="text-md mt-2 tracking-wider">{tour.name}</Text>

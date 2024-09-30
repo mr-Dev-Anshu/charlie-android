@@ -7,6 +7,8 @@ import { tours } from "@/constants/tours.js";
 const { width } = Dimensions.get("window");
 
 const CarouselComponent = () => {
+
+  
   return (
     <View className="absolute top-[280px] flex justify-center items-center z-50 h-[500px]">
       <ScrollView horizontal showsHorizontalScrollIndicator={false} >

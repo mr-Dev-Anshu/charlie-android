@@ -4,7 +4,7 @@ import Notifications from "../../components/UI/Notifications";
 
 const notifications = () => {
   return (
-    <View className="pt-28 h-full w-full px-6">
+    <View className="pt-28 h-full w-full px-3">
       <ScrollView
         showsVerticalScrollIndicator={false}
         contentContainerStyle={{ paddingBottom: 44 }}

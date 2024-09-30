@@ -7,19 +7,19 @@ const AccomodationDetailsElement = ({ details }) => {
     <View className="mt-4 space-y-2 pl-2">
       <View>
         <Text>{`Day ${details?.id}`}</Text>
-        <Text className="font-semibold">{`${details.date}`}</Text>
+        <Text className="font-semibold">{`${details?.date}`}</Text>
       </View>
       <View>
         <Text>{`Place`}</Text>
-        <Text className="font-semibold">{`${details.place}`}</Text>
+        <Text className="font-semibold">{`${details?.place}`}</Text>
       </View>
       <View>
         <Text>{`Hotel Name`}</Text>
-        <Text className="font-semibold">{`${details.hotelName}`}</Text>
+        <Text className="font-semibold">{`${details?.hotelName}`}</Text>
       </View>
       <View>
         <Text>{`Room`}</Text>
-        <Text className="font-bold">{`${details.roomNumber}`}</Text>
+        <Text className="font-bold">{`${details?.roomNumber}`}</Text>
       </View>
       <View className="flex flex-row space-x-4 pt-2">
         <View className="flex flex-row space-x-2 justify-center items-center">

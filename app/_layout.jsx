@@ -16,8 +16,6 @@ import { Provider } from "react-redux";
 import store from "@/redux/store.js";
 import CustomBackButton from "@/components/UI/CustomBackButton";
 
-const PERSISTENCE_KEY = "NAVIGATION_STATE";
-
 SplashScreen.preventAutoHideAsync();
 
 export default function RootLayout() {
@@ -25,25 +23,6 @@ export default function RootLayout() {
   const [loaded] = useFonts({
     SpaceMono: require("../assets/fonts/SpaceMono-Regular.ttf"),
   });
-  const [isReady, setIsReady] = useState(false);
-  const [initialState, setInitialState] = useState();
-
-  useEffect(() => {
-    const restoreState = async () => {
-      try {
-        const savedStateString = await AsyncStorage.getItem(PERSISTENCE_KEY);
-        const state = savedStateString
-          ? JSON.parse(savedStateString)
-          : undefined;
-        if (state !== undefined) {
-          setInitialState(state);
-        }
-      } finally {
-        setIsReady(true);
-      }
-    };
-    restoreState();
-  }, []);
 
   useEffect(() => {
     if (loaded) {
@@ -51,7 +30,7 @@ export default function RootLayout() {
     }
   }, [loaded]);
 
-  if (!loaded || !isReady) {
+  if (!loaded) {
     return null;
   }
 
@@ -59,13 +38,7 @@ export default function RootLayout() {
     <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
       <Provider store={store}>
         <GestureHandlerRootView style={{ flex: 1 }}>
-          <Stack
-            key={initialState ? JSON.stringify(initialState) : "root"}
-            initialState={initialState}
-            onStateChange={(state) =>
-              AsyncStorage.setItem(PERSISTENCE_KEY, JSON.stringify(state))
-            }
-          >
+          <Stack>
             <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
             <Stack.Screen name="(admin)" options={{ headerShown: false }} />
             <Stack.Screen name="login" options={{ headerShown: false }} />
