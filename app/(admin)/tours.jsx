@@ -1,4 +1,4 @@
-import { View, Text, Dimensions } from "react-native";
+import { View, Text, Dimensions, useColorScheme } from "react-native";
 import React from "react";
 import { createdTours } from "../../constants/tours";
 import TourCard from "../../components/admin/UI/TourCard";
@@ -6,10 +6,16 @@ import { ScrollView, TouchableOpacity } from "react-native-gesture-handler";
 import { router } from "expo-router";
 
 const tours = () => {
+
+  const colorScheme = useColorScheme();
+
+  const textColor = colorScheme === "dark" ? "text-white" : "text-black";
+  const bgColor = colorScheme === "dark" ? "bg-black" : "bg-white";
+  const accentBgColor = colorScheme === "dark" ? "bg-gray-800" : "bg-white";
   return (
     <View className="mt-28 h-full relative flex justify-center items-center">
       <ScrollView
-        contentContainerStyle={{ paddingHorizontal: 16, paddingBottom: 10 }}
+        contentContainerStyle={{ paddingHorizontal: 16, paddingBottom: 200 }}
         showsVerticalScrollIndicator={false}
       >
         <View>
@@ -21,7 +27,7 @@ const tours = () => {
           ))}
         </View>
       </ScrollView>
-      <View className="flex flex-row justify-between items-center w-full px-3 py-1 mx-1 bg-white absolute bottom-28">
+      <View className={`flex flex-row justify-between items-center w-full px-3 py-2 mx-1 ${bgColor} absolute bottom-28`}>
         <TouchableOpacity
           activeOpacity={0.7}
           onPress={() => router.push("/addTours")}

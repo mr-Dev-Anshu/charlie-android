@@ -1,4 +1,4 @@
-import { View, Text, ScrollView } from "react-native";
+import { View, Text, ScrollView, useColorScheme } from "react-native";
 import React, { useRef } from "react";
 import Announcement from "../../components/UI/Announcement";
 import { TouchableOpacity } from "react-native-gesture-handler";
@@ -7,9 +7,16 @@ import { Modalize } from "react-native-modalize";
 
 const announcement = () => {
   const addAnnounceMentRef = useRef(null);
+
+  const colorScheme = useColorScheme();
+
+  const textColor = colorScheme === "dark" ? "text-white" : "text-black";
+  const bgColor = colorScheme === "dark" ? "bg-black" : "bg-white";
+  const accentBgColor = colorScheme === "dark" ? "bg-gray-800" : "bg-white";
+
   return (
     <>
-      <View className=" mt-14 h-full w-full px-6">
+      <View className=" mt-14 h-full w-full">
         <View className=" flex justify-center items-center py-1 ">
           <Text className="text-lg font-semibold text-green-800">
             Announcements
@@ -17,7 +24,7 @@ const announcement = () => {
         </View>
         <ScrollView
           showsVerticalScrollIndicator={false}
-          contentContainerStyle={{ paddingBottom: 120 }}
+          contentContainerStyle={{ paddingBottom: 120, paddingHorizontal: 10 }}
         >
           <View className="mt-1">
             <Announcement />
@@ -36,7 +43,7 @@ const announcement = () => {
           </View>
         </ScrollView>
       </View>
-      <View className="bottom-28 py-2 bg-white w-full flex justify-center items-center px-6">
+      <View className={`bottom-28 pb-2 ${bgColor} w-full flex justify-center items-center px-2`}>
         <TouchableOpacity
           activeOpacity={0.7}
           onPress={() => addAnnounceMentRef?.current?.open()}

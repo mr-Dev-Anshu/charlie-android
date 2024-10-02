@@ -1,4 +1,4 @@
-import { Pressable, Text, View } from "react-native";
+import { Pressable, Text, View, useColorScheme } from "react-native";
 import React, { useRef, useState } from "react";
 import { expenseDetails } from "../../constants/tours";
 import { Modalize } from "react-native-modalize";
@@ -36,6 +36,12 @@ const expense = () => {
     }
   };
 
+  const colorScheme = useColorScheme();
+
+  const textColor = colorScheme === "dark" ? "text-white" : "text-black";
+  const bgColor = colorScheme === "dark" ? "bg-black" : "bg-white";
+  const accentBgColor = colorScheme === "dark" ? "bg-gray-800" : "bg-white";
+
   const [open, setOpen] = useState(false);
   const [value, setValue] = useState(null);
   const [roles, setRoles] = useState([
@@ -71,7 +77,7 @@ const expense = () => {
           <View
             className={`w-[30%] rounded-lg flex justify-center items-center h-[70px] space-y-1 bg-green-600/30 `}
           >
-            <Text className="font-medium ">Budget</Text>
+            <Text className={`${textColor} font-medium`}>Budget</Text>
             <Text className={`text-lg font-bold text-blue-600`}>
               ₹ 1,00,000
             </Text>
@@ -79,13 +85,13 @@ const expense = () => {
           <View
             className={`w-[30%] rounded-lg flex justify-center items-center h-[70px] space-y-1 bg-green-600/30 `}
           >
-            <Text className="font-medium ">Spent</Text>
+            <Text className={`${textColor} font-medium`}>Spent</Text>
             <Text className={`text-lg font-bold text-red-600`}>₹ 1,00,000</Text>
           </View>
           <View
             className={`w-[30%] rounded-lg flex justify-center items-center h-[70px] space-y-1 bg-green-600/30 `}
           >
-            <Text className="font-medium ">Balance</Text>
+            <Text className={`${textColor} font-medium`}>Balance</Text>
             <Text className={`text-lg font-bold text-green-600`}>
               ₹ 1,00,000
             </Text>
@@ -94,12 +100,12 @@ const expense = () => {
         <View className=" h-[75%] px-3">
           <ScrollView
             showsVerticalScrollIndicator={false}
-            contentContainerStyle={{ paddingTop: 10, paddingBottom: 36 }}
+            contentContainerStyle={{ paddingTop: 10, paddingBottom: 56 }}
           >
             {expenseDetails?.map((item, index) => (
               <View
                 key={index}
-                className="flex flex-row w-full justify-between items-center px-2 py-2 shadow-sm bg-white shadow-black/30 rounded-lg mb-2"
+                className={`flex flex-row w-full justify-between items-center px-2 py-2 shadow-sm ${accentBgColor} shadow-black/30 rounded-lg mb-2`}
               >
                 <View className="flex flex-row w-[220px] justify-start items-center space-x-3">
                   <Ionicons
@@ -108,7 +114,7 @@ const expense = () => {
                     color={"green"}
                   />
                   <View>
-                    <Text className="font-semibold">
+                    <Text className={`${textColor} font-semibold`}>
                       {shorten(item.category, 25)}
                     </Text>
                     <Text className="text-xs text-gray-500">
@@ -116,9 +122,9 @@ const expense = () => {
                     </Text>
                   </View>
                 </View>
-                <Text>{item.name}</Text>
+                <Text className={`${textColor}`}>{item.name}</Text>
                 <View className="flex flex-row justify-center items-center space-x-4">
-                  <Text className="w-14 text-right font-medium ">
+                  <Text className={`w-14 text-right font-medium ${textColor} `}>
                     ₹ {item.amount}
                   </Text>
                   <TouchableOpacity
@@ -132,7 +138,7 @@ const expense = () => {
             ))}
           </ScrollView>
         </View>
-        <View className="flex flex-row justify-between items-center w-full bottom-12 px-3 py-1 bg-white">
+        <View className={`flex flex-row justify-between items-center w-full bottom-14 px-3 py-2 ${bgColor}`}>
           <TouchableOpacity
             activeOpacity={0.7}
             onPress={() => exportExcelSheet?.current?.open()}
@@ -147,7 +153,7 @@ const expense = () => {
             activeOpacity={0.7}
             onPress={() => addExpenseDetailRef?.current?.open()}
           >
-            <View className="bg-green-600 py-2 rounded-xl flex justify-center items-center w-[190px]">
+            <View className="bg-green-600 py-2 rounded-xl flex justify-center  items-center w-[190px]">
               <Text className="text-white text-lg font-semibold">
                 Add Expense
               </Text>
