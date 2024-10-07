@@ -4,32 +4,106 @@ import {
   TextInput,
   TouchableOpacity,
   useColorScheme,
+  ScrollView,
 } from "react-native";
 import React, { useState } from "react";
-import { ScrollView } from "react-native-gesture-handler";
 import { Ionicons } from "@expo/vector-icons";
 import { Switch } from "galio-framework";
 import { router } from "expo-router";
+import { useSelector } from "react-redux";
 
 const addTours = () => {
+  const { user } = useSelector((state) => state.user);
+
   const [error, setError] = useState("");
   const [tourName, setTourName] = useState("");
+  const [budget, setBudget] = useState("");
   const [location, setLocation] = useState("");
   const [description, setDescription] = useState("");
-  const [personsAllowed, setPersonsAllowed] = useState("");
+  const [totalSeats, setTotalSeats] = useState("");
+  const [distance, setDistance] = useState("");
+  const [startDate, setStartDate] = useState("");
+  const [endDate, setEndDate] = useState("");
+  const [bookingCloseDate, setBookingCloseDate] = useState("");
   const [costPerPerson, setCostPerPerson] = useState("");
   const [adminCanReject, setAdminCanReject] = useState(false);
   const [paymentGatewayEnabled, setPaymentGatewayEnabled] = useState(false);
-  const [tourType, setTourType] = useState("");
+  const [include, setInclude] = useState("");
+  const [notIncluded, setNotIncluded] = useState("");
+  const [backPack, setBackPack] = useState("");
+  const [checkInBaggage, setCheckInBaggage] = useState("");
 
   const colorScheme = useColorScheme();
-
   const textColor = colorScheme === "dark" ? "text-white" : "text-black";
   const inputTextColor = colorScheme === "dark" ? "white" : "black";
   const bgColor = colorScheme === "dark" ? "bg-black" : "bg-white";
 
+  const submitForm = async () => {
+    if (
+      !tourName ||
+      !budget ||
+      !location ||
+      !description ||
+      !totalSeats ||
+      !distance ||
+      !startDate ||
+      !endDate ||
+      !bookingCloseDate ||
+      !costPerPerson
+    ) {
+      setError("Please fill in all required fields.");
+      return;
+    }
+
+    try {
+      setError("");
+
+      const formData = {
+        name: tourName,
+        budget,
+        location,
+        description,
+        total_seats: parseInt(totalSeats, 10),
+        distance,
+        tour_start: new Date(startDate),
+        tour_end: new Date(endDate),
+        booking_close: new Date(bookingCloseDate),
+        tour_cost: costPerPerson,
+        can_admin_reject: adminCanReject,
+        enable_payment_getway: paymentGatewayEnabled,
+        include: include,
+        not_included: notIncluded,
+        back_pack: backPack,
+        check_in_baggage: checkInBaggage,
+      };
+
+      const response = await fetch(
+        "https://trakies-backend.onrender.com/api/tour/create-tour",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "x-user-email": user?.email,
+          },
+          body: JSON.stringify(formData),
+        }
+      );
+
+      const result = await response.json();
+
+      if (response.ok) {
+        router.push("/addTourImgs");
+      } else {
+        setError(result.message || "Failed to submit tour. Please try again.");
+      }
+    } catch (err) {
+      console.error("Error submitting tour:", err);
+      setError("Error submitting tour. Please try again.");
+    }
+  };
+
   return (
-    <View className="h-full w-full px-6">
+    <View className="h-full w-full px-4">
       <ScrollView
         className="h-full w-full py-2"
         showsVerticalScrollIndicator={false}
@@ -56,23 +130,16 @@ const addTours = () => {
               style={{ color: inputTextColor }}
             />
             <TextInput
+              placeholder="Budget"
+              value={budget}
+              placeholderTextColor={"gray"}
+              onChangeText={setBudget}
+              keyboardType="numeric"
+              className={`border-2 py-2 mb-3 w-full border-green-600 rounded-lg placeholder:text-base placeholder:font-semibold px-3 ${textColor}`}
+              style={{ color: inputTextColor }}
+            />
+            <TextInput
               placeholder="Location"
-              value={location}
-              placeholderTextColor={"gray"}
-              onChangeText={setLocation}
-              className={`border-2 py-2 mb-3 w-full border-green-600 rounded-lg placeholder:text-base placeholder:font-semibold px-3 ${textColor}`}
-              style={{ color: inputTextColor }}
-            />
-            <TextInput
-              placeholder="Start Date"
-              value={location}
-              placeholderTextColor={"gray"}
-              onChangeText={setLocation}
-              className={`border-2 py-2 mb-3 w-full border-green-600 rounded-lg placeholder:text-base placeholder:font-semibold px-3 ${textColor}`}
-              style={{ color: inputTextColor }}
-            />
-            <TextInput
-              placeholder="End Date"
               value={location}
               placeholderTextColor={"gray"}
               onChangeText={setLocation}
@@ -89,11 +156,44 @@ const addTours = () => {
               style={{ color: inputTextColor }}
             />
             <TextInput
-              placeholder="Persons Allowed"
-              value={personsAllowed}
+              placeholder="Total Seats"
+              value={totalSeats}
               placeholderTextColor={"gray"}
-              onChangeText={setPersonsAllowed}
+              onChangeText={setTotalSeats}
               keyboardType="numeric"
+              className={`border-2 py-2 mb-3 w-full border-green-600 rounded-lg placeholder:text-base placeholder:font-semibold px-3 ${textColor}`}
+              style={{ color: inputTextColor }}
+            />
+            <TextInput
+              placeholder="Distance"
+              value={distance}
+              placeholderTextColor={"gray"}
+              onChangeText={setDistance}
+              keyboardType="numeric"
+              className={`border-2 py-2 mb-3 w-full border-green-600 rounded-lg placeholder:text-base placeholder:font-semibold px-3 ${textColor}`}
+              style={{ color: inputTextColor }}
+            />
+            <TextInput
+              placeholder="Start Date (YYYY-MM-DD)"
+              value={startDate}
+              placeholderTextColor={"gray"}
+              onChangeText={setStartDate}
+              className={`border-2 py-2 mb-3 w-full border-green-600 rounded-lg placeholder:text-base placeholder:font-semibold px-3 ${textColor}`}
+              style={{ color: inputTextColor }}
+            />
+            <TextInput
+              placeholder="End Date (YYYY-MM-DD)"
+              value={endDate}
+              placeholderTextColor={"gray"}
+              onChangeText={setEndDate}
+              className={`border-2 py-2 mb-3 w-full border-green-600 rounded-lg placeholder:text-base placeholder:font-semibold px-3 ${textColor}`}
+              style={{ color: inputTextColor }}
+            />
+            <TextInput
+              placeholder="Booking Close (YYYY-MM-DD)"
+              value={bookingCloseDate}
+              placeholderTextColor={"gray"}
+              onChangeText={setBookingCloseDate}
               className={`border-2 py-2 mb-3 w-full border-green-600 rounded-lg placeholder:text-base placeholder:font-semibold px-3 ${textColor}`}
               style={{ color: inputTextColor }}
             />
@@ -107,17 +207,34 @@ const addTours = () => {
               style={{ color: inputTextColor }}
             />
             <TextInput
-              placeholder="Tour Type (e.g. Easy, Medium, Hard)"
-              value={tourType}
+              placeholder="Included Items (comma separated)"
+              value={include}
               placeholderTextColor={"gray"}
-              onChangeText={setTourType}
+              onChangeText={setInclude}
               className={`border-2 py-2 mb-3 w-full border-green-600 rounded-lg placeholder:text-base placeholder:font-semibold px-3 ${textColor}`}
               style={{ color: inputTextColor }}
             />
             <TextInput
-              placeholder="Distance (optional)"
-              keyboardType="numeric"
+              placeholder="Not Included Items (comma separated)"
+              value={notIncluded}
               placeholderTextColor={"gray"}
+              onChangeText={setNotIncluded}
+              className={`border-2 py-2 mb-3 w-full border-green-600 rounded-lg placeholder:text-base placeholder:font-semibold px-3 ${textColor}`}
+              style={{ color: inputTextColor }}
+            />
+            <TextInput
+              placeholder="Backpack Items (comma separated)"
+              value={backPack}
+              placeholderTextColor={"gray"}
+              onChangeText={setBackPack}
+              className={`border-2 py-2 mb-3 w-full border-green-600 rounded-lg placeholder:text-base placeholder:font-semibold px-3 ${textColor}`}
+              style={{ color: inputTextColor }}
+            />
+            <TextInput
+              placeholder="Check-in Baggage Items (comma separated)"
+              value={checkInBaggage}
+              placeholderTextColor={"gray"}
+              onChangeText={setCheckInBaggage}
               className={`border-2 py-2 mb-3 w-full border-green-600 rounded-lg placeholder:text-base placeholder:font-semibold px-3 ${textColor}`}
               style={{ color: inputTextColor }}
             />
@@ -153,7 +270,7 @@ const addTours = () => {
         </View>
       </ScrollView>
       <View
-        className={`${bgColor} w-full py-2 flex-row justify-between bottom-6 space-x-3 `}
+        className={`${bgColor} w-full py-2 flex-row justify-between bottom-2 space-x-3 `}
       >
         <TouchableOpacity
           activeOpacity={0.8}
@@ -168,7 +285,7 @@ const addTours = () => {
         </TouchableOpacity>
         <TouchableOpacity
           activeOpacity={0.8}
-          onPress={() => router.push("/addTourImgs")}
+          onPress={submitForm}
           className="flex-1"
         >
           <View className="bg-green-600 py-2 rounded-lg">

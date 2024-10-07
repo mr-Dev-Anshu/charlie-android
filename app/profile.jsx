@@ -13,7 +13,6 @@ const profile = () => {
   const data = useSelector((state) => state.user);
   const { user, role, profile } = data;
 
-  console.log(role);
   const router = useRouter();
 
   const [members, setMembers] = useState([]);

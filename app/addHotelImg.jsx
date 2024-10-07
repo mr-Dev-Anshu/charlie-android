@@ -1,13 +1,12 @@
 import { View, Text, useColorScheme } from "react-native";
 import React, { useState } from "react";
-import { ScrollView, TouchableOpacity } from "react-native-gesture-handler";
+import { TouchableOpacity } from "react-native-gesture-handler";
 import { Ionicons } from "@expo/vector-icons";
 import { deviceWidth } from "../utils/dimensions";
 import * as ImagePicker from "expo-image-picker";
 import { Image } from "expo-image";
-import { router } from "expo-router";
 
-const addTourImgs = () => {
+const addHotelImg = () => {
   const colorScheme = useColorScheme();
 
   const [image, setImage] = useState([]);
@@ -16,6 +15,7 @@ const addTourImgs = () => {
     let result = await ImagePicker.launchImageLibraryAsync({
       allowsMultipleSelection: true,
       mediaTypes: ImagePicker.MediaTypeOptions.All,
+      allowsEditing: true,
       aspect: [4, 3],
       quality: 1,
     });
@@ -74,7 +74,7 @@ const addTourImgs = () => {
             <View className="flex flex-row justify-center items-center space-x-3">
               <Ionicons name="add-circle" size={20} color={"green"} />
               <Text className="text-base font-semibold text-green-600">
-                Add Tour Images
+                Add Hotel Images
               </Text>
             </View>
           </View>
@@ -82,7 +82,6 @@ const addTourImgs = () => {
         <TouchableOpacity
           activeOpacity={0.8}
           containerStyle={{ height: "100%" }}
-          onPress={() => router.push("/addBusImg")}
         >
           <View className="h-12 flex justify-center items-center bg-green-600 rounded-lg">
             <Text className="text-base font-semibold text-white">Proceed</Text>
@@ -93,4 +92,4 @@ const addTourImgs = () => {
   );
 };
 
-export default addTourImgs;
+export default addHotelImg;
