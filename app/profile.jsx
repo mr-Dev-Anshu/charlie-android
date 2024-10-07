@@ -13,8 +13,6 @@ const profile = () => {
   const data = useSelector((state) => state.user);
   const { user, role, profile } = data;
 
-  console.log(profile, '<----------pr')
-
   console.log(role);
   const router = useRouter();
 
@@ -24,32 +22,34 @@ const profile = () => {
     user?.picture ||
     "https://www.pngitem.com/pimgs/m/146-1468479_my-profile-icon-blank-profile-picture-circle-hd.png";
 
-  const handleGetMembers = async () => {
-    try {
-      const response = await fetch(
-        "https://trakies-backend.onrender.com/api/member/get",
-        {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-            useremail: user?.email,
-          },
-        }
-      );
-
-      const data = await response.json();
-
-      if (response.ok) {
-        setMembers(data);
-      } else {
-        throw new Error(data.message || "Failed to fetch members.");
+    const handleGetMembers = async () => {
+      if (!user?.email) {
+        console.error("User email is not available.");
+        return;
       }
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
-  console.log("profile----->", profile);
+    
+      try {
+        const response = await fetch(
+          `https://trakies-backend.onrender.com/api/member/get-member?email=${user.email}`,
+          {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+            },
+          }
+        );
+    
+        if (!response.ok) {
+          const errorData = await response.json();
+          throw new Error(errorData.message || "Failed to fetch members.");
+        }
+    
+        const data = await response.json();
+        setMembers(data);
+      } catch (error) {
+        console.error("Error fetching members:", error);
+      }
+    };
 
   useEffect(() => {
     handleGetMembers();
@@ -116,14 +116,6 @@ const profile = () => {
                 label={"Emergency Contact No ?"}
                 value={profile.emergency_contact}
               />
-              <TouchableOpacity activeOpacity={0.8}>
-                <View className="border border-dashed h-28 rounded-xl flex justify-center items-center">
-                  <Ionicons name="add-circle" size={28} color={"green"} />
-                  <Text className="font-semibold text-lg text-green-600">
-                    Select a profile Image (optional)
-                  </Text>
-                </View>
-              </TouchableOpacity>
             </View>
           ) : (
             <View className="w-full h-[100px] flex justify-center items-center space-y-5">
@@ -213,4 +205,5 @@ const profile = () => {
     </View>
   );
 };
+
 export default profile;

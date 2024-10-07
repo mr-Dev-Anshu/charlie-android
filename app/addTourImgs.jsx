@@ -1,4 +1,4 @@
-import { View, Text } from "react-native";
+import { View, Text, useColorScheme } from "react-native";
 import React from "react";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { Ionicons } from "@expo/vector-icons";
@@ -6,7 +6,14 @@ import { deviceWidth } from "../utils/dimensions";
 
 
 const addTourImgs = () => {
+  const colorScheme = useColorScheme();
 
+  const [image, setImage] = useState(null);
+
+
+  const textColor = colorScheme === "dark" ? "text-white" : "text-black";
+  const inputTextColor = colorScheme === "dark" ? "white" : "black";
+  const bgColor = colorScheme === "dark" ? "black" : "white";
 
   return (
     <View className="px-6 pt-6 relative h-full">
@@ -41,7 +48,13 @@ const addTourImgs = () => {
         </View>
       </TouchableOpacity>
       <View
-        style={{ width: deviceWidth, bottom:48, position: "absolute", paddingHorizontal: 24, backgroundColor:"white"}}
+        style={{
+          width: deviceWidth,
+          bottom: 48,
+          position: "absolute",
+          paddingHorizontal: 24,
+          backgroundColor: bgColor,
+        }}
       >
         <TouchableOpacity
           activeOpacity={0.8}

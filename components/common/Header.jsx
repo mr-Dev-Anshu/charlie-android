@@ -19,13 +19,13 @@ const Header = () => {
 
   const handleProfilePress = () => {
     if (user == null) {
-      router.push("/(admin)/tours");
+      router.push("/login");
       return;
     }
     router.push("/profile");
   };
-
-  return (
+  
+return (
     <View className="absolute mt-[50px] w-full px-2 h-[60px] shadow-xl shadow-black ">
       <View
         className={`${themeColor} h-full py-3 flex justify-between items-center flex-row rounded-xl px-4 `}
