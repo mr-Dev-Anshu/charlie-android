@@ -60,7 +60,6 @@ const DetailsScreen = ({ params }) => {
   return (
     <>
       <ScrollView className="flex h-full">
-        {/* <Image source={{ uri: tour.image }} className="h-72 w-full" /> */}
         <Carousel
           loop
           width={width}

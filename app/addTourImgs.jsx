@@ -6,6 +6,7 @@ import { deviceWidth } from "../utils/dimensions";
 import * as ImagePicker from "expo-image-picker";
 import { Image } from "expo-image";
 import { router, useLocalSearchParams } from "expo-router";
+import { uploadFilesToS3 } from "../utils/uploadFileHelper";
 
 const addTourImgs = () => {
   const [image, setImage] = useState([]);
@@ -30,6 +31,15 @@ const addTourImgs = () => {
   };
 
   console.log("image--------->", image);
+
+  const handleTourImageUpload = async () => {
+    try {
+      const res = await uploadFilesToS3(image);
+      console.log(res);
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   return (
     <View className="px-6 pt-6 relative h-full">
@@ -77,7 +87,7 @@ const addTourImgs = () => {
         <TouchableOpacity
           activeOpacity={0.8}
           containerStyle={{ height: "100%" }}
-          onPress={() => router.push("/addBusImg")}
+          onPress={handleTourImageUpload}
         >
           <View className="h-12 flex justify-center items-center bg-green-600 rounded-lg">
             <Text className="text-base font-semibold text-white">Proceed</Text>
