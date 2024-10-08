@@ -1,11 +1,10 @@
-import { Pressable, Text, View, useColorScheme } from "react-native";
+import {  Text, View, useColorScheme } from "react-native";
 import React, { useRef, useState } from "react";
 import { expenseDetails } from "../../constants/tours";
 import { Modalize } from "react-native-modalize";
 import { Ionicons } from "@expo/vector-icons";
 import { shorten } from "../../components/UI/PostComponent";
 import {
-  FlatList,
   ScrollView,
   TextInput,
   TouchableOpacity,
@@ -138,7 +137,9 @@ const expense = () => {
             ))}
           </ScrollView>
         </View>
-        <View className={`flex flex-row justify-between items-center w-full bottom-14 px-3 py-2 ${bgColor}`}>
+        <View
+          className={`flex flex-row justify-between items-center w-full bottom-14 px-3 py-2 ${bgColor}`}
+        >
           <TouchableOpacity
             activeOpacity={0.7}
             onPress={() => exportExcelSheet?.current?.open()}

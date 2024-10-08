@@ -1,13 +1,10 @@
-import { View, useColorScheme } from "react-native";
+import { View } from "react-native";
 import React from "react";
 import { tours } from "../../constants/tours.js";
 import MyTourCard from "../../components/UI/MyTourCard";
 import { ScrollView } from "react-native-gesture-handler";
 
 const mytours = () => {
-  const colorScheme = useColorScheme();
-
-  console.log(colorScheme);
   return (
     <View className="mt-24 h-full w-full flex justify-center items-center">
       <ScrollView

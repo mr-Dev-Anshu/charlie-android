@@ -1,15 +1,12 @@
-import { View, Text, Touchable, useColorScheme } from "react-native";
+import { View, Text  } from "react-native";
 import React from "react";
 import { TouchableOpacity } from "react-native-gesture-handler";
-import Ionicons from "@expo/vector-icons/Ionicons";
 import { useSelector } from "react-redux";
 import { Image } from "expo-image";
 import { router } from "expo-router";
 import { FontAwesome6 } from "@expo/vector-icons";
 
 const Header = () => {
-  const colorScheme = useColorScheme();
-  const themeColor = colorScheme === "dark" ? "bg-gray-800" : "bg-white";
   const data = useSelector((state) => state.user);
   const { user } = data;
 
@@ -24,11 +21,11 @@ const Header = () => {
     }
     router.push("/profile");
   };
-  
-return (
-    <View className="absolute mt-[50px] w-full px-2 h-[60px] shadow-xl shadow-black ">
+
+  return (
+    <View className="absolute mt-[50px] w-full px-2 h-[60px]">
       <View
-        className={`${themeColor} h-full py-3 flex justify-between items-center flex-row rounded-xl px-4 `}
+        className={` h-full py-3 flex justify-between items-center flex-row px-4 shadow-xl shadow-black bg-white rounded-lg`}
       >
         <TouchableOpacity
           onPress={() => router.push("/")}

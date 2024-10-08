@@ -3,8 +3,6 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import React, { useRef } from "react";
 import { post } from "../../constants/tours";
 import PostComponent from "../../components/UI/PostComponent";
-import Button from "react-native-button";
-import axios from "axios";
 import { ScrollView, TouchableOpacity } from "react-native-gesture-handler";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import { Modalize } from "react-native-modalize";
@@ -35,7 +33,7 @@ const community = () => {
         </View>
       </View>
       <Modalize modalHeight={600} ref={addPostRef} handlePosition="inside">
-        <View className='bg-green-500 w-full ' >
+        <View className="bg-green-500 w-full ">
           <Text>Add Post</Text>
         </View>
       </Modalize>

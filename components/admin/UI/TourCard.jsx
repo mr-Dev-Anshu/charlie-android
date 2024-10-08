@@ -2,8 +2,7 @@ import { View, Text } from "react-native";
 import React from "react";
 import { Ionicons } from "@expo/vector-icons";
 import { Image } from "expo-image";
-import { TouchableOpacity } from "react-native-gesture-handler";
-import { router } from "expo-router";
+
 
 const TourCard = ({ tour }) => {
   return (

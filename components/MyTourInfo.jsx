@@ -10,43 +10,39 @@ import { TouchableOpacity } from "react-native-gesture-handler";
 import { router } from "expo-router";
 
 const MyTourInfo = ({ tour }) => {
-  const colorScheme = useColorScheme();
 
-  const textColor = colorScheme === "dark" ? "text-white" : "text-black";
-  const bgColor = colorScheme === "dark" ? "black" : "white";
-  const accentBgColor = colorScheme === "dark" ? "bg-gray-800" : "white";
 
   return (
-    <View className={`pb-14 ${bgColor}`}>
+    <View className={`pb-14 `}>
       <ScrollView
         className="flex h-full"
         contentContainerStyle={{ paddingBottom: 64 }}
         showsVerticalScrollIndicator={false}
       >
         <View className="mt-5">
-          <Text className={`text-base font-bold ${textColor}`}>Tour Name</Text>
-          <Text className={`text-md mt-2 tracking-wider ${textColor}`}>
+          <Text className={`text-base font-bold`}>Tour Name</Text>
+          <Text className={`text-md mt-2 tracking-wider`}>
             {tour.name}
           </Text>
         </View>
         <View className="mt-4">
-          <Text className={`text-base font-bold ${textColor}`}>
+          <Text className={`text-base font-bold`}>
             Description
           </Text>
-          <Text className={`text-md mt-2 tracking-wider ${textColor}`}>
+          <Text className={`text-md mt-2 tracking-wider`}>
             {tour.info}
           </Text>
         </View>
         <View className="mt-3">
-          <Text className={`text-base font-bold ${textColor}`}>Date</Text>
-          <Text className={`text-md mt-2 tracking-wider ${textColor}`}>
+          <Text className={`text-base font-bold`}>Date</Text>
+          <Text className={`text-md mt-2 tracking-wider`}>
             {tour.date}
           </Text>
         </View>
         <View className="px-2 mt-5">
           <View className="flex flex-row justify-left items-center space-x-3">
             <Ionicons name="thumbs-up-outline" size={24} color={"green"} />
-            <Text className={`text-md font-semibold ${textColor}`}>
+            <Text className={`text-md font-semibold`}>
               What is included ?
             </Text>
           </View>
@@ -76,7 +72,7 @@ const MyTourInfo = ({ tour }) => {
         <View className="px-2 mt-6">
           <View className="flex flex-row justify-left items-center space-x-3">
             <Ionicons name="thumbs-down-outline" size={24} color={"red"} />
-            <Text className={`text-md font-semibold ${textColor}`}>
+            <Text className={`text-md font-semibold`}>
               What is not included ?
             </Text>
           </View>
@@ -106,7 +102,7 @@ const MyTourInfo = ({ tour }) => {
         <View className="px-2 mt-6">
           <View className="flex flex-row justify-left items-center space-x-3">
             <Ionicons name="bag-check-outline" size={24} color={"green"} />
-            <Text className={`text-md font-semibold ${textColor}`}>
+            <Text className={`text-md font-semibold`}>
               Bag Pack
             </Text>
           </View>
@@ -140,7 +136,7 @@ const MyTourInfo = ({ tour }) => {
               size={24}
               color={"green"}
             />
-            <Text className={`text-md font-semibold ${textColor}`}>
+            <Text className={`text-md font-semibold`}>
               Check In Baggage
             </Text>
           </View>
@@ -180,7 +176,7 @@ const MyTourInfo = ({ tour }) => {
           >
             <View className="flex flex-row space-x-2 justify-start items-center my-1 ml-2 ">
               <Ionicons name="bus" size={20} color={"white"} />
-              <Text className={`font-bold ${textColor}`}>
+              <Text className={`font-bold`}>
                 Transport Details
               </Text>
             </View>
@@ -188,37 +184,36 @@ const MyTourInfo = ({ tour }) => {
           <View className="ml-2 mt-2">
             <View className="mt-2">
               <Text
-                className={`${textColor}`}
               >{`From ${transportDetails?.up?.from} to ${transportDetails?.up?.to}`}</Text>
-              <Text className={`${textColor} mt-2 font-semibold`}>
+              <Text className={` mt-2 font-semibold`}>
                 {transportDetails?.up?.busName}
               </Text>
               <Text
-                className={`mt-1 ${textColor}`}
+                className={`mt-1`}
               >{`Bus No : ${transportDetails?.up?.busNumber}`}</Text>
             </View>
             <View className="mt-2">
-              <Text className={`font-semibold ${textColor}`}>
+              <Text className={`font-semibold`}>
                 Contact Details
               </Text>
               <Text
-                className={`mt-1 ${textColor}`}
+                className={`mt-1`}
               >{`Mob No: ${transportDetails?.up?.contact}`}</Text>
             </View>
             <View className="mt-2">
-              <Text className={`font-semibold ${textColor}`}>
+              <Text className={`font-semibold`}>
                 Boarding Point
               </Text>
               <Text
-                className={`mt-1 ${textColor}`}
+                className={`mt-1`}
               >{`${transportDetails?.up?.boardingPoint}`}</Text>
             </View>
             <View className="mt-2">
-              <Text className={`font-semibold ${textColor}`}>
+              <Text className={`font-semibold`}>
                 Boarding Time
               </Text>
               <Text
-                className={`mt-1 ${textColor}`}
+                className={`mt-1`}
               >{`${transportDetails?.up?.boardingTime}`}</Text>
             </View>
             <View className="flex flex-row justify-start space-x-4 items-center mt-2">
@@ -256,38 +251,36 @@ const MyTourInfo = ({ tour }) => {
           </View>
           <View className="ml-2 mt-2">
             <View className="mt-2">
-              <Text
-                className={`${textColor}`}
-              >{`From ${transportDetails?.down?.from} to ${transportDetails?.down?.to}`}</Text>
-              <Text className={`mt-2 font-semibold ${textColor}`}>
+              <Text>{`From ${transportDetails?.down?.from} to ${transportDetails?.down?.to}`}</Text>
+              <Text className={`mt-2 font-semibold`}>
                 {transportDetails?.down?.busName}
               </Text>
               <Text
-                className={`mt-1 ${textColor}`}
+                className={`mt-1`}
               >{`Bus No : ${transportDetails?.down?.busNumber}`}</Text>
             </View>
             <View className="mt-2">
-              <Text className={`font-semibold ${textColor}`}>
+              <Text className={`font-semibold`}>
                 Contact Details
               </Text>
               <Text
-                className={`mt-1 ${textColor}`}
+                className={`mt-1`}
               >{`Mob No: ${transportDetails?.down?.contact}`}</Text>
             </View>
             <View className="mt-2">
-              <Text className={`font-semibold ${textColor}`}>
+              <Text className={`font-semibold`}>
                 Boarding Point
               </Text>
               <Text
-                className={`mt-1 ${textColor}`}
+                className={`mt-1`}
               >{`${transportDetails?.down?.boardingPoint}`}</Text>
             </View>
             <View className="mt-2">
-              <Text className={`font-semibold ${textColor}`}>
+              <Text className={`font-semibold`}>
                 Boarding Time
               </Text>
               <Text
-                className={`mt-1 ${textColor}`}
+                className={`mt-1`}
               >{`${transportDetails?.down?.boardingTime}`}</Text>
             </View>
           </View>
@@ -301,7 +294,7 @@ const MyTourInfo = ({ tour }) => {
           >
             <View className="flex flex-row space-x-2 justify-start items-center my-1 ml-2 ">
               <Ionicons name="bed" size={20} color={"white"} />
-              <Text className={`font-bold ${textColor}`}>
+              <Text className={`font-bold`}>
                 Accomodation Details
               </Text>
             </View>

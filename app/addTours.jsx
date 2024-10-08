@@ -33,11 +33,6 @@ const addTours = () => {
   const [backPack, setBackPack] = useState("");
   const [checkInBaggage, setCheckInBaggage] = useState("");
 
-  const colorScheme = useColorScheme();
-  const textColor = colorScheme === "dark" ? "text-white" : "text-black";
-  const inputTextColor = colorScheme === "dark" ? "white" : "black";
-  const bgColor = colorScheme === "dark" ? "bg-black" : "bg-white";
-
   const submitForm = async () => {
     if (
       !tourName ||
@@ -126,8 +121,7 @@ const addTours = () => {
               value={tourName}
               placeholderTextColor={"gray"}
               onChangeText={setTourName}
-              className={`border-2 py-2 mb-3 w-full border-green-600 rounded-lg placeholder:text-base placeholder:font-semibold px-3 ${textColor}`}
-              style={{ color: inputTextColor }}
+              className={`border-2 py-2 mb-3 w-full border-green-600 rounded-lg placeholder:text-base placeholder:font-semibold px-3 `}
             />
             <TextInput
               placeholder="Budget"
@@ -135,16 +129,14 @@ const addTours = () => {
               placeholderTextColor={"gray"}
               onChangeText={setBudget}
               keyboardType="numeric"
-              className={`border-2 py-2 mb-3 w-full border-green-600 rounded-lg placeholder:text-base placeholder:font-semibold px-3 ${textColor}`}
-              style={{ color: inputTextColor }}
+              className={`border-2 py-2 mb-3 w-full border-green-600 rounded-lg placeholder:text-base placeholder:font-semibold px-3 `}
             />
             <TextInput
               placeholder="Location"
               value={location}
               placeholderTextColor={"gray"}
               onChangeText={setLocation}
-              className={`border-2 py-2 mb-3 w-full border-green-600 rounded-lg placeholder:text-base placeholder:font-semibold px-3 ${textColor}`}
-              style={{ color: inputTextColor }}
+              className={`border-2 py-2 mb-3 w-full border-green-600 rounded-lg placeholder:text-base placeholder:font-semibold px-3 `}
             />
             <TextInput
               placeholder="Description"
@@ -152,8 +144,7 @@ const addTours = () => {
               placeholderTextColor={"gray"}
               onChangeText={setDescription}
               multiline
-              className={`border-2 mb-3 w-full border-green-600 rounded-lg placeholder:text-base placeholder:font-semibold px-3 flex justify-start items-start h-24 ${textColor}`}
-              style={{ color: inputTextColor }}
+              className={`border-2 mb-3 w-full border-green-600 rounded-lg placeholder:text-base placeholder:font-semibold px-3 flex justify-start items-start h-24 `}
             />
             <TextInput
               placeholder="Total Seats"
@@ -161,8 +152,7 @@ const addTours = () => {
               placeholderTextColor={"gray"}
               onChangeText={setTotalSeats}
               keyboardType="numeric"
-              className={`border-2 py-2 mb-3 w-full border-green-600 rounded-lg placeholder:text-base placeholder:font-semibold px-3 ${textColor}`}
-              style={{ color: inputTextColor }}
+              className={`border-2 py-2 mb-3 w-full border-green-600 rounded-lg placeholder:text-base placeholder:font-semibold px-3 `}
             />
             <TextInput
               placeholder="Distance"
@@ -170,32 +160,28 @@ const addTours = () => {
               placeholderTextColor={"gray"}
               onChangeText={setDistance}
               keyboardType="numeric"
-              className={`border-2 py-2 mb-3 w-full border-green-600 rounded-lg placeholder:text-base placeholder:font-semibold px-3 ${textColor}`}
-              style={{ color: inputTextColor }}
+              className={`border-2 py-2 mb-3 w-full border-green-600 rounded-lg placeholder:text-base placeholder:font-semibold px-3 `}
             />
             <TextInput
               placeholder="Start Date (YYYY-MM-DD)"
               value={startDate}
               placeholderTextColor={"gray"}
               onChangeText={setStartDate}
-              className={`border-2 py-2 mb-3 w-full border-green-600 rounded-lg placeholder:text-base placeholder:font-semibold px-3 ${textColor}`}
-              style={{ color: inputTextColor }}
+              className={`border-2 py-2 mb-3 w-full border-green-600 rounded-lg placeholder:text-base placeholder:font-semibold px-3 `}
             />
             <TextInput
               placeholder="End Date (YYYY-MM-DD)"
               value={endDate}
               placeholderTextColor={"gray"}
               onChangeText={setEndDate}
-              className={`border-2 py-2 mb-3 w-full border-green-600 rounded-lg placeholder:text-base placeholder:font-semibold px-3 ${textColor}`}
-              style={{ color: inputTextColor }}
+              className={`border-2 py-2 mb-3 w-full border-green-600 rounded-lg placeholder:text-base placeholder:font-semibold px-3 `}
             />
             <TextInput
               placeholder="Booking Close (YYYY-MM-DD)"
               value={bookingCloseDate}
               placeholderTextColor={"gray"}
               onChangeText={setBookingCloseDate}
-              className={`border-2 py-2 mb-3 w-full border-green-600 rounded-lg placeholder:text-base placeholder:font-semibold px-3 ${textColor}`}
-              style={{ color: inputTextColor }}
+              className={`border-2 py-2 mb-3 w-full border-green-600 rounded-lg placeholder:text-base placeholder:font-semibold px-3 `}
             />
             <TextInput
               placeholder="Cost Per Person"
@@ -203,43 +189,38 @@ const addTours = () => {
               placeholderTextColor={"gray"}
               onChangeText={setCostPerPerson}
               keyboardType="numeric"
-              className={`border-2 py-2 mb-3 w-full border-green-600 rounded-lg placeholder:text-base placeholder:font-semibold px-3 ${textColor}`}
-              style={{ color: inputTextColor }}
+              className={`border-2 py-2 mb-3 w-full border-green-600 rounded-lg placeholder:text-base placeholder:font-semibold px-3 `}
             />
             <TextInput
               placeholder="Included Items (comma separated)"
               value={include}
               placeholderTextColor={"gray"}
               onChangeText={setInclude}
-              className={`border-2 py-2 mb-3 w-full border-green-600 rounded-lg placeholder:text-base placeholder:font-semibold px-3 ${textColor}`}
-              style={{ color: inputTextColor }}
+              className={`border-2 py-2 mb-3 w-full border-green-600 rounded-lg placeholder:text-base placeholder:font-semibold px-3 `}
             />
             <TextInput
               placeholder="Not Included Items (comma separated)"
               value={notIncluded}
               placeholderTextColor={"gray"}
               onChangeText={setNotIncluded}
-              className={`border-2 py-2 mb-3 w-full border-green-600 rounded-lg placeholder:text-base placeholder:font-semibold px-3 ${textColor}`}
-              style={{ color: inputTextColor }}
+              className={`border-2 py-2 mb-3 w-full border-green-600 rounded-lg placeholder:text-base placeholder:font-semibold px-3 `}
             />
             <TextInput
               placeholder="Backpack Items (comma separated)"
               value={backPack}
               placeholderTextColor={"gray"}
               onChangeText={setBackPack}
-              className={`border-2 py-2 mb-3 w-full border-green-600 rounded-lg placeholder:text-base placeholder:font-semibold px-3 ${textColor}`}
-              style={{ color: inputTextColor }}
+              className={`border-2 py-2 mb-3 w-full border-green-600 rounded-lg placeholder:text-base placeholder:font-semibold px-3 `}
             />
             <TextInput
               placeholder="Check-in Baggage Items (comma separated)"
               value={checkInBaggage}
               placeholderTextColor={"gray"}
               onChangeText={setCheckInBaggage}
-              className={`border-2 py-2 mb-3 w-full border-green-600 rounded-lg placeholder:text-base placeholder:font-semibold px-3 ${textColor}`}
-              style={{ color: inputTextColor }}
+              className={`border-2 py-2 mb-3 w-full border-green-600 rounded-lg placeholder:text-base placeholder:font-semibold px-3 `}
             />
             <View className="flex-row justify-between items-center w-full mb-3 border-2 py-1 rounded-lg px-2 border-green-600">
-              <Text className={`text-lg font-semibold ${textColor}`}>
+              <Text className={`text-lg font-semibold `}>
                 Admin Can Reject Booking?
               </Text>
               <View style={{ transform: [{ scaleX: 0.8 }, { scaleY: 0.8 }] }}>
@@ -252,7 +233,7 @@ const addTours = () => {
               </View>
             </View>
             <View className="flex-row justify-between items-center w-full mb-3 border-2 py-1 rounded-lg px-2 border-green-600">
-              <Text className={`text-lg font-semibold ${textColor}`}>
+              <Text className={`text-lg font-semibold `}>
                 Payment Gateway Enabled?
               </Text>
               <View style={{ transform: [{ scaleX: 0.8 }, { scaleY: 0.8 }] }}>
@@ -270,7 +251,7 @@ const addTours = () => {
         </View>
       </ScrollView>
       <View
-        className={`${bgColor} w-full py-2 flex-row justify-between bottom-2 space-x-3 `}
+        className={` w-full py-2 flex-row justify-between bottom-2 space-x-3 `}
       >
         <TouchableOpacity
           activeOpacity={0.8}

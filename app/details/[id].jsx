@@ -1,4 +1,4 @@
-import { View, Text, Alert, Dimensions, useColorScheme } from "react-native";
+import { View, Text, Alert, Dimensions } from "react-native";
 import Button from "react-native-button";
 import { useRef, useState } from "react";
 import { router, useLocalSearchParams } from "expo-router";
@@ -52,12 +52,6 @@ const DetailsScreen = ({ params }) => {
     setShowAddMember(false);
   };
 
-  const colorScheme = useColorScheme();
-
-  const textColor = colorScheme === "dark" ? "text-white" : "text-black";
-  const bgColor = colorScheme === "dark" ? "bg-black" : "bg-white";
-  const accentBgColor = colorScheme === "dark" ? "bg-gray-800" : "bg-white";
-
   const interestedRef = useRef(null);
   const reserveRef = useRef(null);
 
@@ -88,51 +82,43 @@ const DetailsScreen = ({ params }) => {
               className={`flex flex-row justify-between border-2  py-3 px-4 rounded-xl `}
             >
               <View className="space-y-2">
-                <Text className={`font-medium ${textColor}`}>Price</Text>
+                <Text className={`font-medium `}>Price</Text>
                 <Text
-                  className={`text-lg font-bold ${textColor}`}
+                  className={`text-lg font-bold `}
                 >{`₹ ${tour?.cost}`}</Text>
               </View>
               <View className="space-y-2">
-                <Text className={`font-medium ${textColor}`}>
-                  Seats Available
-                </Text>
-                <Text className={`text-lg font-bold ${textColor} text-right`}>
+                <Text className={`font-medium`}>Seats Available</Text>
+                <Text className={`text-lg font-bold  text-right`}>
                   {`${tour?.seats} seats`}
                 </Text>
               </View>
             </View>
           </LinearGradient>
           <View
-            className={`flex flex-row justify-between py-3 px-4 rounded-xl mt-4 ${bgColor}`}
+            className={`flex flex-row justify-between py-3 px-4 rounded-xl mt-4 bg-white`}
           >
             <View className="space-y-2">
-              <Text className={`font-medium ${textColor}`}>Tour Name</Text>
-              <Text
-                className={`text-lg font-bold ${textColor}`}
-              >{`${tour?.name}`}</Text>
+              <Text className={`font-medium `}>Tour Name</Text>
+              <Text className={`text-lg font-bold `}>{`${tour?.name}`}</Text>
             </View>
             <View className="space-y-2">
-              <Text className={`font-medium ${textColor}`}>Booking Open</Text>
-              <Text className={`text-lg font-bold ${textColor} text-right`}>
+              <Text className={`font-medium `}>Booking Open</Text>
+              <Text className={`text-lg font-bold  text-right`}>
                 {`till 19 July`}
               </Text>
             </View>
           </View>
           <View className={`px-4 space-y-2 mt-3 ${bgColor}`}>
-            <Text className={`font-semibold text-md ${textColor}`}>
-              Description
-            </Text>
-            <Text
-              className={`text-justify tracking-wider text-md ${textColor}`}
-            >
+            <Text className={`font-semibold text-md `}>Description</Text>
+            <Text className={`text-justify tracking-wider text-md `}>
               {tour?.info}
             </Text>
           </View>
           <View className={`px-4 space-y-2 mt-3 ${bgColor}`}>
-            <Text className={`font-semibold text-md ${textColor}`}>Date</Text>
+            <Text className={`font-semibold text-md `}>Date</Text>
             <Text
-              className={`text-justify tracking-wider text-md font-semibold ${textColor}`}
+              className={`text-justify tracking-wider text-md font-semibold `}
             >
               {`${tour?.date} ( ${tour?.duration} )`}
             </Text>
@@ -140,9 +126,7 @@ const DetailsScreen = ({ params }) => {
           <View className="px-4 mt-5">
             <View className="flex flex-row justify-left items-center space-x-3">
               <Ionicons name="thumbs-up-outline" size={24} color={"green"} />
-              <Text className={`text-base ${textColor} font-bold`}>
-                What is included ?
-              </Text>
+              <Text className={`text-base  font-bold`}>What is included ?</Text>
             </View>
             <View className="px-1 mt-3 space-y-2">
               <ListComponent
@@ -170,7 +154,7 @@ const DetailsScreen = ({ params }) => {
           <View className="px-4 mt-6">
             <View className="flex flex-row justify-left items-center space-x-3">
               <Ionicons name="thumbs-down-outline" size={24} color={"red"} />
-              <Text className={`text-base ${textColor} font-bold`}>
+              <Text className={`text-base  font-bold`}>
                 What is not included ?
               </Text>
             </View>
@@ -200,9 +184,7 @@ const DetailsScreen = ({ params }) => {
           <View className="px-4 mt-6">
             <View className="flex flex-row justify-left items-center space-x-3">
               <Ionicons name="bag-check-outline" size={24} color={"green"} />
-              <Text className={`text-base ${textColor} font-bold`}>
-                Bag Pack
-              </Text>
+              <Text className={`text-base  font-bold`}>Bag Pack</Text>
             </View>
             <View className="px-1 mt-3 space-y-2">
               <ListComponent
@@ -234,9 +216,7 @@ const DetailsScreen = ({ params }) => {
                 size={24}
                 color={"green"}
               />
-              <Text className={`text-base ${textColor} font-bold`}>
-                Check In Baggage
-              </Text>
+              <Text className={`text-base  font-bold`}>Check In Baggage</Text>
             </View>
             <View className="px-1 mt-3 space-y-2">
               <ListComponent
@@ -294,11 +274,11 @@ const DetailsScreen = ({ params }) => {
         <View
           className={`flex justify-center items-center h-[350px] rounded-t-lg ${accentBgColor}`}
         >
-          <Text className={`text-xl font-semibold mt-6 ${textColor}`}>
+          <Text className={`text-xl font-semibold mt-6 `}>
             Thanks for showing interest for the tour.
           </Text>
           <Image source={approve} className=" h-40 w-40 mt-2" />
-          <Text className={`mt-2 text-lg ${textColor}`}>
+          <Text className={`mt-2 text-lg `}>
             Our team will reach out to you.
           </Text>
         </View>
@@ -317,10 +297,10 @@ const DetailsScreen = ({ params }) => {
         <View className="h-full relative">
           <View className={`flex px-4 h-[600px] rounded-t-lg ${accentBgColor}`}>
             <View>
-              <Text className={`text-lg font-semibold mt-6 ${textColor}`}>
+              <Text className={`text-lg font-semibold mt-6 `}>
                 Select Number of Seats
               </Text>
-              <Text className={`text-sm tracking-wider ${textColor}`}>
+              <Text className={`text-sm tracking-wider `}>
                 You can add family members in my profile.
               </Text>
             </View>
@@ -332,7 +312,7 @@ const DetailsScreen = ({ params }) => {
                 {tourMembers.map((member, index) => (
                   <View key={index} className="space-y-2">
                     <View className="w-full flex flex-row justify-between items-center">
-                      <Text className={`text-lg font-semibold ${textColor}`}>
+                      <Text className={`text-lg font-semibold `}>
                         {member.name}
                       </Text>
                       <Button onPress={() => handleRemoveMember(index)}>
@@ -350,7 +330,7 @@ const DetailsScreen = ({ params }) => {
                           style={{ height: 16, width: 16 }}
                           color={"green"}
                         />
-                        <Text className={`${textColor}`}>I am a Trekker</Text>
+                        <Text className={``}>I am a Trekker</Text>
                       </View>
                       <View className="flex flex-row space-x-2 justify-center items-center">
                         <Checkbox
@@ -358,7 +338,7 @@ const DetailsScreen = ({ params }) => {
                           style={{ height: 16, width: 16 }}
                           color={"green"}
                         />
-                        <Text className={`${textColor}`}>No Accommodation</Text>
+                        <Text className={``}>No Accommodation</Text>
                       </View>
                     </View>
                   </View>
@@ -368,8 +348,10 @@ const DetailsScreen = ({ params }) => {
                 <View className="mt-8 space-y-4">
                   <TextInput
                     placeholder="Enter Member Name"
-                    placeholderTextColor={colorScheme === "dark" ? "white" : "black"}
-                    className={`border-2 p-2 rounded-md h-10 font-semibold border-green-700 ${textColor}`}
+                    placeholderTextColor={
+                      colorScheme === "dark" ? "white" : "black"
+                    }
+                    className={`border-2 p-2 rounded-md h-10 font-semibold border-green-700 `}
                     value={newMember.name}
                     onChangeText={(text) =>
                       setNewMember({ ...newMember, name: text })
@@ -385,9 +367,7 @@ const DetailsScreen = ({ params }) => {
                         style={{ height: 16, width: 16 }}
                         color={"green"}
                       />
-                      <Text className={`font-semibold ${textColor}`}>
-                        Is a Trekker ?
-                      </Text>
+                      <Text className={`font-semibold `}>Is a Trekker ?</Text>
                     </View>
                     <View className="flex flex-row space-x-2 justify-start items-center">
                       <Checkbox
@@ -398,9 +378,7 @@ const DetailsScreen = ({ params }) => {
                         style={{ height: 16, width: 16 }}
                         color={"green"}
                       />
-                      <Text className={`font-bold ${textColor}`}>
-                        No Accommodation
-                      </Text>
+                      <Text className={`font-bold `}>No Accommodation</Text>
                     </View>
                   </View>
                   <View className="flex flex-row justify-end items-center px-1">
@@ -442,10 +420,8 @@ const DetailsScreen = ({ params }) => {
           <View className={`px-4 absolute bottom-0 pb-8 pt-1`}>
             <View className="flex flex-row w-full justify-between items-center">
               <View>
-                <Text className={`text-xs ${textColor}`}>Total Payable</Text>
-                <Text className={`text-xl font-bold ${textColor}`}>
-                  {`₹ 12,000`}
-                </Text>
+                <Text className={`text-xs `}>Total Payable</Text>
+                <Text className={`text-xl font-bold `}>{`₹ 12,000`}</Text>
               </View>
               <Button onPress={() => router.push("/payment")}>
                 <View className="h-10 w-40 flex justify-center items-center rounded-lg bg-green-700">

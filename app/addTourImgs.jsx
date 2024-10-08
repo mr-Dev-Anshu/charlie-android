@@ -1,4 +1,4 @@
-import { View, Text, useColorScheme } from "react-native";
+import { View, Text } from "react-native";
 import React, { useState } from "react";
 import { ScrollView, TouchableOpacity } from "react-native-gesture-handler";
 import { Ionicons } from "@expo/vector-icons";
@@ -8,8 +8,6 @@ import { Image } from "expo-image";
 import { router } from "expo-router";
 
 const addTourImgs = () => {
-  const colorScheme = useColorScheme();
-
   const [image, setImage] = useState([]);
 
   const pickImage = async () => {
@@ -28,10 +26,6 @@ const addTourImgs = () => {
   };
 
   console.log("image--------->", image);
-
-  const textColor = colorScheme === "dark" ? "text-white" : "text-black";
-  const inputTextColor = colorScheme === "dark" ? "white" : "black";
-  const bgColor = colorScheme === "dark" ? "black" : "white";
 
   return (
     <View className="px-6 pt-6 relative h-full">
@@ -55,9 +49,7 @@ const addTourImgs = () => {
             ))}
           </ScrollView>
         ) : (
-          <Text className={`${textColor}`}>
-            Selected Images Will be Shown here
-          </Text>
+          <Text>Selected Images Will be Shown here</Text>
         )}
       </View>
       <View
@@ -66,7 +58,6 @@ const addTourImgs = () => {
           bottom: 32,
           position: "absolute",
           paddingHorizontal: 24,
-          backgroundColor: bgColor,
         }}
       >
         <TouchableOpacity activeOpacity={0.8} onPress={pickImage}>

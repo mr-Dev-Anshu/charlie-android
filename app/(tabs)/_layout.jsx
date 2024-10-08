@@ -4,10 +4,8 @@ import FontAwesome6 from "@expo/vector-icons/FontAwesome6";
 import Octicons from "@expo/vector-icons/Octicons";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import Header from "@/components/common/Header";
-import { useColorScheme } from "react-native";
 
 export default function TabLayout() {
-  const colorScheme = useColorScheme();
   return (
     <Tabs
       screenOptions={({ route }) => ({
@@ -38,9 +36,7 @@ export default function TabLayout() {
             <FontAwesome6
               name={focused ? "house" : "house"}
               size={24}
-              color={
-                focused ? "green" : colorScheme === "dark" ? "white" : "black"
-              }
+              color={focused ? "green" : "black"}
             />
           ),
         }}
@@ -53,9 +49,7 @@ export default function TabLayout() {
             <FontAwesome6
               name="person-hiking"
               size={24}
-              color={
-                focused ? "green" : colorScheme === "dark" ? "white" : "black"
-              }
+              color={focused ? "green" : "black"}
             />
           ),
         }}
@@ -68,9 +62,7 @@ export default function TabLayout() {
             <Ionicons
               name={"chatbubbles"}
               size={24}
-              color={
-                focused ? "green" : colorScheme === "dark" ? "white" : "black"
-              }
+              color={focused ? "green" : "black"}
             />
           ),
         }}
@@ -83,9 +75,7 @@ export default function TabLayout() {
             <Octicons
               name={"bell-fill"}
               size={24}
-              color={
-                focused ? "green" : colorScheme === "dark" ? "white" : "black"
-              }
+              color={focused ? "green" : "black"}
             />
           ),
         }}

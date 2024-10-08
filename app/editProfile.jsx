@@ -105,11 +105,6 @@ const EditProfile = () => {
     }
   };
 
-  const colorScheme = useColorScheme();
-
-  const textColor = colorScheme === "dark" ? "#fff" : "#000";
-  const placeholderColor = "gray";
-
   return (
     <View
       style={{
@@ -117,7 +112,7 @@ const EditProfile = () => {
         flex: 1,
       }}
     >
-      <ScrollView contentContainerStyle={{ flexGrow: 1, paddingBottom:24 }}>
+      <ScrollView contentContainerStyle={{ flexGrow: 1, paddingBottom: 24 }}>
         <View className="w-full px-8">
           {error && (
             <View className="h-6">
@@ -141,7 +136,6 @@ const EditProfile = () => {
               className="text-lg font-semibold w-full mt-3 indent-3 border border-green-600 rounded-[10px] p-2"
               placeholderTextColor={placeholderColor}
               value={name}
-              style={{ color: textColor }}
             />
             <TextInput
               placeholder="Enter Date of Birth (YYYY-MM-DD)"
@@ -150,7 +144,6 @@ const EditProfile = () => {
               className="text-lg font-semibold w-full mt-3 indent-3 border border-green-600 rounded-[10px] p-2"
               placeholderTextColor={placeholderColor}
               value={dob}
-              style={{ color: textColor }}
             />
             <TextInput
               placeholder="Enter Age"
@@ -159,7 +152,6 @@ const EditProfile = () => {
               className="text-lg font-semibold w-full mt-3 indent-3 border border-green-600 rounded-[10px] p-2"
               placeholderTextColor={placeholderColor}
               value={age}
-              style={{ color: textColor }}
             />
             <TextInput
               placeholder="Gender"
@@ -169,7 +161,6 @@ const EditProfile = () => {
               className="text-lg font-semibold w-full mt-3 indent-3 border border-green-600 rounded-[10px] p-2"
               placeholderTextColor={placeholderColor}
               value={gender}
-              style={{ color: textColor }}
             />
             <TextInput
               placeholder="Enter Contact Number"
@@ -178,7 +169,6 @@ const EditProfile = () => {
               className="text-lg font-semibold w-full mt-3 indent-3 border border-green-600 rounded-[10px] p-2"
               placeholderTextColor={placeholderColor}
               value={contact}
-              style={{ color: textColor }}
             />
             <TextInput
               placeholder="Enter Emergency Contact Number"
@@ -187,7 +177,6 @@ const EditProfile = () => {
               className="text-lg font-semibold w-full mt-3 indent-3 border border-green-600 rounded-[10px] p-2"
               placeholderTextColor={placeholderColor}
               value={emergencyContact}
-              style={{ color: textColor }}
             />
             <TextInput
               placeholder="Enter Address"
@@ -195,7 +184,6 @@ const EditProfile = () => {
               className="text-lg font-semibold w-full mt-3 indent-3 border border-green-600 rounded-[10px] p-2"
               placeholderTextColor={placeholderColor}
               value={address}
-              style={{ color: textColor }}
             />
             <TextInput
               placeholder="Enter Id Proof Name"
@@ -203,7 +191,6 @@ const EditProfile = () => {
               className="text-lg font-semibold w-full mt-3 indent-3 border border-green-600 rounded-[10px] p-2"
               placeholderTextColor={placeholderColor}
               value={idProofType}
-              style={{ color: textColor }}
             />
             <TextInput
               placeholder="Enter Id Proof Number"
@@ -211,7 +198,6 @@ const EditProfile = () => {
               className="text-lg font-semibold w-full mt-3 indent-3 border border-green-600 rounded-[10px] p-2"
               placeholderTextColor={placeholderColor}
               value={identityProofNumber}
-              style={{ color: textColor }}
             />
             <TextInput
               placeholder="How do you know about us?"
@@ -219,7 +205,6 @@ const EditProfile = () => {
               className="text-lg font-semibold w-full mt-3 indent-3 border border-green-600 rounded-[10px] p-2"
               placeholderTextColor={placeholderColor}
               value={info}
-              style={{ color: textColor }}
             />
           </View>
         </View>
@@ -234,10 +219,7 @@ const EditProfile = () => {
           {loading ? (
             <ActivityIndicator size={24} color="#00ff00" />
           ) : (
-            <Text
-              className="text-center font-bold text-lg"
-              style={{ color: textColor }}
-            >
+            <Text className="text-center font-bold text-lg">
               Update Profile
             </Text>
           )}
@@ -247,12 +229,7 @@ const EditProfile = () => {
           className="w-full py-2 px-2 rounded-[10px] border-2 border-[#228B22] mt-3"
           activeOpacity={0.8}
         >
-          <Text
-            className="text-center font-bold text-lg"
-            style={{ color: textColor }}
-          >
-            Cancel
-          </Text>
+          <Text className="text-center font-bold text-lg">Cancel</Text>
         </TouchableOpacity>
       </View>
     </View>

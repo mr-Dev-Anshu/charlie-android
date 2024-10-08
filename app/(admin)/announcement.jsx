@@ -43,7 +43,9 @@ const announcement = () => {
           </View>
         </ScrollView>
       </View>
-      <View className={`bottom-28 pb-2 ${bgColor} w-full flex justify-center items-center px-2`}>
+      <View
+        className={`bottom-28 pb-2 ${bgColor} w-full flex justify-center items-center px-2`}
+      >
         <TouchableOpacity
           activeOpacity={0.7}
           onPress={() => addAnnounceMentRef?.current?.open()}
