@@ -120,7 +120,7 @@ const Login = () => {
           <Text className="font-bold text-xl text-white">Welcome to</Text>
           <Text className="font-bold text-6xl text-white">Trekies.</Text>
         </View>
-        <View className="space-y-4 mb-16 flex justify-center items-center px-6 w-full">
+        <View className="space-y-4 mb-12 flex justify-center items-center px-6 w-full">
           <TouchableOpacity activeOpacity={0.7} onPress={() => promptAsync()}>
             <View className="bg-gray-600/80 p-3 w-[400px] rounded-xl py-4 flex flex-row space-x-5 justify-center items-center">
               {loading ? (

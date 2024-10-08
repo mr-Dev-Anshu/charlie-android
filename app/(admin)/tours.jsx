@@ -3,18 +3,22 @@ import React from "react";
 import { createdTours } from "../../constants/tours";
 import TourCard from "../../components/admin/UI/TourCard";
 import { ScrollView, TouchableOpacity } from "react-native-gesture-handler";
-import { router } from "expo-router";
+import { Link, router } from "expo-router";
 
 const tours = () => {
   return (
     <View className="mt-28 h-full relative flex justify-center items-center">
       <ScrollView
-        contentContainerStyle={{ paddingHorizontal: 16, paddingBottom: 200 }}
+        contentContainerStyle={{
+          paddingHorizontal: 16,
+          paddingBottom: 200,
+          width: "100%",
+        }}
         showsVerticalScrollIndicator={false}
       >
-        <View>
+        <View className="w-full">
           {createdTours.map((tour, index) => (
-            <TourCard key={index} tour={tour} />
+              <TourCard key={index} tour={tour} />
           ))}
           {createdTours.map((tour, index) => (
             <TourCard key={index} tour={tour} />
@@ -22,7 +26,7 @@ const tours = () => {
         </View>
       </ScrollView>
       <View
-        className={`flex flex-row justify-between items-center w-full px-3 py-2 mx-1 absolute bottom-28`}
+        className={`flex flex-row justify-between items-center w-full px-3 py-2 mx-1 absolute bottom-28 bg-white`}
       >
         <TouchableOpacity
           activeOpacity={0.7}

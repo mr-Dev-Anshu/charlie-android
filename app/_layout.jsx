@@ -47,10 +47,15 @@ export default function RootLayout() {
             options={getOpt("Add Tour Images")}
           />
           <Stack.Screen name="editProfile" options={getOpt("Edit Profile")} />
+          <Stack.Screen
+            name="updateProfile"
+            options={getOpt("Update Profile")}
+          />
           <Stack.Screen name="profile" options={getOpt("My Profile")} />
           <Stack.Screen name="tourmates" options={getOpt("Tour Mates")} />
           <Stack.Screen name="details/[id]" options={getOpt("Tour Details")} />
           <Stack.Screen name="postdetails/[id]" options={getOpt("Post")} />
+          <Stack.Screen name="tour/[id]" options={getOpt("Tour")} />
           <Stack.Screen
             name="mytour/[id]"
             options={getOpt("My Tour Details")}

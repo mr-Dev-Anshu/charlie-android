@@ -5,10 +5,14 @@ import { Ionicons } from "@expo/vector-icons";
 import { deviceWidth } from "../utils/dimensions";
 import * as ImagePicker from "expo-image-picker";
 import { Image } from "expo-image";
-import { router } from "expo-router";
+import { router, useLocalSearchParams } from "expo-router";
 
 const addTourImgs = () => {
   const [image, setImage] = useState([]);
+
+  const { id } = useLocalSearchParams();
+
+  console.log(id);
 
   const pickImage = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({

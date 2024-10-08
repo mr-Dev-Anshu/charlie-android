@@ -71,7 +71,7 @@ const MyTourDetails = () => {
         )}
       </View>
       <View
-        className={`absolute bottom-2 w-full px-2 py-2 rounded-xl flex flex-row justify-between `}
+        className={`absolute bottom-2 w-full py-2 rounded-xl flex flex-row justify-between `}
       >
         {activeTab === "tourInfo" ? (
           <TouchableOpacity

@@ -3,7 +3,6 @@ import {
   Text,
   TextInput,
   TouchableOpacity,
-  useColorScheme,
   ScrollView,
 } from "react-native";
 import React, { useState } from "react";
@@ -85,9 +84,11 @@ const addTours = () => {
       );
 
       const result = await response.json();
+      console.log(result);
 
       if (response.ok) {
-        router.push("/addTourImgs");
+        const { _id } = result;
+        router.push(`/addTourImgs?id=${_id}`);
       } else {
         setError(result.message || "Failed to submit tour. Please try again.");
       }

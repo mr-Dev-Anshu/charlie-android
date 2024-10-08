@@ -10,7 +10,7 @@ const Notifications = () => {
 
   return (
     <TouchableOpacity activeOpacity={0.8}>
-      <View className={`border-2 h-32 rounded-lg p-2 mt-3`}>
+      <View className={`border-2 border-green-600 h-32 rounded-lg p-2 mt-3`}>
         <View className="flex flex-row justify-start items-center space-x-3">
           <FontAwesome6 name="bell" size={20} color={"green"} />
           <Text className={`text-base font-semibold `}>ShriShailm Trek</Text>

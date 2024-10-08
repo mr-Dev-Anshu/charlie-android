@@ -82,7 +82,7 @@ const profile = () => {
                 </View>
               </View>
               {profile && (
-                <TouchableOpacity onPress={() => router.push("/editProfile")}>
+                <TouchableOpacity onPress={() => router.push("/updateProfile")}>
                   <FontAwesome6
                     name="pen-to-square"
                     color={"green"}
@@ -141,17 +141,10 @@ const profile = () => {
           )}
           <View className="px-2">
             <View className="flex justify-center items-center">
-              <View className="flex flex-row justify-between items-center px-4 w-full">
-                <View className="flex flex-row justify-center items-center space-x-2">
-                  <FontAwesome6
-                    name="person-circle-plus"
-                    size={20}
-                    color={"green"}
-                  />
-                  <Text className="text-xl font-bold text-green-600 ml-2">
-                    Members
-                  </Text>
-                </View>
+              <View className="flex flex-row justify-between items-center px-2 w-full">
+                <Text className="text-xl font-bold text-green-600">
+                  Members
+                </Text>
                 <View className="bg-green-600 h-6 w-6 flex justify-center items-center rounded-full">
                   <Text className="text-base font-bold text-white">
                     {members.length}

@@ -10,9 +10,12 @@ import { useRouter } from "expo-router";
 import { useDispatch, useSelector } from "react-redux";
 import { setProfile } from "../redux/slices/userSlice";
 
-const EditProfile = () => {
+const UpdateProfile = () => {
   const router = useRouter();
-  const { user, profile } = useSelector((state) => state.user);
+
+  const data = useSelector((state) => state.user);
+  const { user, profile } = data;
+
   const dispatch = useDispatch();
 
   const [name, setName] = useState("");
@@ -25,65 +28,49 @@ const EditProfile = () => {
   const [loading, setLoading] = useState(false);
   const [info, setInfo] = useState("");
   const [error, setError] = useState("");
-
-  const [genderOpen, setGenderOpen] = useState(false);
   const [gender, setGender] = useState(null);
-  const [genders] = useState([
-    { label: "Male", value: "male" },
-    { label: "Female", value: "female" },
-    { label: "Other", value: "other" },
-  ]);
-
-  const [idProofOpen, setIdProofOpen] = useState(false);
   const [idProofType, setIdProofType] = useState(null);
-  const [idProofTypes] = useState([
-    { label: "Aadhar", value: "aadhar" },
-    { label: "PAN", value: "pan" },
-    { label: "Licence", value: "licence" },
-  ]);
-
-  const url = profile
-    ? "https://trakies-backend.onrender.com/api/users/updateProfile"
-    : "https://trakies-backend.onrender.com/api/users/createProfile";
 
   const handleUpdate = async () => {
     setError("");
     if (
-      !name ||
-      !user.email ||
-      !dob ||
-      !age ||
-      !gender ||
-      !contact ||
-      !emergencyContact ||
-      !address ||
-      !idProofType ||
+      !name &&
+      !dob &&
+      !age &&
+      !gender &&
+      !contact &&
+      !emergencyContact &&
+      !address &&
+      !idProofType &&
       !identityProofNumber
     ) {
-      setError("Please fill in all the fields");
+      setError("You haven't changed any field !");
       return;
     }
     setLoading(true);
     try {
-      const res = await fetch(url, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          email: user?.email,
-          name,
-          dob,
-          age,
-          gender,
-          contact,
-          emergency_contact: emergencyContact,
-          address,
-          id_type: idProofType,
-          id_number: identityProofNumber,
-          Ganesh: info,
-        }),
-      });
+      const res = await fetch(
+        "https://trakies-backend.onrender.com/api/users/updateProfile",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            email: user?.email,
+            name,
+            dob,
+            age,
+            gender,
+            contact,
+            emergency_contact: emergencyContact,
+            address,
+            id_type: idProofType,
+            id_number: identityProofNumber,
+            Ganesh: info,
+          }),
+        }
+      );
       const profileData = await res.json();
       dispatch(setProfile(profileData));
       setLoading(false);
@@ -122,72 +109,64 @@ const EditProfile = () => {
           )}
           <View>
             <TextInput
-              placeholder="Enter Name"
+              placeholder={user.name}
               textContentType="name"
               autoCapitalize="words"
               onChangeText={setName}
               className="text-lg font-semibold w-full mt-3 indent-3 border-2 border-green-600 rounded-[10px] p-2"
-              value={name}
             />
             <TextInput
-              placeholder="Enter Date of Birth (YYYY-MM-DD)"
+              placeholder={profile.dob}
               keyboardType="default"
               onChangeText={setDob}
               className="text-lg font-semibold w-full mt-3 indent-3 border-2 border-green-600 rounded-[10px] p-2"
-              value={dob}
             />
             <TextInput
-              placeholder="Enter Age"
+              placeholder={profile.age}
               keyboardType="numeric"
               onChangeText={setAge}
               className="text-lg font-semibold w-full mt-3 indent-3 border-2 border-green-600 rounded-[10px] p-2"
-              value={age}
             />
             <TextInput
-              placeholder="Gender"
+              placeholder={profile.gender}
               keyboardType="default"
               onChangeText={setGender}
               autoCapitalize="words"
               className="text-lg font-semibold w-full mt-3 indent-3 border-2 border-green-600 rounded-[10px] p-2"
-              value={gender}
             />
             <TextInput
-              placeholder="Enter Contact Number"
+              placeholder={profile.contact}
               keyboardType="phone-pad"
               onChangeText={setContact}
               className="text-lg font-semibold w-full mt-3 indent-3 border-2 border-green-600 rounded-[10px] p-2"
-              value={contact}
             />
             <TextInput
-              placeholder="Enter Emergency Contact Number"
+              placeholder={profile.emergency_contact}
               keyboardType="phone-pad"
               onChangeText={setEmergencyContact}
               className="text-lg font-semibold w-full mt-3 indent-3 border-2 border-green-600 rounded-[10px] p-2"
               value={emergencyContact}
             />
             <TextInput
-              placeholder="Enter Address"
+              placeholder={profile.address}
               onChangeText={setAddress}
               className="text-lg font-semibold w-full mt-3 indent-3 border-2 border-green-600 rounded-[10px] p-2"
               value={address}
             />
             <TextInput
-              placeholder="Enter Id Proof Name"
+              placeholder={profile.id_type}
               onChangeText={setIdProofType}
               className="text-lg font-semibold w-full mt-3 indent-3 border-2 border-green-600 rounded-[10px] p-2"
-              value={idProofType}
             />
             <TextInput
-              placeholder="Enter Id Proof Number"
+              placeholder={profile.id_number}
               onChangeText={setIdentityProofNumber}
               className="text-lg font-semibold w-full mt-3 indent-3 border-2 border-green-600 rounded-[10px] p-2"
-              value={identityProofNumber}
             />
             <TextInput
               placeholder="How do you know about us?"
               onChangeText={setInfo}
               className="text-lg font-semibold w-full mt-3 indent-3 border-2 border-green-600 rounded-[10px] p-2"
-              value={info}
             />
           </View>
         </View>
@@ -217,4 +196,4 @@ const EditProfile = () => {
   );
 };
 
-export default EditProfile;
+export default UpdateProfile;

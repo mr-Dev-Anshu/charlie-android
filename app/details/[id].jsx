@@ -109,13 +109,13 @@ const DetailsScreen = ({ params }) => {
               </Text>
             </View>
           </View>
-          <View className={`px-4 space-y-2 mt-3 ${bgColor}`}>
+          <View className={`px-4 space-y-2 mt-3 `}>
             <Text className={`font-semibold text-md `}>Description</Text>
             <Text className={`text-justify tracking-wider text-md `}>
               {tour?.info}
             </Text>
           </View>
-          <View className={`px-4 space-y-2 mt-3 ${bgColor}`}>
+          <View className={`px-4 space-y-2 mt-3 `}>
             <Text className={`font-semibold text-md `}>Date</Text>
             <Text
               className={`text-justify tracking-wider text-md font-semibold `}
@@ -272,7 +272,7 @@ const DetailsScreen = ({ params }) => {
         modalHeight={350}
       >
         <View
-          className={`flex justify-center items-center h-[350px] rounded-t-lg ${accentBgColor}`}
+          className={`flex justify-center items-center h-[350px] rounded-t-lg `}
         >
           <Text className={`text-xl font-semibold mt-6 `}>
             Thanks for showing interest for the tour.
@@ -295,7 +295,7 @@ const DetailsScreen = ({ params }) => {
         modalHeight={600}
       >
         <View className="h-full relative">
-          <View className={`flex px-4 h-[600px] rounded-t-lg ${accentBgColor}`}>
+          <View className={`flex px-4 h-[600px] rounded-t-lg `}>
             <View>
               <Text className={`text-lg font-semibold mt-6 `}>
                 Select Number of Seats
@@ -401,7 +401,7 @@ const DetailsScreen = ({ params }) => {
               )}
               {!showAddMember && (
                 <View
-                  className={`${accentBgColor} w-40 mt-4 py-2 px-2 rounded-md`}
+                  className={` w-40 mt-4 py-2 px-2 rounded-md`}
                 >
                   <Button className="bg-green-600" onPress={handleAddMember}>
                     <Ionicons

@@ -7,7 +7,6 @@ import Header from "@/components/common/Header";
 import { useColorScheme } from "react-native";
 
 export default function AdminLayout() {
-  const colorScheme = useColorScheme();
   return (
     <Tabs
       screenOptions={({ route }) => ({
@@ -28,9 +27,7 @@ export default function AdminLayout() {
             <FontAwesome6
               name="person-hiking"
               size={24}
-              color={
-                focused ? "green" : colorScheme === "dark" ? "white" : "black"
-              }
+              color={focused ? "green" : "black"}
             />
           ),
         }}
@@ -44,9 +41,7 @@ export default function AdminLayout() {
             <Ionicons
               name={focused ? "wallet" : "wallet-outline"}
               size={24}
-              color={
-                focused ? "green" : colorScheme === "dark" ? "white" : "black"
-              }
+              color={focused ? "green" : "black"}
             />
           ),
         }}
@@ -60,9 +55,7 @@ export default function AdminLayout() {
             <Ionicons
               name={focused ? "chatbubbles" : "chatbubbles-outline"}
               size={24}
-              color={
-                focused ? "green" : colorScheme === "dark" ? "white" : "black"
-              }
+              color={focused ? "green" : "black"}
             />
           ),
         }}
@@ -76,9 +69,7 @@ export default function AdminLayout() {
             <Octicons
               name={focused ? "bell-fill" : "bell"}
               size={24}
-              color={
-                focused ? "green" : colorScheme === "dark" ? "white" : "black"
-              }
+              color={focused ? "green" : "black"}
             />
           ),
         }}

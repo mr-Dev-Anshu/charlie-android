@@ -23,27 +23,15 @@ const AccomodationDetailsElement = ({ details }) => {
       </View>
       <View className="flex flex-row space-x-4 pt-2">
         <View className="flex flex-row space-x-2 justify-center items-center">
-          <Ionicons
-            name="images"
-            size={16}
-            color={textColor.includes("white") ? "white" : "green"}
-          />
+          <Ionicons name="images" size={16} color={"green"} />
           <Text className={`font-semibold `}>{`View Hotel Images`}</Text>
         </View>
         <View className="flex flex-row space-x-2 justify-center items-center">
-          <Ionicons
-            name="compass"
-            size={16}
-            color={textColor.includes("white") ? "white" : "green"}
-          />
+          <Ionicons name="compass" size={16} color={"green"} />
           <Text className={`font-semibold `}>{`View Direction`}</Text>
         </View>
       </View>
-      <View
-        className={`w-full h-[1px] ${
-          textColor.includes("white") ? "bg-white" : "bg-green-700"
-        }`}
-      />
+      <View className={`w-full h-[1px] "bg-green-700"`} />
     </View>
   );
 };

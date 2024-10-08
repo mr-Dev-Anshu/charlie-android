@@ -28,7 +28,7 @@ const MyTourCard = ({ tour }) => {  const confirmed = 0;
 
         <View className="flex flex-row justify-between px-3 mt-2">
           <View>
-            <Text className={`text-xl font-bold ${textColor}`}>
+            <Text className={`text-xl font-bold`}>
               {tour.name}
             </Text>
             <Text>{tour.duration}</Text>
