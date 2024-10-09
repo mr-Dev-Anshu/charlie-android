@@ -1,4 +1,4 @@
-import { View, Text, ScrollView, useColorScheme } from "react-native";
+import { View, Text, ScrollView } from "react-native";
 import React, { useRef } from "react";
 import Announcement from "../../components/UI/Announcement";
 import { TouchableOpacity } from "react-native-gesture-handler";
@@ -6,13 +6,8 @@ import { Ionicons } from "@expo/vector-icons";
 import { Modalize } from "react-native-modalize";
 
 const announcement = () => {
+
   const addAnnounceMentRef = useRef(null);
-
-  const colorScheme = useColorScheme();
-
-  const textColor = colorScheme === "dark" ? "text-white" : "text-black";
-  const bgColor = colorScheme === "dark" ? "bg-black" : "bg-white";
-  const accentBgColor = colorScheme === "dark" ? "bg-gray-800" : "bg-white";
 
   return (
     <>
@@ -28,23 +23,11 @@ const announcement = () => {
         >
           <View className="mt-1">
             <Announcement />
-            <Announcement />
-            <Announcement />
-            <Announcement />
-            <Announcement />
-            <Announcement />
-            <Announcement />
-            <Announcement />
-            <Announcement />
-            <Announcement />
-            <Announcement />
-            <Announcement />
-            <Announcement />
           </View>
         </ScrollView>
       </View>
       <View
-        className={`bottom-28 pb-2 ${bgColor} w-full flex justify-center items-center px-2`}
+        className={`bottom-28 pb-2 bg-white w-full flex justify-center items-center px-2`}
       >
         <TouchableOpacity
           activeOpacity={0.7}

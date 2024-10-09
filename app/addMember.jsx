@@ -25,13 +25,7 @@ const AddMember = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
-  const [genderOpen, setGenderOpen] = useState(false);
   const [gender, setGender] = useState(null);
-  const [genders, setGenders] = useState([
-    { label: "Male", value: "Male" },
-    { label: "Female", value: "Female" },
-    { label: "Other", value: "Other" },
-  ]);
 
   const handleSubmit = async () => {
     setError("");
@@ -116,7 +110,7 @@ const AddMember = () => {
                   autoCapitalize="words"
                   onChangeText={setName}
                   className="text-white text-lg font-semibold w-full mt-5 outline outline-2 outline-green-600 indent-3 border border-green-600 rounded-[10px] p-2"
-                  placeholderTextColor={"white"}
+                  placeholderTextColor={"gray"}
                   value={name}
                 />
                 <TextInput
@@ -124,7 +118,7 @@ const AddMember = () => {
                   keyboardType="numeric"
                   onChangeText={setAge}
                   className="text-white text-lg font-semibold w-full mt-5 outline outline-2 outline-green-600 indent-3 border border-green-600 rounded-[10px] p-2"
-                  placeholderTextColor={"white"}
+                  placeholderTextColor={"gray"}
                   value={age}
                 />
                 <TextInput
@@ -132,14 +126,14 @@ const AddMember = () => {
                   keyboardType="default"
                   onChangeText={setGender}
                   className="text-white text-lg font-semibold w-full mt-5 outline outline-2 outline-green-600 indent-3 border border-green-600 rounded-[10px] p-2"
-                  placeholderTextColor={"white"}
+                  placeholderTextColor={"gray"}
                   value={gender}
                 />
                 <TextInput
                   placeholder="Enter Relation"
                   onChangeText={setRelation}
                   className="text-white text-lg font-semibold w-full mt-5 outline outline-2 outline-green-600 indent-3 border border-green-600 rounded-[10px] p-2"
-                  placeholderTextColor={"white"}
+                  placeholderTextColor={"gray"}
                   value={relation}
                 />
                 <TextInput
@@ -147,7 +141,7 @@ const AddMember = () => {
                   keyboardType="phone-pad"
                   onChangeText={setContact}
                   className="text-white text-lg font-semibold w-full mt-5 outline outline-2 outline-green-600 indent-3 border border-green-600 rounded-[10px] p-2"
-                  placeholderTextColor={"white"}
+                  placeholderTextColor={"gray"}
                   value={contact}
                 />
               </View>

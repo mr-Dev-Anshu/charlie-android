@@ -267,8 +267,7 @@ const addTours = () => {
         </TouchableOpacity>
         <TouchableOpacity
           activeOpacity={0.8}
-          // onPress={submitForm}
-          onPress={() => router.push("/addTourImgs")}
+          onPress={submitForm}
           className="flex-1"
         >
           <View className="bg-green-600 py-2 rounded-lg">

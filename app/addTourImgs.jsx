@@ -30,12 +30,11 @@ const addTourImgs = () => {
     }
   };
 
-  console.log("image--------->", image);
-
   const handleTourImageUpload = async () => {
+    if(!image || image.length === 0) return;
     try {
-      const res = await uploadFilesToS3(image);
-      console.log(res);
+      const res = await uploadFilesToS3(image, id);
+      router.push(`/addBusImg?id=${id}`);
     } catch (error) {
       console.log(error);
     }
@@ -55,7 +54,7 @@ const addTourImgs = () => {
                 source={{ uri: img.uri }}
                 style={{
                   width: "100%",
-                  height: 150,
+                  height: 200,
                   borderRadius: 10,
                   marginBottom: 14,
                 }}
@@ -63,7 +62,7 @@ const addTourImgs = () => {
             ))}
           </ScrollView>
         ) : (
-          <Text>Selected Images Will be Shown here</Text>
+          <Text>Selected Tour Images</Text>
         )}
       </View>
       <View

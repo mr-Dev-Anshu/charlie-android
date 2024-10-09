@@ -12,16 +12,6 @@ const notifications = () => {
       >
         <View className="mt-1">
           <Notifications />
-          <Notifications />
-          <Notifications />
-          <Notifications />
-          <Notifications />
-          <Notifications />
-          <Notifications />
-          <Notifications />
-          <Notifications />
-          <Notifications />
-          <Notifications />
         </View>
       </ScrollView>
     </View>

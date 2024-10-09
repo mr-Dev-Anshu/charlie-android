@@ -1,19 +1,24 @@
-import { View, Text } from "react-native";
+import { View, Text, Alert } from "react-native";
 import React, { useState } from "react";
-import { TouchableOpacity } from "react-native-gesture-handler";
+import { ScrollView, TouchableOpacity } from "react-native-gesture-handler";
 import { Ionicons } from "@expo/vector-icons";
 import { deviceWidth } from "../utils/dimensions";
 import * as ImagePicker from "expo-image-picker";
 import { Image } from "expo-image";
+import { useLocalSearchParams } from "expo-router";
+import { uploadFilesToS3 } from "../utils/uploadFileHelper";
 
 const addHotelImg = () => {
   const [image, setImage] = useState([]);
+
+  const { id } = useLocalSearchParams();
+
+  console.log(id);
 
   const pickImage = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
       allowsMultipleSelection: true,
       mediaTypes: ImagePicker.MediaTypeOptions.All,
-      allowsEditing: true,
       aspect: [4, 3],
       quality: 1,
     });
@@ -25,7 +30,16 @@ const addHotelImg = () => {
     }
   };
 
-  console.log("image--------->", image);
+  const handleHotelImageUpload = async () => {
+    if(!image || image.length === 0) return;
+    try {
+      const res = await uploadFilesToS3(image, id, "bus");
+      Alert("Tour created successfully!");
+      router.push(`/(admin)/tour`);
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   return (
     <View className="px-6 pt-6 relative h-full">
@@ -41,7 +55,7 @@ const addHotelImg = () => {
                 source={{ uri: img.uri }}
                 style={{
                   width: "100%",
-                  height: 150,
+                  height: 200,
                   borderRadius: 10,
                   marginBottom: 14,
                 }}
@@ -49,7 +63,7 @@ const addHotelImg = () => {
             ))}
           </ScrollView>
         ) : (
-          <Text>Selected Images Will be Shown here</Text>
+          <Text>Selected Hotel Images</Text>
         )}
       </View>
       <View
@@ -73,6 +87,7 @@ const addHotelImg = () => {
         <TouchableOpacity
           activeOpacity={0.8}
           containerStyle={{ height: "100%" }}
+          onPress={handleHotelImageUpload}
         >
           <View className="h-12 flex justify-center items-center bg-green-600 rounded-lg">
             <Text className="text-base font-semibold text-white">Proceed</Text>
