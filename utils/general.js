@@ -1,7 +1,16 @@
-export const gradientColor = (colorScheme) => {
-  if (colorScheme === "dark") {
-    return ["rgba(10, 110, 1, 1)", "rgba(255, 255, 255, 0.2)"];
-  } else {
-    return ["rgba(255, 255, 255, 0.2)", "rgba(0, 0,0, 0)"];
-  }
+export const formatDate = (dateValue) => {
+  const date = new Date(dateValue);
+  const options = { day: "numeric", month: "short", year: "numeric" };
+  return date.toLocaleDateString("en-US", options);
+};
+
+export const calculateDuration = (startDate, endDate) => {
+  const start = new Date(startDate);
+  const end = new Date(endDate);
+
+  const diffInMilliseconds = Math.abs(end - start);
+  const diffInDays = Math.ceil(diffInMilliseconds / (1000 * 60 * 60 * 24));
+  const diffInNights = diffInDays - 1;
+
+  return `${diffInDays} days ${diffInNights} nights`;
 };

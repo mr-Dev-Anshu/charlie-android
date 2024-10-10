@@ -26,7 +26,7 @@ const profile = () => {
       console.error("User email is not available.");
       return;
     }
-
+ 
     try {
       const response = await fetch(
         `https://trakies-backend.onrender.com/api/member/get-member?email=${user.email}`,

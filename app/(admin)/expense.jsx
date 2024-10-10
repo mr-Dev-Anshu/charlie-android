@@ -10,13 +10,92 @@ import {
   TouchableOpacity,
 } from "react-native-gesture-handler";
 import DropDownPicker from "react-native-dropdown-picker";
-import ModalDropdown from "react-native-modal-dropdown";
+import { useSelector } from "react-redux";
+import * as ImagePicker from "expo-image-picker";
+import { uploadFileToS3 } from "../../utils/uploadFileHelper";
 
 const expense = () => {
+  const { tour } = useSelector((state) => state.tour);
+  const { user } = useSelector((state) => state.user);
+
+  // Transform the tour data for the dropdown
+  const toursData = tour.map((t) => {
+    return { label: t.name, value: t._id };
+  });
+
   const addExpenseDetailRef = useRef(null);
   const showExpenseDetailRef = useRef(null);
   const exportExcelSheet = useRef(null);
-  const [selectedIndex, setSelectedIndex] = useState(null);
+
+  const [open, setOpen] = useState(false);
+
+  const [expenseCategory, setExpenseCategory] = useState("");
+  const [amount, setAmount] = useState("");
+  const [note, setNote] = useState("");
+  const [image, setImage] = useState(null);
+  const [date, setDate] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+
+  const pickImage = async () => {
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.All,
+      aspect: [4, 3],
+      quality: 1,
+    });
+
+    console.log(result);
+
+    if (!result.canceled) {
+      setImage(result.assets);
+    }
+  };
+
+  // const handleAddExpense = async () => {
+  //   if (!expenseCategory || !amount || !date || !user.name) return;
+  //   setLoading(true);
+  //   const imgUrl = await uploadFileToS3(image);
+
+  //   const newExpense = {
+  //     category: expenseCategory,
+  //     amount: amount,
+  //     note: note,
+  //     reciept: imgUrl,
+  //     date: date,
+  //     name: user?.name,
+  //   };
+
+  //   console.log("data------>", newExpense);
+
+  //   fetch("https://trakies-backend.onrender.com/api/expanse/add-expanse", {
+  //     method: "POST",
+  //     headers: {
+  //       "Content-Type": "application/json",
+  //     },
+  //     body: JSON.stringify(newExpense),
+  //   })
+  //     .then((response) => response.json())
+  //     .then((data) => {
+  //       console.log(data);
+  //       setExpenseCategory("");
+  //       setAmount("");
+  //       setNote("");
+  //       setImage(null);
+  //       setDate("");
+  //       setLoading(false);
+  //       addExpenseDetailRef?.current?.close();
+  //     })
+  //     .catch((error) => {
+  //       console.error(error);
+  //       setError(error?.message);
+  //       setLoading(false);
+  //     });
+  // };
+
+  const [currentTour, setCurrentTour] = useState(toursData[0]?.value);
+  const [tours, setTours] = useState(toursData);
+
+  console.log(currentTour);
 
   const getIconName = (category) => {
     switch (category) {
@@ -31,16 +110,9 @@ const expense = () => {
       case "Miscellaneous":
         return "document-text-outline";
       default:
-        break;
+        return "help-outline";
     }
   };
-
-  const [open, setOpen] = useState(false);
-  const [value, setValue] = useState(null);
-  const [roles, setRoles] = useState([
-    { label: "Admin", value: "admin" },
-    { label: "Coordinator", value: "coordinator" },
-  ]);
 
   return (
     <>
@@ -48,8 +120,9 @@ const expense = () => {
         <View className="z-50 px-3">
           <DropDownPicker
             open={open}
-            value={value}
-            items={roles}
+            items={tours}
+            value={currentTour} // Show the selected value
+            onChangeValue={(value) => setCurrentTour(value)} // Update selected tour
             closeOnBackPressed={true}
             placeholder="Select Tour"
             zIndex={1000}
@@ -62,8 +135,7 @@ const expense = () => {
               borderColor: "#117004",
             }}
             setOpen={setOpen}
-            setValue={setValue}
-            setItems={setRoles}
+            setItems={setTours}
           />
         </View>
         <View className="flex flex-row justify-between items-center px-3 py-3">
@@ -171,95 +243,44 @@ const expense = () => {
           <Text className="text-lg font-semibold">Add Expense Details</Text>
         </View>
         <View className="px-6 pt-3 flex justify-center items-center space-y-4 ">
-          <View className="w-full">
-            <ModalDropdown
-              options={[
-                "SriSailam Tour",
-                "Hyderabad Tour",
-                "Vizag Tour",
-                "Goa Tour",
-                "Kerala Tour",
-              ]}
-              defaultValue="Select Expense Category"
-              onSelect={(index, value) => setSelectedIndex(index)}
-              style={{
-                padding: 10,
-                borderColor: "green",
-                borderRadius: 10,
-                borderWidth: 2,
-                width: "100%",
-                height: 40,
-              }}
-              textStyle={{ color: "black", fontSize: 14 }}
-              dropdownTextStyle={{
-                color: "black",
-                fontSize: 14,
-                lineHeight: 24,
-              }}
-              showsVerticalScrollIndicator={false}
-              dropdownStyle={{
-                width: 200,
-                height: 150,
-                paddingTop: 10,
-                borderColor: "green",
-              }}
-            />
-          </View>
-          <View className="w-full">
-            <ModalDropdown
-              options={[
-                "Food & Snacks",
-                "First Aid",
-                "Transportation",
-                "Accommodation",
-                "Miscellaneous",
-              ]}
-              defaultValue="Select Expense Category"
-              onSelect={(index, value) => setSelectedIndex(index)}
-              style={{
-                padding: 10,
-                borderColor: "green",
-                borderRadius: 10,
-                borderWidth: 2,
-                width: "100%",
-                height: 40,
-              }}
-              textStyle={{ color: "black", fontSize: 14 }}
-              dropdownTextStyle={{
-                color: "black",
-                fontSize: 14,
-                lineHeight: 24,
-              }}
-              showsVerticalScrollIndicator={false}
-              dropdownStyle={{ width: "100%", height: 150 }}
-            />
-          </View>
+          <TextInput
+            placeholder="Category [e.g., Food, Accomodation]..."
+            onChangeText={setExpenseCategory}
+            autoCapitalize="none"
+            keyboardType="default"
+            className="text-black text-base font-semibold px-2 lowercase w-full outline-green-700 indent-3 border-2 border-green-700 rounded-[10px] p-1.5"
+            placeholderTextColor={"#7d7d7d"}
+          />
           <TextInput
             placeholder="Note"
             multiline
             numberOfLines={2}
+            onChangeText={setNote}
             autoCapitalize="none"
-            keyboardType="email-address"
-            className="text-black text-base font-semibold lowercase w-full outline-green-700 indent-3 border-2 border-green-700 rounded-[10px] p-1.5"
+            keyboardType="default"
+            className="text-black text-base font-semibold px-2 lowercase w-full outline-green-700 indent-3 border-2 border-green-700 rounded-[10px] p-1.5"
             placeholderTextColor={"#7d7d7d"}
           />
           <TextInput
             placeholder="Date"
             autoCapitalize="none"
+            onChangeText={setDate}
             keyboardType="numbers-and-punctuation"
-            className="text-black text-base font-semibold lowercase w-full outline-green-700 indent-3 border-2 border-green-700 rounded-[10px] p-1.5"
+            className="text-black text-base font-semibold px-2 lowercase w-full outline-green-700 indent-3 border-2 border-green-700 rounded-[10px] p-1.5"
             placeholderTextColor={"#7d7d7d"}
           />
           <TextInput
             placeholder="Amount"
             autoCapitalize="none"
+            onChangeText={amount}
             keyboardType="number-pad"
-            className="text-black text-base font-semibold lowercase w-full outline-green-700 indent-3 border-2 border-green-700 rounded-[10px] p-1.5"
+            className="text-black text-base font-semibold px-2 lowercase w-full outline-green-700 indent-3 border-2 border-green-700 rounded-[10px] p-1.5"
             placeholderTextColor={"#7d7d7d"}
           />
           <TouchableOpacity
             activeOpacity={0.8}
             containerStyle={{ width: "100%" }}
+            onPress={pickImage}
           >
             <View className="h-20 flex justify-center items-center border-2 border-dashed rounded-lg mb-3 border-green-600 w-full">
               <View className="flex flex-row justify-center items-center space-x-3">
@@ -274,11 +295,18 @@ const expense = () => {
         <TouchableOpacity
           activeOpacity={0.8}
           containerStyle={{ width: "100%", paddingHorizontal: 24 }}
+          onPress={handleAddExpense}
         >
           <View className="flex justify-center items-center mt-2 bg-green-600 w-full py-2 rounded-[10px]">
-            <Text className="text-white text-lg font-semibold">
-              Add Expense
-            </Text>
+            {loading ? (
+              <Text className="text-white text-lg font-semibold">
+                Adding...
+              </Text>
+            ) : (
+              <Text className="text-white text-lg font-semibold">
+                Add Expense
+              </Text>
+            )}
           </View>
         </TouchableOpacity>
       </Modalize>

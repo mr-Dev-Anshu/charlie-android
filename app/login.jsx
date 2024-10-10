@@ -7,8 +7,8 @@ import * as WebBrowser from "expo-web-browser";
 import * as Google from "expo-auth-session/providers/google";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useDispatch } from "react-redux";
-import { setProfile, setUser } from "../redux/slices/userSlice";
-import { setRole } from "../redux/slices/userSlice";
+import { setProfile, setUser, setRole } from "../redux/slices/userSlice";
+import { setTour } from "../redux/slices/tourSlice";
 
 const androidClientId =
   "589470403357-tucvnutjfgbrjimnbiddhuf8q47fn3dv.apps.googleusercontent.com";
@@ -97,6 +97,21 @@ const Login = () => {
     }
   };
 
+  const getAllTours = async () => {
+    try {
+      const response = await fetch(
+        "https://trakies-backend.onrender.com/api/tour/get-alltours"
+      );
+      if (!response.ok) {
+        throw new Error("Failed to fetch tours");
+      }
+      const tour = await response.json();
+      dispatch(setTour(tour));
+    } catch (error) {
+      console.error("Error fetching tours:", error);
+    }
+  };
+
   useEffect(() => {
     if (response?.type === "success" && response.authentication) {
       const { accessToken } = response.authentication;
@@ -105,6 +120,10 @@ const Login = () => {
       });
     }
   }, [response]);
+
+  useEffect(() => {
+    getAllTours();
+  }, []);
 
   return (
     <View className="h-full w-full flex justify-center items-center ">

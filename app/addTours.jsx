@@ -19,6 +19,7 @@ const addTours = () => {
   const [budget, setBudget] = useState("");
   const [location, setLocation] = useState("");
   const [description, setDescription] = useState("");
+  const [difficulty, setDifficulty] = useState("");
   const [totalSeats, setTotalSeats] = useState("");
   const [distance, setDistance] = useState("");
   const [startDate, setStartDate] = useState("");
@@ -43,7 +44,8 @@ const addTours = () => {
       !startDate ||
       !endDate ||
       !bookingCloseDate ||
-      !costPerPerson
+      !costPerPerson ||
+      !difficulty
     ) {
       setError("Please fill in all required fields.");
       return;
@@ -69,6 +71,7 @@ const addTours = () => {
         not_included: notIncluded,
         back_pack: backPack,
         check_in_baggage: checkInBaggage,
+        difficulty,
       };
 
       const response = await fetch(
@@ -145,7 +148,14 @@ const addTours = () => {
               placeholderTextColor={"gray"}
               onChangeText={setDescription}
               multiline
-              className={`border-2 mb-3 w-full border-green-600 rounded-lg placeholder:text-base placeholder:font-semibold px-3 flex justify-start items-start h-24 `}
+              className={`border-2 mb-3 w-full border-green-600 rounded-lg placeholder:text-base placeholder:font-semibold px-3 h-24 `}
+            />
+            <TextInput
+              placeholder="Difficulty [e.g., Easy, Medium, Hard]"
+              value={difficulty}
+              placeholderTextColor={"gray"}
+              onChangeText={setDifficulty}
+              className={`border-2 mb-3 w-full border-green-600 rounded-lg placeholder:text-base placeholder:font-semibold px-3`}
             />
             <TextInput
               placeholder="Total Seats"
