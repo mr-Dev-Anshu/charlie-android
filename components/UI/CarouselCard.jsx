@@ -11,7 +11,7 @@ const CarouselCard = ({ tour }) => {
 
   return (
     <Link push href={`/details/${tour._id}`} className="ml-5 ">
-      <View className={`h-[430px] w-80 rounded-xl relative `}>
+      <View className={`h-[430px] w-72 rounded-xl relative `}>
         <View className="h-full w-full rounded-xl overflow-hidden bg-white  shadow-xl shadow-black/50 ">
           <View className="h-[200px] w-full">
             <Carousel
@@ -59,8 +59,8 @@ const CarouselCard = ({ tour }) => {
             </View>
           </View>
         </View>
-        <View className="absolute -bottom-8 w-full z-50">
-          <View className="bg-green-700 shadow-md shadow-green-800/40 mx-12 flex justify-center items-center py-4 rounded-lg">
+        <View className="absolute -bottom-5 w-full z-50">
+          <View className="bg-green-700 shadow-md shadow-green-800/40 mx-12 flex justify-center items-center py-3 rounded-lg">
             <Text className="text-white">Explore more</Text>
           </View>
         </View>

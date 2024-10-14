@@ -1,47 +1,88 @@
-import { View, Text } from "react-native";
+import { View, Text, ScrollView, TouchableOpacity } from "react-native";
 import React from "react";
 import { createdTours } from "../../constants/tours";
 import TourCard from "../../components/admin/UI/TourCard";
-import { ScrollView, TouchableOpacity } from "react-native-gesture-handler";
-import { Link, router } from "expo-router";
+import { router } from "expo-router";
 
-const tours = () => {
+const Tours = () => {
   return (
-    <View className="mt-28 h-full relative flex justify-center items-center">
+    <View
+      style={{
+        flex: 1, 
+        marginTop: 112,
+        justifyContent: "center",
+        alignItems: "center",
+        position: "relative",
+      }}
+      >
       <ScrollView
         contentContainerStyle={{
+          flexGrow: 1, 
+          justifyContent: "center",
+          alignItems: "center",
           paddingHorizontal: 16,
           paddingBottom: 200,
-          width: "100%",
+          paddingHorizontal:16
         }}
         showsVerticalScrollIndicator={false}
       >
-        <View className="w-full">
-          {createdTours.map((tour, index) => (
-              <TourCard key={index} tour={tour} />
-          ))}
+        <View style={{ width: "100%", alignItems: "center" }}>
           {createdTours.map((tour, index) => (
             <TourCard key={index} tour={tour} />
           ))}
         </View>
       </ScrollView>
       <View
-        className={`flex flex-row justify-between items-center w-full px-3 py-2 mx-1 absolute bottom-28 bg-white`}
+        style={{
+          flexDirection: "row",
+          justifyContent: "center",
+          alignItems: "center",
+          width: "100%",
+          paddingHorizontal: 12,
+          paddingVertical: 8,
+          position: "absolute",
+          bottom:0,
+          backgroundColor: "white",
+          gap:24
+        }}
       >
         <TouchableOpacity
           activeOpacity={0.7}
           onPress={() => router.push("/addTours")}
         >
-          <View className="bg-green-600 py-2 rounded-xl flex justify-center items-center w-[180px]">
-            <Text className="text-white text-lg font-semibold">Add Tour</Text>
+          <View
+            style={{
+              backgroundColor: "green",
+              paddingVertical: 8,
+              borderRadius: 10,
+              width: 160,
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+          >
+            <Text style={{ color: "white", fontSize: 18, fontWeight: "600" }}>
+              Add Tour
+            </Text>
           </View>
         </TouchableOpacity>
+
         <TouchableOpacity
           activeOpacity={0.7}
           onPress={() => router.push("/addRoles")}
         >
-          <View className="bg-green-600 py-2 rounded-xl flex justify-center items-center w-[180px]">
-            <Text className="text-white text-lg font-semibold">Add Roles</Text>
+          <View
+            style={{
+              backgroundColor: "green",
+              paddingVertical: 8,
+              borderRadius: 10,
+              width: 160,
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+          >
+            <Text style={{ color: "white", fontSize: 18, fontWeight: "600" }}>
+              Add Roles
+            </Text>
           </View>
         </TouchableOpacity>
       </View>
@@ -49,4 +90,4 @@ const tours = () => {
   );
 };
 
-export default tours;
+export default Tours;

@@ -23,7 +23,7 @@ const Header = () => {
   };
 
   return (
-    <View className="absolute mt-[50px] w-full px-2 h-[60px]">
+    <View className="absolute mt-[50px] w-full px-4 h-[60px]">
       <View
         className={` h-full py-3 flex justify-between items-center flex-row px-4 shadow-xl shadow-black bg-white rounded-lg`}
       >

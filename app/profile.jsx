@@ -27,7 +27,7 @@ const profile = () => {
       console.error("User email is not available.");
       return;
     }
- 
+
     try {
       const response = await fetch(
         `https://trakies-backend.onrender.com/api/member/get-member?email=${user.email}`,
@@ -60,7 +60,7 @@ const profile = () => {
       <ScrollView
         className="h-full w-full py-2"
         showsVerticalScrollIndicator={false}
-        contentContainerStyle={{ paddingBottom: 56 }}
+        contentContainerStyle={{ paddingBottom: 56, paddingHorizontal: 8 }}
       >
         <View className="mt-3 space-y-5">
           <LinearGradient
@@ -95,7 +95,10 @@ const profile = () => {
           </LinearGradient>
           {profile ? (
             <View>
-              <LabelValue label={"Date Of Birth"} value={formatDate(profile.dob)} />
+              <LabelValue
+                label={"Date Of Birth"}
+                value={formatDate(profile.dob)}
+              />
               <LabelValue label={"Age"} value={profile.age} />
               <LabelValue label={"Gender"} value={profile.gender} />
               <LabelValue label={"Contact No"} value={profile.contact} />
@@ -174,12 +177,12 @@ const profile = () => {
           </View>
         </View>
       </ScrollView>
-      {role && (
+      {(role !== undefined || role) && (
         <View className="h-12 w-full">
           <TouchableOpacity
             activeOpacity={0.8}
             onPress={() => router.push("/(admin)/tours")}
-            className="flex justify-center items-center h-full"
+            className="flex justify-center items-center h-full px-12"
           >
             <View className="fixed bottom-4 w-full h-full px-6 flex justify-between items-center bg-green-800 py-3 rounded-xl flex-row">
               <Ionicons name="lock-closed" color={"white"} size={24} />

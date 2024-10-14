@@ -22,7 +22,6 @@ export default function TabLayout() {
           display: "flex",
           justifyContent: "center",
           alignItems: "center",
-          borderTopColor: "green",
           paddingVertical: 10,
         },
         header: () => <Header />,

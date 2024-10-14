@@ -1,14 +1,13 @@
 import { ActivityIndicator, Text, TouchableOpacity, View } from "react-native";
 import { Image } from "expo-image";
 import React, { useEffect, useState } from "react";
-import { useRouter } from "expo-router";
+import { router } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
 import * as WebBrowser from "expo-web-browser";
 import * as Google from "expo-auth-session/providers/google";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useDispatch } from "react-redux";
 import { setProfile, setUser, setRole } from "../redux/slices/userSlice";
-import { setTour } from "../redux/slices/tourSlice";
 
 const androidClientId =
   "589470403357-tucvnutjfgbrjimnbiddhuf8q47fn3dv.apps.googleusercontent.com";
@@ -25,7 +24,6 @@ const Login = () => {
   const [loading, setLoading] = useState(false);
 
   const [request, response, promptAsync] = Google.useAuthRequest(config);
-  const router = useRouter();
 
   const storeUserData = async (user) => {
     try {
@@ -120,28 +118,22 @@ const Login = () => {
           <Text className="font-bold text-xl text-white">Welcome to</Text>
           <Text className="font-bold text-6xl text-white">Trekies.</Text>
         </View>
-        <View className="space-y-4 mb-12 flex justify-center items-center px-6 w-full">
-          <TouchableOpacity activeOpacity={0.7} onPress={() => promptAsync()}>
-            <View className="bg-gray-600/80 p-3 w-[400px] rounded-xl py-4 flex flex-row space-x-5 justify-center items-center">
-              {loading ? (
-                <ActivityIndicator size={24} color="white" />
-              ) : (
-                <View className="flex flex-row justify-center items-center space-x-5">
-                  <Ionicons name="logo-google" size={24} color="white" />
-                  <Text className="text-white font-bold">
-                    Login with Google
-                  </Text>
-                </View>
-              )}
-            </View>
-          </TouchableOpacity>
-          <TouchableOpacity onPress={() => router.push("/(tabs)")}>
-            <View className="bg-gray-600/80 p-3 w-[400px] rounded-xl py-4 flex flex-row space-x-5 justify-center items-center">
-              <Ionicons name="person-circle-outline" size={24} color="white" />
-              <Text className="text-white font-bold">Login with Role</Text>
-            </View>
-          </TouchableOpacity>
-        </View>
+        <TouchableOpacity
+          activeOpacity={0.7}
+          onPress={() => promptAsync()}
+          className="w-full flex justify-center items-center mb-4 px-8"
+        >
+          <View className="bg-gray-600/80 w-full rounded-xl py-4 flex flex-row space-x-5 justify-center items-center">
+            {loading ? (
+              <ActivityIndicator size={24} color="white" />
+            ) : (
+              <View className="flex flex-row justify-center items-center space-x-5">
+                <Ionicons name="logo-google" size={24} color="white" />
+                <Text className="text-white font-bold">Login with Google</Text>
+              </View>
+            )}
+          </View>
+        </TouchableOpacity>
       </View>
     </View>
   );

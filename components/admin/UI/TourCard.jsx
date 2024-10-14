@@ -8,7 +8,7 @@ import { Link, router } from "expo-router";
 const TourCard = ({ tour }) => {
   return (
     <Link className="w-full flex-1 mt-3" push href={`/tour/${tour.id}`} >
-      <View className="flex flex-row justify-between h-[150px] w-[390px] bg-white shadow-xl shadow-black rounded-lg mt-3 p-2 ">
+      <View className="flex flex-row justify-between h-[150px] w-[360px] bg-white shadow-xl shadow-black rounded-lg mt-3 p-2 ">
         <View>
           <Text className="text-xl font-bold text-gray-700">{tour.name}</Text>
           <View className="flex flex-row mt-4 space-x-2 justify-start items-center">

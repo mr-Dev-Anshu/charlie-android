@@ -18,15 +18,16 @@ import Checkbox from "expo-checkbox";
 import Carousel from "react-native-reanimated-carousel";
 import CarouselImageRender from "../../components/UI/CarouselImageRender.jsx";
 import { formatDate } from "../../utils/general.js";
+import { StatusBar } from "expo-status-bar";
+import { useSelector } from "react-redux";
 
 const width = Dimensions.get("window").width;
 
 const DetailsScreen = ({ params }) => {
   const { id } = useLocalSearchParams();
+  const { tour } = useSelector((state) => state.tour);
 
-  const [tour, setTour] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const [tourData, setTourData] = useState(null);
 
   const [tourMembers, setTourMembers] = useState(members);
   const [showAddMember, setShowAddMember] = useState(false);
@@ -38,27 +39,10 @@ const DetailsScreen = ({ params }) => {
   });
 
   useEffect(() => {
-    const fetchData = async () => {
-      setLoading(true);
-      setError(null);
-      try {
-        const response = await fetch(
-          `https://trakies-backend.onrender.com/api/tour/get-tour?id=${id}`
-        );
-        if (!response.ok) {
-          throw new Error("Failed to fetch tour data");
-        }
-        const data = await response.json();
-        setTour(data[0]);
-      } catch (error) {
-        setError(error.message);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchData();
-  }, [id]);
+    const t = tour.find((tourData) => tourData._id === id);
+    setTourData(t);
+    console.log(t);
+  }, []);
 
   const handleSaveMember = () => {
     if (!newMember.name) {
@@ -84,11 +68,17 @@ const DetailsScreen = ({ params }) => {
   const interestedRef = useRef(null);
   const reserveRef = useRef(null);
 
-  const images = tour?.images.filter((i) => !i.type).map((i) => i.url);
+  const images = tourData?.images.filter((i) => !i.type).map((i) => i.url);
 
   return (
     <>
       <ScrollView className="flex h-full">
+        <StatusBar
+          style="dark"
+          backgroundColor="#fff"
+          translucent={true}
+          animated
+        />
         <Carousel
           loop
           width={width}
@@ -99,7 +89,7 @@ const DetailsScreen = ({ params }) => {
           scrollAnimationDuration={1000}
           renderItem={CarouselImageRender}
         />
-        <View className="px-2 mt-4 pb-8 relative">
+        <View className="px-4 mt-4 pb-8 relative">
           <LinearGradient
             start={{ x: 0, y: 0 }}
             end={{ x: 1, y: 0 }}
@@ -113,12 +103,12 @@ const DetailsScreen = ({ params }) => {
                 <Text className={`font-medium `}>Price</Text>
                 <Text
                   className={`text-lg font-bold `}
-                >{`₹ ${tour?.tour_cost}`}</Text>
+                >{`₹ ${tourData?.tour_cost}`}</Text>
               </View>
               <View className="space-y-2">
                 <Text className={`font-medium`}>Seats Available</Text>
                 <Text className={`text-lg font-bold  text-right`}>
-                  {`${tour?.total_seats} seats`}
+                  {`${tourData?.total_seats} seats`}
                 </Text>
               </View>
             </View>
@@ -128,19 +118,21 @@ const DetailsScreen = ({ params }) => {
           >
             <View className="space-y-2">
               <Text className={`font-medium `}>Tour Name</Text>
-              <Text className={`text-lg font-bold `}>{`${tour?.name}`}</Text>
+              <Text
+                className={`text-lg font-bold `}
+              >{`${tourData?.name}`}</Text>
             </View>
             <View className="space-y-2">
               <Text className={`font-medium `}>Booking Close</Text>
               <Text className={`text-lg font-bold  text-right`}>
-                {`${formatDate(tour?.booking_close)}`}
+                {`${formatDate(tourData?.booking_close)}`}
               </Text>
             </View>
           </View>
           <View className={`px-4 space-y-2 mt-3 `}>
             <Text className={`font-semibold text-md `}>Description</Text>
             <Text className={`text-justify tracking-wider text-md `}>
-              {tour?.description}
+              {tourData?.description}
             </Text>
           </View>
           <View className={`px-4 space-y-2 mt-3 `}>
@@ -148,8 +140,8 @@ const DetailsScreen = ({ params }) => {
             <Text
               className={`text-justify tracking-wider text-md font-semibold `}
             >
-              {`${formatDate(tour?.tour_start)} to ${formatDate(
-                tour?.tour_end
+              {`${formatDate(tourData?.tour_start)} to ${formatDate(
+                tourData?.tour_end
               )}`}
             </Text>
           </View>
@@ -159,7 +151,7 @@ const DetailsScreen = ({ params }) => {
               <Text className={`text-base  font-bold`}>What is included ?</Text>
             </View>
             <View className="px-1 mt-3 space-y-2">
-              {tour?.include.split(",").map((i, idx) => {
+              {tourData?.include.split(",").map((i, idx) => {
                 return (
                   <ListComponent
                     icon="checkmark-circle"
@@ -179,7 +171,7 @@ const DetailsScreen = ({ params }) => {
               </Text>
             </View>
             <View className="px-1 mt-3 space-y-2">
-              {tour?.include.split(",").map((i, idx) => {
+              {tourData?.include.split(",").map((i, idx) => {
                 return (
                   <ListComponent
                     icon="close-circle-outline"
@@ -197,7 +189,7 @@ const DetailsScreen = ({ params }) => {
               <Text className={`text-base  font-bold`}>Bag Pack</Text>
             </View>
             <View className="px-1 mt-3 space-y-2">
-              {tour?.back_pack?.split(",").map((i, idx) => {
+              {tourData?.back_pack?.split(",").map((i, idx) => {
                 return (
                   <ListComponent
                     icon="checkmark-circle-outline"
@@ -219,7 +211,7 @@ const DetailsScreen = ({ params }) => {
               <Text className={`text-base  font-bold`}>Check In Baggage</Text>
             </View>
             <View className="px-1 mt-3 space-y-2">
-              {tour?.check_in_baggage?.split(",").map((i, idx) => {
+              {tourData?.check_in_baggage?.split(",").map((i, idx) => {
                 return (
                   <ListComponent
                     icon="checkmark-circle-outline"
@@ -233,12 +225,12 @@ const DetailsScreen = ({ params }) => {
           </View>
         </View>
       </ScrollView>
-      <View className="h-fit mb-5 flex flex-row justify-between items-center w-full px-6 space-x-4">
+      <View className="h-fit mb-5 flex flex-row justify-center items-center w-full px-6 space-x-6">
         <TouchableOpacity
           onPress={() => interestedRef.current?.open()}
           activeOpacity={0.8}
         >
-          <View className=" bg-slate-500 w-[180px] rounded-xl py-4 ">
+          <View className=" bg-slate-500 w-[160px] rounded-xl py-3 ">
             <Text className="text-white text-center text-md font-semibold">
               Interested
             </Text>
@@ -248,7 +240,7 @@ const DetailsScreen = ({ params }) => {
           onPress={() => reserveRef.current?.open()}
           activeOpacity={0.8}
         >
-          <View className="py-4 bg-green-700 w-[180px] rounded-xl">
+          <View className="py-3 bg-green-700 w-[160px] rounded-xl">
             <Text className="text-center text-white font-semibold">
               Reserve Seat
             </Text>
@@ -265,7 +257,7 @@ const DetailsScreen = ({ params }) => {
           className={`flex justify-center items-center h-[350px] rounded-t-lg `}
         >
           <Text className={`text-xl font-semibold mt-6 `}>
-            Thanks for showing interest for the tour.
+            Thanks for showing interest for the tourData.
           </Text>
           <Image source={approve} className=" h-40 w-40 mt-2" />
           <Text className={`mt-2 text-lg `}>

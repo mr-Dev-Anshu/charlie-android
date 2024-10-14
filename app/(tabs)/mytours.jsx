@@ -3,10 +3,17 @@ import React from "react";
 import { tours } from "../../constants/tours.js";
 import MyTourCard from "../../components/UI/MyTourCard";
 import { ScrollView } from "react-native-gesture-handler";
+import { StatusBar } from "expo-status-bar";
 
 const mytours = () => {
   return (
     <View className="mt-24 h-full w-full flex justify-center items-center">
+      <StatusBar
+        style="dark"
+        backgroundColor="#fff"
+        translucent={true}
+        animated
+      />
       <ScrollView
         showsVerticalScrollIndicator={false}
         contentContainerStyle={{
@@ -14,6 +21,8 @@ const mytours = () => {
           display: "flex",
           justifyConten: "center",
           alignItems: "center",
+          paddingBottom: 60,
+          paddingHorizontal: 4,
         }}
       >
         <View className="h-full w-full flex justify-center items-center mt-4 pb-28">

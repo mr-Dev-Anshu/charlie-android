@@ -5,13 +5,14 @@ import { FontAwesome6, Ionicons } from "@expo/vector-icons";
 import CarouselImageRender from "./CarouselImageRender";
 import Carousel from "react-native-reanimated-carousel";
 
-const MyTourCard = ({ tour }) => {  const confirmed = 0; 
+const MyTourCard = ({ tour }) => {
+  const confirmed = 0;
   const pending = 1;
 
   return (
     <Link href={`/mytour/${tour.id}`} className="mt-4">
       <View
-        className={`w-[390px] h-[470px] mt-5 rounded-xl overflow-hidden shadow-xl shadow-black/50 border bg-white`}
+        className={`w-[360px] h-[470px] mt-5 rounded-xl overflow-hidden bg-white shadow-xl shadow-black/70 `}
       >
         <View className="h-[256px] w-full">
           <Carousel
@@ -28,9 +29,7 @@ const MyTourCard = ({ tour }) => {  const confirmed = 0;
 
         <View className="flex flex-row justify-between px-3 mt-2">
           <View>
-            <Text className={`text-xl font-bold`}>
-              {tour.name}
-            </Text>
+            <Text className={`text-xl font-bold`}>{tour.name}</Text>
             <Text>{tour.duration}</Text>
           </View>
 

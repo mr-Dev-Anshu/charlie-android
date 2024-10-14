@@ -45,7 +45,7 @@ const community = () => {
           contentContainerStyle={{ paddingBottom: 10 }}
           showsVerticalScrollIndicator={false}
         >
-          <View className="px-4 pt-16">
+          <View className="px-8 pt-16">
             {post.map((post, index) => (
               <PostComponent key={index} post={post} />
             ))}

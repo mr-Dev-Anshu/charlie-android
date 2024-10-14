@@ -11,7 +11,7 @@ const PostComponent = ({ post }) => {
       onPress={() => router.push("/postdetails/2")}
     >
       <View
-        className={`h-44 mb-4 px-2 py-2 shadow-sm shadow-black/30 rounded-lg `}
+        className={`h-44 mb-4 px-2 py-2 shadow-xl shadow-black/70 bg-white rounded-lg `}
       >
         <Text className={`h-10 `}>{shorten(post?.description, 100)}</Text>
         <View className="flex flex-row w-full justify-around mt-2">

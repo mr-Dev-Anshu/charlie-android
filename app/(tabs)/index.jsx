@@ -6,9 +6,9 @@ import { View } from "react-native";
 import { useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { setTour } from "@/redux/slices/tourSlice";
+import { StatusBar } from "expo-status-bar";
 
 export default function HomeScreen() {
-
   const dispatch = useDispatch();
 
   const getAllTours = async () => {
@@ -25,13 +25,19 @@ export default function HomeScreen() {
       console.error("Error fetching tours:", error);
     }
   };
-  
+
   useEffect(() => {
     getAllTours();
   }, []);
 
   return (
     <SafeAreaView>
+      <StatusBar
+        style="dark"
+        backgroundColor="#fff"
+        translucent={true}
+        animated
+      />
       <View className="flex h-full space-y-5 relative">
         <Image source={v1} className="h-96 top-0 w-full" />
         <CarouselComponent />
