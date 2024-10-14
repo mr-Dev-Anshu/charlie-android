@@ -40,10 +40,10 @@ export const uploadFilesToS3 = async (files, id = 12, type) => {
         },
       });
 
-      console.log(
-        `File ${file.fileName} uploaded successfully`,
-        uploadResponse
-      );
+      // console.log(
+      //   `File ${file.fileName} uploaded successfully`,
+      //   uploadResponse
+      // );
 
       if (uploadResponse.status === 200) {
         const newImage = await axios.post(
@@ -88,7 +88,7 @@ export const uploadFileToS3 = async (file) => {
 
     const result = await response.json();
     const presignedUrl = result;
-    console.log(`Pre-signed URL for ${file.fileName}: `, presignedUrl);
+    // console.log(`Pre-signed URL for ${file.fileName}: `, presignedUrl);
 
     const fileData = await FileSystem.readAsStringAsync(file.uri, {
       encoding: FileSystem.EncodingType.Base64,
