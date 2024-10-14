@@ -5,7 +5,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { deviceWidth } from "../utils/dimensions";
 import * as ImagePicker from "expo-image-picker";
 import { Image } from "expo-image";
-import { useLocalSearchParams } from "expo-router";
+import { router, useLocalSearchParams } from "expo-router";
 import { uploadFilesToS3 } from "../utils/uploadFileHelper";
 
 const addHotelImg = () => {
@@ -13,7 +13,8 @@ const addHotelImg = () => {
 
   const { id } = useLocalSearchParams();
 
-  console.log(id);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
 
   const pickImage = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
@@ -23,26 +24,36 @@ const addHotelImg = () => {
       quality: 1,
     });
 
-    console.log(result);
-
     if (!result.canceled) {
       setImage(result.assets);
+    } else {
+      setError("Image not selected! Try again...");
     }
   };
 
   const handleHotelImageUpload = async () => {
-    if(!image || image.length === 0) return;
+    if (!image || image.length === 0) {
+      setError("Image not selected!");
+      return;
+    }
+    setLoading(true);
     try {
-      const res = await uploadFilesToS3(image, id, "bus");
-      Alert("Tour created successfully!");
+      await uploadFilesToS3(image, id, "hotel");
       router.push(`/(admin)/tour`);
     } catch (error) {
       console.log(error);
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
     <View className="px-6 pt-6 relative h-full">
+      <View className="w-full flex justify-center items-center">
+        {error && (
+          <Text className="text-base font-semibold text-red-500">{error}</Text>
+        )}
+      </View>
       <View className="flex justify-center items-center h-[80%] w-full border-2 border-green-600 rounded-xl">
         {image.length > 0 ? (
           <ScrollView
@@ -63,7 +74,7 @@ const addHotelImg = () => {
             ))}
           </ScrollView>
         ) : (
-          <Text>Selected Hotel Images</Text>
+          <Text>Select Hotel Images</Text>
         )}
       </View>
       <View
@@ -90,7 +101,9 @@ const addHotelImg = () => {
           onPress={handleHotelImageUpload}
         >
           <View className="h-12 flex justify-center items-center bg-green-600 rounded-lg">
-            <Text className="text-base font-semibold text-white">Proceed</Text>
+            <Text className="text-base font-semibold text-white">
+              {loading ? "Uploading..." : "Proceed"}
+            </Text>
           </View>
         </TouchableOpacity>
       </View>

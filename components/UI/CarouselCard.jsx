@@ -10,7 +10,7 @@ const CarouselCard = ({ tour }) => {
   const images = tour.images.map((i) => i.url);
 
   return (
-    <Link push href={`/details/${tour.id}`} className="ml-5 ">
+    <Link push href={`/details/${tour._id}`} className="ml-5 ">
       <View className={`h-[430px] w-80 rounded-xl relative `}>
         <View className="h-full w-full rounded-xl overflow-hidden bg-white  shadow-xl shadow-black/50 ">
           <View className="h-[200px] w-full">
@@ -51,7 +51,7 @@ const CarouselCard = ({ tour }) => {
             </View>
             <View className="flex flex-row space-x-3">
               <FontAwesome6 name="route" size={16} color="green" />
-              <Text>{tour.distance}</Text>
+              <Text>{`${tour.distance} Km`}</Text>
             </View>
             <View className="flex flex-row space-x-3">
               <Ionicons name="person-outline" size={16} color="green" />

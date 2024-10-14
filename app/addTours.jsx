@@ -15,6 +15,7 @@ const addTours = () => {
   const { user } = useSelector((state) => state.user);
 
   const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
   const [tourName, setTourName] = useState("");
   const [budget, setBudget] = useState("");
   const [location, setLocation] = useState("");
@@ -50,7 +51,7 @@ const addTours = () => {
       setError("Please fill in all required fields.");
       return;
     }
-
+    setLoading(true);
     try {
       setError("");
 
@@ -87,7 +88,24 @@ const addTours = () => {
       );
 
       const result = await response.json();
-      console.log(result);
+
+      const notificationData = {
+        title: `Buckle up! New tour: ${tourName}`,
+        id: result._id,
+      };
+
+      const notify = await fetch(
+        "https://trakies-backend.onrender.com/api/notification/create",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(notificationData),
+        }
+      );
+
+      await notify.json();
 
       if (response.ok) {
         const { _id } = result;
@@ -98,6 +116,8 @@ const addTours = () => {
     } catch (err) {
       console.error("Error submitting tour:", err);
       setError("Error submitting tour. Please try again.");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -144,18 +164,19 @@ const addTours = () => {
             />
             <TextInput
               placeholder="Description"
+              textAlignVertical="top"
               value={description}
               placeholderTextColor={"gray"}
               onChangeText={setDescription}
               multiline
-              className={`border-2 mb-3 w-full border-green-600 rounded-lg placeholder:text-base placeholder:font-semibold px-3 h-24 `}
+              className={`border-2 mb-3 w-full border-green-600 rounded-lg placeholder:text-base placeholder:font-semibold px-3 h-24 py-2 `}
             />
             <TextInput
               placeholder="Difficulty [e.g., Easy, Medium, Hard]"
               value={difficulty}
               placeholderTextColor={"gray"}
               onChangeText={setDifficulty}
-              className={`border-2 mb-3 w-full border-green-600 rounded-lg placeholder:text-base placeholder:font-semibold px-3`}
+              className={`border-2 mb-3 w-full border-green-600 rounded-lg placeholder:text-base placeholder:font-semibold py-2 px-3`}
             />
             <TextInput
               placeholder="Total Seats"
@@ -282,7 +303,7 @@ const addTours = () => {
         >
           <View className="bg-green-600 py-2 rounded-lg">
             <Text className="text-center text-white font-bold text-lg">
-              Submit
+              {loading ? "Uploading..." : "Proceed"}
             </Text>
           </View>
         </TouchableOpacity>

@@ -1,6 +1,6 @@
 import { View, Text, Alert, Dimensions } from "react-native";
 import Button from "react-native-button";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { router, useLocalSearchParams } from "expo-router";
 import { members, tours } from "../../constants/tours.js";
 import { Image } from "expo-image";
@@ -17,11 +17,17 @@ import approve from "../../assets/approve.png";
 import Checkbox from "expo-checkbox";
 import Carousel from "react-native-reanimated-carousel";
 import CarouselImageRender from "../../components/UI/CarouselImageRender.jsx";
+import { formatDate } from "../../utils/general.js";
 
 const width = Dimensions.get("window").width;
 
 const DetailsScreen = ({ params }) => {
   const { id } = useLocalSearchParams();
+
+  const [tour, setTour] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
   const [tourMembers, setTourMembers] = useState(members);
   const [showAddMember, setShowAddMember] = useState(false);
   const [newMember, setNewMember] = useState({
@@ -30,6 +36,29 @@ const DetailsScreen = ({ params }) => {
     isTrekker: false,
     noAccommodation: false,
   });
+
+  useEffect(() => {
+    const fetchData = async () => {
+      setLoading(true);
+      setError(null);
+      try {
+        const response = await fetch(
+          `https://trakies-backend.onrender.com/api/tour/get-tour?id=${id}`
+        );
+        if (!response.ok) {
+          throw new Error("Failed to fetch tour data");
+        }
+        const data = await response.json();
+        setTour(data[0]);
+      } catch (error) {
+        setError(error.message);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, [id]);
 
   const handleSaveMember = () => {
     if (!newMember.name) {
@@ -55,7 +84,7 @@ const DetailsScreen = ({ params }) => {
   const interestedRef = useRef(null);
   const reserveRef = useRef(null);
 
-  const tour = tours.find((tour) => tour.id === Number(id));
+  const images = tour?.images.filter((i) => !i.type).map((i) => i.url);
 
   return (
     <>
@@ -65,7 +94,7 @@ const DetailsScreen = ({ params }) => {
           width={width}
           height={288}
           autoPlay={true}
-          data={tour.images}
+          data={images}
           autoPlayInterval={2000}
           scrollAnimationDuration={1000}
           renderItem={CarouselImageRender}
@@ -84,12 +113,12 @@ const DetailsScreen = ({ params }) => {
                 <Text className={`font-medium `}>Price</Text>
                 <Text
                   className={`text-lg font-bold `}
-                >{`₹ ${tour?.cost}`}</Text>
+                >{`₹ ${tour?.tour_cost}`}</Text>
               </View>
               <View className="space-y-2">
                 <Text className={`font-medium`}>Seats Available</Text>
                 <Text className={`text-lg font-bold  text-right`}>
-                  {`${tour?.seats} seats`}
+                  {`${tour?.total_seats} seats`}
                 </Text>
               </View>
             </View>
@@ -102,24 +131,26 @@ const DetailsScreen = ({ params }) => {
               <Text className={`text-lg font-bold `}>{`${tour?.name}`}</Text>
             </View>
             <View className="space-y-2">
-              <Text className={`font-medium `}>Booking Open</Text>
+              <Text className={`font-medium `}>Booking Close</Text>
               <Text className={`text-lg font-bold  text-right`}>
-                {`till 19 July`}
+                {`${formatDate(tour?.booking_close)}`}
               </Text>
             </View>
           </View>
           <View className={`px-4 space-y-2 mt-3 `}>
             <Text className={`font-semibold text-md `}>Description</Text>
             <Text className={`text-justify tracking-wider text-md `}>
-              {tour?.info}
+              {tour?.description}
             </Text>
           </View>
           <View className={`px-4 space-y-2 mt-3 `}>
-            <Text className={`font-semibold text-md `}>Date</Text>
+            <Text className={`font-semibold text-md `}>Dates</Text>
             <Text
               className={`text-justify tracking-wider text-md font-semibold `}
             >
-              {`${tour?.date} ( ${tour?.duration} )`}
+              {`${formatDate(tour?.tour_start)} to ${formatDate(
+                tour?.tour_end
+              )}`}
             </Text>
           </View>
           <View className="px-4 mt-5">
@@ -128,26 +159,16 @@ const DetailsScreen = ({ params }) => {
               <Text className={`text-base  font-bold`}>What is included ?</Text>
             </View>
             <View className="px-1 mt-3 space-y-2">
-              <ListComponent
-                icon="checkmark-circle"
-                text="Food"
-                color={"#0e9c02"}
-              />
-              <ListComponent
-                icon="checkmark-circle"
-                text="Accomodation"
-                color={"#0e9c02"}
-              />
-              <ListComponent
-                icon="checkmark-circle"
-                text="Guide"
-                color={"#0e9c02"}
-              />
-              <ListComponent
-                icon="checkmark-circle"
-                text="Transportation"
-                color={"#0e9c02"}
-              />
+              {tour?.include.split(",").map((i, idx) => {
+                return (
+                  <ListComponent
+                    icon="checkmark-circle"
+                    text={i.trim()}
+                    key={idx}
+                    color={"#0e9c02"}
+                  />
+                );
+              })}
             </View>
           </View>
           <View className="px-4 mt-6">
@@ -158,26 +179,16 @@ const DetailsScreen = ({ params }) => {
               </Text>
             </View>
             <View className="px-1 mt-3 space-y-2">
-              <ListComponent
-                icon="close-circle-outline"
-                text="Food"
-                color={"red"}
-              />
-              <ListComponent
-                icon="close-circle-outline"
-                text="Accomodation"
-                color={"red"}
-              />
-              <ListComponent
-                icon="close-circle-outline"
-                text="Guide"
-                color={"red"}
-              />
-              <ListComponent
-                icon="close-circle-outline"
-                text="Transportation"
-                color={"red"}
-              />
+              {tour?.include.split(",").map((i, idx) => {
+                return (
+                  <ListComponent
+                    icon="close-circle-outline"
+                    text={i.trim()}
+                    key={idx}
+                    color={"#f00"}
+                  />
+                );
+              })}
             </View>
           </View>
           <View className="px-4 mt-6">
@@ -186,26 +197,16 @@ const DetailsScreen = ({ params }) => {
               <Text className={`text-base  font-bold`}>Bag Pack</Text>
             </View>
             <View className="px-1 mt-3 space-y-2">
-              <ListComponent
-                icon="checkmark-circle-outline"
-                text="Food"
-                color={"gray"}
-              />
-              <ListComponent
-                icon="checkmark-circle-outline"
-                text="Accomodation"
-                color={"gray"}
-              />
-              <ListComponent
-                icon="checkmark-circle-outline"
-                text="Guide"
-                color={"gray"}
-              />
-              <ListComponent
-                icon="checkmark-circle-outline"
-                text="Transportation"
-                color={"gray"}
-              />
+              {tour?.back_pack?.split(",").map((i, idx) => {
+                return (
+                  <ListComponent
+                    icon="checkmark-circle-outline"
+                    text={i.trim()}
+                    color={"gray"}
+                    key={idx}
+                  />
+                );
+              })}
             </View>
           </View>
           <View className="px-4 mt-6">
@@ -218,26 +219,16 @@ const DetailsScreen = ({ params }) => {
               <Text className={`text-base  font-bold`}>Check In Baggage</Text>
             </View>
             <View className="px-1 mt-3 space-y-2">
-              <ListComponent
-                icon="checkmark-circle-outline"
-                text="Water Bottle"
-                color={"gray"}
-              />
-              <ListComponent
-                icon="checkmark-circle-outline"
-                text="Trekking Boots"
-                color={"gray"}
-              />
-              <ListComponent
-                icon="checkmark-circle-outline"
-                text="Rain Coat"
-                color={"gray"}
-              />
-              <ListComponent
-                icon="checkmark-circle-outline"
-                text="Warm Clothes"
-                color={"gray"}
-              />
+              {tour?.check_in_baggage?.split(",").map((i, idx) => {
+                return (
+                  <ListComponent
+                    icon="checkmark-circle-outline"
+                    text={i.trim()}
+                    color={"gray"}
+                    key={idx}
+                  />
+                );
+              })}
             </View>
           </View>
         </View>
@@ -399,9 +390,7 @@ const DetailsScreen = ({ params }) => {
                 </View>
               )}
               {!showAddMember && (
-                <View
-                  className={` w-40 mt-4 py-2 px-2 rounded-md`}
-                >
+                <View className={` w-40 mt-4 py-2 px-2 rounded-md`}>
                   <Button className="bg-green-600" onPress={handleAddMember}>
                     <Ionicons
                       name="add-circle-outline"

@@ -97,33 +97,14 @@ const Login = () => {
     }
   };
 
-  const getAllTours = async () => {
-    try {
-      const response = await fetch(
-        "https://trakies-backend.onrender.com/api/tour/get-alltours"
-      );
-      if (!response.ok) {
-        throw new Error("Failed to fetch tours");
-      }
-      const tour = await response.json();
-      dispatch(setTour(tour));
-    } catch (error) {
-      console.error("Error fetching tours:", error);
-    }
-  };
-
   useEffect(() => {
     if (response?.type === "success" && response.authentication) {
       const { accessToken } = response.authentication;
       getUserProfile(accessToken).then(() => {
-        router.replace("(tabs)");
+        router.replace("/(tabs)");
       });
     }
   }, [response]);
-
-  useEffect(() => {
-    getAllTours();
-  }, []);
 
   return (
     <View className="h-full w-full flex justify-center items-center ">

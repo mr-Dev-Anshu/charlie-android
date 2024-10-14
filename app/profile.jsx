@@ -8,6 +8,7 @@ import { FontAwesome6, Ionicons } from "@expo/vector-icons";
 import MemberCard from "../components/UI/MemberCard";
 import { Image } from "expo-image";
 import LinearGradient from "react-native-linear-gradient";
+import { formatDate } from "../utils/general";
 
 const profile = () => {
   const data = useSelector((state) => state.user);
@@ -94,7 +95,7 @@ const profile = () => {
           </LinearGradient>
           {profile ? (
             <View>
-              <LabelValue label={"Date Of Birth"} value={profile.dob} />
+              <LabelValue label={"Date Of Birth"} value={formatDate(profile.dob)} />
               <LabelValue label={"Age"} value={profile.age} />
               <LabelValue label={"Gender"} value={profile.gender} />
               <LabelValue label={"Contact No"} value={profile.contact} />
@@ -180,7 +181,7 @@ const profile = () => {
             onPress={() => router.push("/(admin)/tours")}
             className="flex justify-center items-center h-full"
           >
-            <View className="fixed bottom-7 w-full h-full px-6 flex justify-between items-center bg-green-800 py-3 rounded-xl flex-row">
+            <View className="fixed bottom-4 w-full h-full px-6 flex justify-between items-center bg-green-800 py-3 rounded-xl flex-row">
               <Ionicons name="lock-closed" color={"white"} size={24} />
               <Text className="text-white text-xl font-bold capitalize">
                 {role} Screen

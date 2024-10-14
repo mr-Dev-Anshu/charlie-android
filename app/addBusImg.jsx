@@ -10,10 +10,10 @@ import { uploadFilesToS3 } from "../utils/uploadFileHelper";
 
 const addBusImg = () => {
   const [image, setImage] = useState([]);
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const { id } = useLocalSearchParams();
-
-  console.log(id);
 
   const pickImage = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
@@ -23,25 +23,36 @@ const addBusImg = () => {
       quality: 1,
     });
 
-    console.log(result);
-
     if (!result.canceled) {
       setImage(result.assets);
+    } else {
+      setError("Image not selected! Try again");
     }
   };
 
   const handleBusImageUpload = async () => {
-    if(!image || image.length === 0) return;
+    if (!image || image.length === 0) {
+      setError("Select an Image...");
+      return;
+    }
+    setLoading(true);
     try {
       const res = await uploadFilesToS3(image, id, "bus");
       router.push(`/addHotelImg?id=${id}`);
     } catch (error) {
       console.log(error);
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
     <View className="px-6 pt-6 relative h-full">
+      <View className="w-full flex justify-center items-center">
+        {error && (
+          <Text className="text-base text-red-500 font-semibold">{error}</Text>
+        )}
+      </View>
       <View className="flex justify-center items-center h-[80%] w-full border-2 border-green-600 rounded-xl">
         {image.length > 0 ? (
           <ScrollView
@@ -62,7 +73,7 @@ const addBusImg = () => {
             ))}
           </ScrollView>
         ) : (
-          <Text>Selected Bus Images</Text>
+          <Text>Select Bus Images</Text>
         )}
       </View>
       <View
@@ -89,7 +100,9 @@ const addBusImg = () => {
           onPress={handleBusImageUpload}
         >
           <View className="h-12 flex justify-center items-center bg-green-600 rounded-lg">
-            <Text className="text-base font-semibold text-white">Proceed</Text>
+            <Text className="text-base font-semibold text-white">
+              {loading ? "Uploading..." : "Proceed"}
+            </Text>
           </View>
         </TouchableOpacity>
       </View>
