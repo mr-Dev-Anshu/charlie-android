@@ -11,8 +11,8 @@ import {
 import DropDownPicker from "react-native-dropdown-picker";
 import { useSelector } from "react-redux";
 import * as ImagePicker from "expo-image-picker";
-import { uploadFileToS3 } from "../../utils/uploadFileHelper";
-import { formatDate } from "../../utils/general.js";
+import { uploadFileToS3 } from "../../utils/helpers.js";
+import { formatDate } from "../../utils/helpers.js";
 import { Image } from "expo-image";
 
 const expense = () => {
@@ -146,11 +146,9 @@ const expense = () => {
     }
   };
 
-  console.log(image?.uri);
-
   return (
     <>
-      <View className="mt-16 h-full w-full relative">
+      <View className="mt-16 h-full w-full relative px-3">
         <View className="z-50 px-3">
           <DropDownPicker
             open={open}
@@ -173,7 +171,7 @@ const expense = () => {
           />
         </View>
         {loading ? (
-          <View className="h-[75%] px-3 flex justify-center items-center">
+          <View className="h-[85%] px-3 flex justify-center items-center">
             <Text className="text-black font-semibold">Loading...</Text>
           </View>
         ) : (
@@ -214,7 +212,7 @@ const expense = () => {
                     key={index}
                     className={`flex flex-row w-full justify-between items-center px-2 py-2 bg-white shadow-xl  shadow-black/50 rounded-lg mb-2`}
                   >
-                    <View className="flex flex-row w-[220px] justify-start items-center space-x-3">
+                    <View className="flex flex-row w-[40%] justify-start items-center space-x-3">
                       <Ionicons
                         name={getIconName(item.category)}
                         size={24}
@@ -222,7 +220,7 @@ const expense = () => {
                       />
                       <View>
                         <Text className={` font-semibold`}>
-                          {shorten(item.category, 25)}
+                          {shorten(item.category, 20)}
                         </Text>
                         <Text className="text-xs text-gray-500">
                           {formatDate(item?.createdAt)}
@@ -252,14 +250,14 @@ const expense = () => {
           </>
         )}
         <View
-          className={`flex flex-row justify-between items-center w-full bottom-14 px-3 py-2 bg-white `}
+          className={`flex flex-grow flex-row justify-between items-center w-full bottom-14 px-3 py-2 bg-white `}
         >
           <TouchableOpacity
             activeOpacity={0.7}
             onPress={() => exportExcelSheet?.current?.open()}
           >
-            <View className="bg-green-600 py-2 rounded-xl flex justify-center items-center w-[190px]">
-              <Text className="text-white text-lg font-semibold">
+            <View className="bg-green-600 py-1.5 rounded-xl flex justify-center items-center w-[160px]">
+              <Text className="text-white text-base font-semibold">
                 Export Excel
               </Text>
             </View>
@@ -268,15 +266,15 @@ const expense = () => {
             activeOpacity={0.7}
             onPress={() => addExpenseDetailRef?.current?.open()}
           >
-            <View className="bg-green-600 py-2 rounded-xl flex justify-center  items-center w-[190px]">
-              <Text className="text-white text-lg font-semibold">
+            <View className="bg-green-600 py-1.5 rounded-xl flex justify-center  items-center w-[160px]">
+              <Text className="text-white text-base font-semibold">
                 Add Expense
               </Text>
             </View>
           </TouchableOpacity>
         </View>
       </View>
-      <Modalize ref={showExpenseDetailRef} modalHeight={600}>
+      <Modalize ref={showExpenseDetailRef} modalHeight={500}>
         <View>
           <Text>Hello</Text>
         </View>

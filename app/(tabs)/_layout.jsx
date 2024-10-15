@@ -8,7 +8,7 @@ import Header from "@/components/common/Header";
 export default function TabLayout() {
   return (
     <Tabs
-      screenOptions={({ route }) => ({
+      screenOptions={() => ({
         tabBarActiveTintColor: "green",
         tabBarInactiveTintColor: "gray",
         headerShown: true,
@@ -31,7 +31,7 @@ export default function TabLayout() {
         name="index"
         options={{
           title: "Home",
-          tabBarIcon: ({ color, focused }) => (
+          tabBarIcon: ({ focused }) => (
             <FontAwesome6
               name={focused ? "house" : "house"}
               size={24}
@@ -44,7 +44,7 @@ export default function TabLayout() {
         name="mytours"
         options={{
           title: "My Tours",
-          tabBarIcon: ({ color, focused }) => (
+          tabBarIcon: ({ focused }) => (
             <FontAwesome6
               name="person-hiking"
               size={24}
@@ -57,7 +57,7 @@ export default function TabLayout() {
         name="community"
         options={{
           title: "Community",
-          tabBarIcon: ({ color, focused }) => (
+          tabBarIcon: ({ focused }) => (
             <Ionicons
               name={"chatbubbles"}
               size={24}
@@ -70,7 +70,7 @@ export default function TabLayout() {
         name="notifications"
         options={{
           title: "Notifications",
-          tabBarIcon: ({ color, focused }) => (
+          tabBarIcon: ({ focused }) => (
             <Octicons
               name={"bell-fill"}
               size={24}

@@ -78,7 +78,7 @@ const community = () => {
               className="text-white text-lg h-12 font-semibold w-full mt-5 outline outline-2 outline-green-600 indent-3 border border-green-600 rounded-[10px] p-2"
               placeholderTextColor={"gray"}
             />
-            {images && (
+            {images.length !== 0 && (
               <View className="flex flex-row flex-wrap space-x-4 justify-center items-center border-2 border-green-600 rounded-lg h-fit p-1">
                 {images.map((img, idx) => (
                   <View className="relative h-fit w-fit">

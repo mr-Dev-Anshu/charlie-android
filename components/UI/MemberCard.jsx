@@ -6,6 +6,25 @@ import { Ionicons } from "@expo/vector-icons";
 import { TouchableOpacity } from "react-native-gesture-handler";
 
 const MemberCard = ({ data }) => {
+  const id = data._id;
+
+  const handleDeleteMember = async () => {
+    try {
+      const response = await fetch(
+        `https://trakies-backend.onrender.com/api/member/delete-member?id=${id}`,
+        {
+          method: "DELETE",
+        }
+      );
+      if (response.ok) {
+        console.log("Member deleted successfully !");
+      } else {
+        console.log("Failed to delete member");
+      }
+    } catch (error) {
+      console.log("Some error occured!");
+    }
+  };
   return (
     <View className="h-48 w-full mt-4 bg-white shadow-sm shadow-black/20 rounded-lg p-2 space-y-3 justify-center items-end ">
       <LinearGradient
@@ -29,7 +48,7 @@ const MemberCard = ({ data }) => {
               <Text className="font-bold text-lg text-white">{data.name}</Text>
             </View>
           </View>
-          <TouchableOpacity activeOpacity={0.8} onPress={() => {}}>
+          <TouchableOpacity activeOpacity={0.8} onPress={handleDeleteMember}>
             <Ionicons name="trash-outline" color={"red"} size={24} />
           </TouchableOpacity>
         </View>

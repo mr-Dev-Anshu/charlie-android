@@ -8,7 +8,7 @@ import { FontAwesome6, Ionicons } from "@expo/vector-icons";
 import MemberCard from "../components/UI/MemberCard";
 import { Image } from "expo-image";
 import LinearGradient from "react-native-linear-gradient";
-import { formatDate } from "../utils/general";
+import { formatDate } from "../utils/helpers";
 
 const profile = () => {
   const data = useSelector((state) => state.user);
@@ -56,7 +56,7 @@ const profile = () => {
   }, [members]);
 
   return (
-    <View className="h-full w-full px-4 relative">
+    <View className="h-full w-full px-4 flex justify-center items-center relative">
       <ScrollView
         className="h-full w-full py-2"
         showsVerticalScrollIndicator={false}
@@ -82,15 +82,26 @@ const profile = () => {
                   </Text>
                 </View>
               </View>
-              {profile && (
-                <TouchableOpacity onPress={() => router.push("/updateProfile")}>
-                  <FontAwesome6
-                    name="pen-to-square"
-                    color={"green"}
-                    size={28}
-                  />
-                </TouchableOpacity>
-              )}
+              <View className="flex justify-center items-center flex-row space-x-5">
+                {profile && (
+                  <TouchableOpacity
+                    onPress={() => router.push("/updateProfile")}
+                  >
+                    <FontAwesome6
+                      name="pen-to-square"
+                      color={"green"}
+                      size={28}
+                    />
+                  </TouchableOpacity>
+                )}
+                {(role !== undefined || role) && (
+                  <TouchableOpacity
+                    onPress={() => router.push("/(admin)/tours")}
+                  >
+                    <Ionicons name="lock-closed" color={"red"} size={28} />
+                  </TouchableOpacity>
+                )}
+              </View>
             </View>
           </LinearGradient>
           {profile ? (
@@ -113,7 +124,7 @@ const profile = () => {
               <LabelValue label={"Address"} value={profile.address} />
               <LabelValue
                 label={"How You Know About Us ?"}
-                value={"John Doe"}
+                value={profile.Ganesh}
               />
               <LabelValue
                 label={"Emergency Contact No ?"}
@@ -177,27 +188,6 @@ const profile = () => {
           </View>
         </View>
       </ScrollView>
-      {(role !== undefined || role) && (
-        <View className="h-12 w-full">
-          <TouchableOpacity
-            activeOpacity={0.8}
-            onPress={() => router.push("/(admin)/tours")}
-            className="flex justify-center items-center h-full px-12"
-          >
-            <View className="fixed bottom-4 w-full h-full px-6 flex justify-between items-center bg-green-800 py-3 rounded-xl flex-row">
-              <Ionicons name="lock-closed" color={"white"} size={24} />
-              <Text className="text-white text-xl font-bold capitalize">
-                {role} Screen
-              </Text>
-              <Ionicons
-                name="chevron-forward-outline"
-                size={24}
-                color={"white"}
-              />
-            </View>
-          </TouchableOpacity>
-        </View>
-      )}
     </View>
   );
 };

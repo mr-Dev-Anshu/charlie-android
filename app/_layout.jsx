@@ -35,6 +35,7 @@ export default function RootLayout() {
           <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
           <Stack.Screen name="(admin)" options={{ headerShown: false }} />
           <Stack.Screen name="login" options={{ headerShown: false }} />
+          <Stack.Screen name="temp" options={{ headerShown: false }} />
           <Stack.Screen name="form" options={{ headerShown: false }} />
           <Stack.Screen name="addRoles" options={{ headerShown: false }} />
           <Stack.Screen name="addMember" options={{ headerShown: false }} />

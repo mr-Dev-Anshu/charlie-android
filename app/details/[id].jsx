@@ -17,7 +17,7 @@ import approve from "../../assets/approve.png";
 import Checkbox from "expo-checkbox";
 import Carousel from "react-native-reanimated-carousel";
 import CarouselImageRender from "../../components/UI/CarouselImageRender.jsx";
-import { formatDate } from "../../utils/general.js";
+import { formatDate } from "../../utils/helpers.js";
 import { StatusBar } from "expo-status-bar";
 import { useSelector } from "react-redux";
 

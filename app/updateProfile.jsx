@@ -9,6 +9,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import { useDispatch, useSelector } from "react-redux";
 import { setProfile } from "../redux/slices/userSlice";
+import { formatDate } from "../utils/helpers";
 
 const UpdateProfile = () => {
   const router = useRouter();
@@ -87,113 +88,165 @@ const UpdateProfile = () => {
   };
 
   return (
-    <View
-      style={{
-        flex: 1,
-      }}
-    >
-      <ScrollView contentContainerStyle={{ flexGrow: 1, paddingBottom: 24 }}>
-        <View className="w-full px-4">
+    <View style={{ flex: 1, paddingHorizontal: 10 }}>
+      <ScrollView
+        contentContainerStyle={{ paddingBottom: 50 }}
+        showsVerticalScrollIndicator={false}
+      >
+        <View style={{ paddingHorizontal: 16 }}>
           {error && (
-            <View className="h-6">
-              <View className="flex flex-row justify-center items-center space-x-2">
-                <Ionicons name="warning-outline" size={24} color="red" />
+            <View style={{ paddingVertical: 5 }}>
+              <View
+                style={{
+                  flexDirection: "row",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  marginBottom: 10,
+                  gap: 10,
+                }}
+              >
+                <Ionicons name="warning-outline" size={20} color="red" />
                 <Text
-                  style={{ color: "red" }}
-                  className="text-lg font-bold text-center"
+                  style={{
+                    color: "red",
+                    fontWeight: "bold",
+                    textAlign: "center",
+                  }}
                 >
                   {error}
                 </Text>
               </View>
             </View>
           )}
-          <View>
-            <TextInput
-              placeholder={user.name}
-              textContentType="name"
-              autoCapitalize="words"
-              onChangeText={setName}
-              className="text-lg font-semibold w-full mt-3 indent-3 border-2 border-green-600 rounded-[10px] p-2"
-            />
-            <TextInput
-              placeholder={profile.dob}
-              keyboardType="default"
-              onChangeText={setDob}
-              className="text-lg font-semibold w-full mt-3 indent-3 border-2 border-green-600 rounded-[10px] p-2"
-            />
-            <TextInput
-              placeholder={profile.age}
-              keyboardType="numeric"
-              onChangeText={setAge}
-              className="text-lg font-semibold w-full mt-3 indent-3 border-2 border-green-600 rounded-[10px] p-2"
-            />
-            <TextInput
-              placeholder={profile.gender}
-              keyboardType="default"
-              onChangeText={setGender}
-              autoCapitalize="words"
-              className="text-lg font-semibold w-full mt-3 indent-3 border-2 border-green-600 rounded-[10px] p-2"
-            />
-            <TextInput
-              placeholder={profile.contact}
-              keyboardType="phone-pad"
-              onChangeText={setContact}
-              className="text-lg font-semibold w-full mt-3 indent-3 border-2 border-green-600 rounded-[10px] p-2"
-            />
-            <TextInput
-              placeholder={profile.emergency_contact}
-              keyboardType="phone-pad"
-              onChangeText={setEmergencyContact}
-              className="text-lg font-semibold w-full mt-3 indent-3 border-2 border-green-600 rounded-[10px] p-2"
-              value={emergencyContact}
-            />
-            <TextInput
-              placeholder={profile.address}
-              onChangeText={setAddress}
-              className="text-lg font-semibold w-full mt-3 indent-3 border-2 border-green-600 rounded-[10px] p-2"
-              value={address}
-            />
-            <TextInput
-              placeholder={profile.id_type}
-              onChangeText={setIdProofType}
-              className="text-lg font-semibold w-full mt-3 indent-3 border-2 border-green-600 rounded-[10px] p-2"
-            />
-            <TextInput
-              placeholder={profile.id_number}
-              onChangeText={setIdentityProofNumber}
-              className="text-lg font-semibold w-full mt-3 indent-3 border-2 border-green-600 rounded-[10px] p-2"
-            />
-            <TextInput
-              placeholder="How do you know about us?"
-              onChangeText={setInfo}
-              className="text-lg font-semibold w-full mt-3 indent-3 border-2 border-green-600 rounded-[10px] p-2"
-            />
-          </View>
+          <Text
+            style={{
+              textAlign: "center",
+              fontSize: 18,
+              fontWeight: "bold",
+              paddingVertical: 5,
+            }}
+          >
+            Enter New Values
+          </Text>
+          <TextInput
+            placeholder={user.name}
+            textContentType="name"
+            autoCapitalize="words"
+            onChangeText={setName}
+            style={styles.input}
+          />
+          <TextInput
+            placeholder={formatDate(profile.dob)}
+            keyboardType="default"
+            onChangeText={setDob}
+            style={styles.input}
+          />
+          <TextInput
+            placeholder={profile.age}
+            keyboardType="numeric"
+            onChangeText={setAge}
+            style={styles.input}
+          />
+          <TextInput
+            placeholder={profile.gender}
+            keyboardType="default"
+            onChangeText={setGender}
+            autoCapitalize="words"
+            style={styles.input}
+          />
+          <TextInput
+            placeholder={profile.contact}
+            keyboardType="phone-pad"
+            onChangeText={setContact}
+            style={styles.input}
+          />
+          <TextInput
+            placeholder={profile.emergency_contact}
+            keyboardType="phone-pad"
+            onChangeText={setEmergencyContact}
+            style={styles.input}
+          />
+          <TextInput
+            placeholder={profile.address}
+            onChangeText={setAddress}
+            style={styles.input}
+          />
+          <TextInput
+            placeholder={profile.id_type}
+            onChangeText={setIdProofType}
+            style={styles.input}
+          />
+          <TextInput
+            placeholder={profile.id_number}
+            onChangeText={setIdentityProofNumber}
+            style={styles.input}
+          />
+          <TextInput
+            placeholder="How do you know about us?"
+            onChangeText={setInfo}
+            style={styles.input}
+          />
         </View>
       </ScrollView>
-      <View className="fixed bottom-4 w-full px-10">
+      <View
+        style={{
+          paddingVertical: 10,
+          paddingHorizontal: 24,
+          backgroundColor: "white",
+        }}
+      >
         <TouchableOpacity
           onPress={handleUpdate}
-          className="py-3 flex justify-center items-center bg-[#228B22] w-full rounded-[10px]"
+          style={{
+            backgroundColor: "#228B22",
+            padding: 12,
+            display:"flex",
+            justifyContent: "center",
+            alignItems: "center",
+            borderRadius: 10,
+          }}
         >
           {loading ? (
-            <ActivityIndicator size={24} color="#00ff00" />
+            <ActivityIndicator size="small" color="#fff" />
           ) : (
-            <Text className="text-center font-bold text-lg">
+            <Text style={{ color: "#fff", fontWeight: "bold", fontSize: 16 }}>
               Update Profile
             </Text>
           )}
         </TouchableOpacity>
         <TouchableOpacity
           onPress={() => router.back()}
-          className="w-full py-2 px-2 rounded-[10px] border-2 border-[#228B22] mt-3"
-          activeOpacity={0.8}
+          style={{
+            marginTop: 10,
+            padding: 8,
+            borderRadius: 10,
+            borderColor: "#228B22",
+            borderWidth: 2,
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+          }}
         >
-          <Text className="text-center font-bold text-lg">Cancel</Text>
+          <Text style={{ fontWeight: "bold", fontSize: 16, color: "#228B22" }}>
+            Cancel
+          </Text>
         </TouchableOpacity>
       </View>
     </View>
   );
+};
+
+const styles = {
+  input: {
+    fontSize: 16,
+    fontWeight: "bold",
+    paddingVertical: 12,
+    paddingHorizontal: 10,
+    borderColor: "green",
+    borderWidth: 2,
+    borderRadius: 10,
+    marginTop: 10,
+  },
 };
 
 export default UpdateProfile;

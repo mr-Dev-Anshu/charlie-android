@@ -35,7 +35,7 @@ const AnnouncementScreen = () => {
 
   return (
     <>
-      <View className="mt-14 h-full w-full">
+      <View className="mt-14 h-full w-full px-3">
         <View className="flex justify-center items-center py-1">
           <Text className="text-lg font-semibold text-green-800">
             Announcements
@@ -71,7 +71,7 @@ const AnnouncementScreen = () => {
           </View>
         </ScrollView>
       </View>
-      <View className="bottom-28 pb-2 bg-white w-full flex justify-center items-center px-2">
+      <View className="bottom-28 pb-2 bg-white w-full flex justify-center items-center px-12">
         <TouchableOpacity
           activeOpacity={0.7}
           onPress={() => addAnnounceMentRef?.current?.open()}

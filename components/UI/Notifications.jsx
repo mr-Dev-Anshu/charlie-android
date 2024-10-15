@@ -1,25 +1,48 @@
 import { View, Text, useColorScheme } from "react-native";
 import { FontAwesome6 } from "@expo/vector-icons";
-import React from "react";
+import React, { useEffect } from "react";
 import { shorten } from "./PostComponent";
 import { TouchableOpacity } from "react-native-gesture-handler";
+import { apiRequest } from "../../utils/helpers";
+import { useSelector } from "react-redux";
 
-const Notifications = () => {
-  const text =
-    "Lorem ipsum dolor sit amet consectetur adipisicing elit. Quos fuga nesciunt, minima perferendis aut quia rem, eos id quo quod, libero deserunt alias enim corrupti! Lorem ipsum dolor sit amet consectetur adipisicing elit. Laboriosam fugit placeat atque ut at porro est eligendi sed possimus excepturi qui sequi omnis debitis, adipisci alias, nulla hic doloremque? Corrupti labore beatae dolor. Ipsum accusamus voluptatum exercitationem fuga, nisi doloremque, totam rerum explicabo provident consequatur corporis deserunt corrupti nostrum cupiditate.";
+const Notifications = ({ id, title, content, seen }) => {
+  const { user } = useSelector((state) => state.user);
+
+  const handleSeen = async () => {
+    const userEmail = user.email;
+    console.log(userEmail);
+    try {
+      await apiRequest(
+        "https://trakies-backend.onrender.com/api/notification/update",
+        "POST",
+        { email: userEmail, notificationId: id }
+      );
+      console.log("updated successfully");
+    } catch (error) {
+      console.log("Failed to update", error);
+    }
+  };
 
   return (
-    <TouchableOpacity activeOpacity={0.8}>
-      <View className={`border-2 border-green-600 h-32 rounded-lg p-2 mt-3`}>
+    <TouchableOpacity activeOpacity={0.8} onPress={handleSeen}>
+      <View
+        className={`border-2 border-green-600 h-fit rounded-lg p-2 mt-3 relative`}
+      >
+        {seen === false && (
+          <View className="h-2 w-2 bg-red-600  absolute right-2 top-2 rounded-full" />
+        )}
         <View className="flex flex-row justify-start items-center space-x-3">
           <FontAwesome6 name="bell" size={20} color={"green"} />
-          <Text className={`text-base font-semibold `}>ShriShailm Trek</Text>
+          <Text className={`text-base font-semibold `}>{title}</Text>
         </View>
-        <View className="mt-2">
-          <Text className={`tracking-wide text-justify `}>
-            {shorten(text, 160)}
-          </Text>
-        </View>
+        {content && (
+          <View className="mt-2">
+            <Text className={`tracking-wide text-justify `}>
+              {shorten(content, 160)}
+            </Text>
+          </View>
+        )}
       </View>
     </TouchableOpacity>
   );

@@ -4,7 +4,7 @@ import { FontAwesome6, Ionicons } from "@expo/vector-icons";
 import { Link } from "expo-router";
 import Carousel from "react-native-reanimated-carousel";
 import CarouselImageRender from "./CarouselImageRender";
-import { formatDate, calculateDuration } from "../../utils/general.js";
+import { formatDate, calculateDuration } from "../../utils/helpers.js";
 
 const CarouselCard = ({ tour }) => {
   const images = tour.images.map((i) => i.url);

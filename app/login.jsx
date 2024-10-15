@@ -8,6 +8,7 @@ import * as Google from "expo-auth-session/providers/google";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useDispatch } from "react-redux";
 import { setProfile, setUser, setRole } from "../redux/slices/userSlice";
+import { apiRequest } from "../utils/helpers";
 
 const androidClientId =
   "589470403357-tucvnutjfgbrjimnbiddhuf8q47fn3dv.apps.googleusercontent.com";
@@ -20,9 +21,7 @@ const config = {
 
 const Login = () => {
   const dispatch = useDispatch();
-
   const [loading, setLoading] = useState(false);
-
   const [request, response, promptAsync] = Google.useAuthRequest(config);
 
   const storeUserData = async (user) => {
@@ -39,54 +38,43 @@ const Login = () => {
     setLoading(true);
 
     try {
-      const fetchUserProfile = async () => {
-        const response = await fetch(
-          "https://www.googleapis.com/oauth2/v2/userinfo",
-          {
-            headers: { Authorization: `Bearer ${token}` },
-          }
-        );
-        if (!response.ok)
-          throw new Error(
-            `Failed to fetch user profile: ${await response.text()}`
-          );
-        return JSON.parse(await response.text());
-      };
+      const user = await apiRequest(
+        "https://www.googleapis.com/oauth2/v2/userinfo",
+        "GET",
+        null,
+        {
+          Authorization: `Bearer ${token}`,
+        }
+      );
 
-      const fetchUserRole = (email) => {
-        return fetch("https://trakies-backend.onrender.com/api/users/signin", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ email }),
-        }).then((res) => res.json());
-      };
-
-      const fetchUserProfileData = (email) => {
-        return fetch(
-          "https://trakies-backend.onrender.com/api/users/getProfile",
-          {
-            method: "GET",
-            headers: {
-              "Content-Type": "application/json",
-              email,
-            },
-          }
-        ).then((res) => res.json());
-      };
-
-      const user = await fetchUserProfile();
       dispatch(setUser(user));
       await storeUserData(user);
 
-      const [roledata, profiledata] = await Promise.all([
-        fetchUserRole(user.email),
-        fetchUserProfileData(user.email),
-      ]);
+      const userEmail = user.email;
 
-      if (roledata) dispatch(setRole(roledata));
+      console.log("email------->", userEmail);
 
-      if (profiledata && !profiledata.error) {
-        dispatch(setProfile(profiledata));
+      if (userEmail) {
+        const roleData = await apiRequest(
+          "https://trakies-backend.onrender.com/api/users/signin",
+          "POST",
+          { email: userEmail }
+        );
+
+        if (roleData) {
+          dispatch(setRole(roleData));
+        }
+
+        const profileData = await apiRequest(
+          "https://trakies-backend.onrender.com/api/users/getProfile",
+          "GET",
+          null,
+          { email: userEmail }
+        );
+
+        if (profileData && !profileData.error) {
+          dispatch(setProfile(profileData));
+        }
       }
     } catch (error) {
       console.error("Error fetching user profile:", error);
@@ -96,12 +84,16 @@ const Login = () => {
   };
 
   useEffect(() => {
-    if (response?.type === "success" && response.authentication) {
-      const { accessToken } = response.authentication;
-      getUserProfile(accessToken).then(() => {
-        router.replace("/(tabs)");
-      });
-    }
+    const fetchProfile = async () => {
+      if (response?.type === "success" && response.authentication) {
+        const { accessToken } = response.authentication;
+        await getUserProfile(accessToken);
+        router.replace("(tabs)");
+      } else {
+        console.log("Response not successful or no authentication");
+      }
+    };
+    fetchProfile();
   }, [response]);
 
   return (
