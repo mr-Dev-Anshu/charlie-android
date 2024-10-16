@@ -2,14 +2,16 @@ import v1 from "@/assets/welcomeTile.svg";
 import { Image } from "expo-image";
 import { SafeAreaView } from "react-native-safe-area-context";
 import CarouselComponent from "@/components/CarouselComponent";
-import { View } from "react-native";
-import { useEffect } from "react";
+import { View, Text } from "react-native";
+import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { setTour } from "@/redux/slices/tourSlice";
 import { StatusBar } from "expo-status-bar";
+import * as Network from "expo-network";
 
 export default function HomeScreen() {
   const dispatch = useDispatch();
+  const [isConnected, setIsConnected] = useState(null);
 
   const getAllTours = async () => {
     try {
@@ -26,9 +28,17 @@ export default function HomeScreen() {
     }
   };
 
+  const checkNetworkConnection = async () => {
+    const networkState = await Network.getNetworkStateAsync();
+    setIsConnected(networkState.isConnected);
+  };
+
   useEffect(() => {
-    getAllTours();
-  }, []);
+    checkNetworkConnection();
+    if (isConnected) {
+      getAllTours();
+    }
+  }, [isConnected]);
 
   return (
     <SafeAreaView>
@@ -39,8 +49,16 @@ export default function HomeScreen() {
         animated
       />
       <View className="flex h-full space-y-5 relative">
-        <Image source={v1} className="h-96 top-0 w-full" />
-        <CarouselComponent />
+        {isConnected === false ? (
+          <View className="flex-1 justify-center items-center">
+            <Text style={{ fontSize: 20, color: "red" }}>Mobile data off</Text>
+          </View>
+        ) : (
+          <>
+            <Image source={v1} className="h-96 top-0 w-full" />
+            <CarouselComponent />
+          </>
+        )}
       </View>
     </SafeAreaView>
   );

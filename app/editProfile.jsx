@@ -42,10 +42,6 @@ const EditProfile = () => {
     { label: "Licence", value: "licence" },
   ]);
 
-  const url = profile
-    ? "https://trakies-backend.onrender.com/api/users/updateProfile"
-    : "https://trakies-backend.onrender.com/api/users/createProfile";
-
   const handleUpdate = async () => {
     setError("");
     if (
@@ -65,36 +61,37 @@ const EditProfile = () => {
     }
     setLoading(true);
     try {
-      const res = await fetch(url, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          email: user?.email,
-          name,
-          dob,
-          age,
-          gender,
-          contact,
-          emergency_contact: emergencyContact,
-          address,
-          id_type: idProofType,
-          id_number: identityProofNumber,
-          Ganesh: info,
-        }),
-      });
+      const res = await fetch(
+        "https://trakies-backend.onrender.com/api/users/createProfile",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            email: user?.email,
+            name,
+            dob,
+            age,
+            gender,
+            contact,
+            emergency_contact: emergencyContact,
+            address,
+            id_type: idProofType,
+            id_number: identityProofNumber,
+            Ganesh: info,
+          }),
+        }
+      );
       const profileData = await res.json();
       dispatch(setProfile(profileData));
       setLoading(false);
-      Alert.alert(
-        "Success",
-        `Profile ${profile ? "updated" : "created"} successfully`
-      );
+      Alert.alert("Success", `Profile Created!`);
       router.push("/profile");
     } catch (error) {
       console.log(error?.message);
       setError("An error occurred. Please try again.");
+    } finally {
       setLoading(false);
     }
   };

@@ -27,14 +27,14 @@ const CarouselCard = ({ tour }) => {
           </View>
           <View className="flex flex-row justify-between px-2 mt-1">
             <View className="space-y-0.5">
-              <Text className={`text-lg font-bold `}>{tour.name}</Text>
+              <Text className={`text-lg font-semibold `}>{tour.name}</Text>
               <Text className={`text-md font-normal `}>{`${calculateDuration(
                 tour.tour_start,
                 tour.tour_end
               )}`}</Text>
             </View>
             <View>
-              <Text className="text-lg font-bold text-green-600 text-right">{`₹${tour.tour_cost}`}</Text>
+              <Text className="text-lg font-semibold text-green-600 text-right">{`₹${tour.tour_cost}`}</Text>
               <Text className={`text-xs  text-right`}>per seat</Text>
             </View>
           </View>

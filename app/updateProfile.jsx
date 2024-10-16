@@ -17,20 +17,27 @@ const UpdateProfile = () => {
   const data = useSelector((state) => state.user);
   const { user, profile } = data;
 
+  console.log("profile------->", profile);
+
   const dispatch = useDispatch();
 
-  const [name, setName] = useState("");
-  const [dob, setDob] = useState("");
-  const [age, setAge] = useState("");
-  const [contact, setContact] = useState("");
-  const [emergencyContact, setEmergencyContact] = useState("");
-  const [address, setAddress] = useState("");
-  const [identityProofNumber, setIdentityProofNumber] = useState("");
-  const [loading, setLoading] = useState(false);
-  const [info, setInfo] = useState("");
+  const [name, setName] = useState(profile.name);
+  const [dob, setDob] = useState(profile.dob);
+  const [age, setAge] = useState(profile.age);
+  const [contact, setContact] = useState(profile.contact);
+  const [emergencyContact, setEmergencyContact] = useState(
+    profile.emergency_contact
+  );
+  const [address, setAddress] = useState(profile.address);
+  const [identityProofNumber, setIdentityProofNumber] = useState(
+    profile.id_number
+  );
+  const [info, setInfo] = useState(profile.Ganesh);
+  const [gender, setGender] = useState(profile.gender);
+  const [idProofType, setIdProofType] = useState(profile.id_type);
+
   const [error, setError] = useState("");
-  const [gender, setGender] = useState(null);
-  const [idProofType, setIdProofType] = useState(null);
+  const [loading, setLoading] = useState(false);
 
   const handleUpdate = async () => {
     setError("");
@@ -45,7 +52,7 @@ const UpdateProfile = () => {
       !idProofType &&
       !identityProofNumber
     ) {
-      setError("You haven't changed any field !");
+      setError("Change at least one field to update !");
       return;
     }
     setLoading(true);
@@ -58,7 +65,7 @@ const UpdateProfile = () => {
             "Content-Type": "application/json",
           },
           body: JSON.stringify({
-            email: user?.email,
+            id: profile._id,
             name,
             dob,
             age,
@@ -73,12 +80,13 @@ const UpdateProfile = () => {
         }
       );
       const profileData = await res.json();
-      dispatch(setProfile(profileData));
+
+      console.log("updated profile---->", profileData);
+
+      if (profileData && !profileData.error) {
+        dispatch(setProfile(profileData));
+      }
       setLoading(false);
-      Alert.alert(
-        "Success",
-        `Profile ${profile ? "updated" : "created"} successfully`
-      );
       router.push("/profile");
     } catch (error) {
       console.log(error?.message);
@@ -200,7 +208,7 @@ const UpdateProfile = () => {
           style={{
             backgroundColor: "#228B22",
             padding: 12,
-            display:"flex",
+            display: "flex",
             justifyContent: "center",
             alignItems: "center",
             borderRadius: 10,

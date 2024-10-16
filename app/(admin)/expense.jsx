@@ -1,4 +1,4 @@
-import { Text, View } from "react-native";
+import { Text, View, ActivityIndicator } from "react-native";
 import React, { useEffect, useRef, useState } from "react";
 import { Modalize } from "react-native-modalize";
 import { Ionicons } from "@expo/vector-icons";
@@ -172,7 +172,8 @@ const expense = () => {
         </View>
         {loading ? (
           <View className="h-[85%] px-3 flex justify-center items-center">
-            <Text className="text-black font-semibold">Loading...</Text>
+            <ActivityIndicator size="large" color="green" />
+            <Text>Loading...</Text>
           </View>
         ) : (
           <>

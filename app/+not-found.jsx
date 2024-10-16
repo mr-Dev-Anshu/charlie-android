@@ -1,11 +1,10 @@
-import { Stack } from "expo-router";
-import { Text } from "react-native";
+import { ActivityIndicator, Text, View } from "react-native";
 
 export default function NotFoundScreen() {
   return (
-    <>
-      <Stack.Screen options={{ title: "Oops!" }} />
-      <Text>Page not found</Text>
-    </>
+    <View className="h-full w-full flex justify-center items-center">
+      <ActivityIndicator size="large" color="green" />
+      <Text>Loading...</Text>
+    </View>
   );
 }

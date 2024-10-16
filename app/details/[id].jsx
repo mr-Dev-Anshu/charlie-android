@@ -102,12 +102,12 @@ const DetailsScreen = ({ params }) => {
               <View className="space-y-2">
                 <Text className={`font-medium `}>Price</Text>
                 <Text
-                  className={`text-lg font-bold `}
+                  className={`text-lg font-semibold `}
                 >{`₹ ${tourData?.tour_cost}`}</Text>
               </View>
               <View className="space-y-2">
                 <Text className={`font-medium`}>Seats Available</Text>
-                <Text className={`text-lg font-bold  text-right`}>
+                <Text className={`text-lg font-semibold  text-right`}>
                   {`${tourData?.total_seats} seats`}
                 </Text>
               </View>
@@ -119,12 +119,12 @@ const DetailsScreen = ({ params }) => {
             <View className="space-y-2">
               <Text className={`font-medium `}>Tour Name</Text>
               <Text
-                className={`text-lg font-bold `}
+                className={`text-lg font-semibold `}
               >{`${tourData?.name}`}</Text>
             </View>
             <View className="space-y-2">
               <Text className={`font-medium `}>Booking Close</Text>
-              <Text className={`text-lg font-bold  text-right`}>
+              <Text className={`text-lg font-semibold  text-right`}>
                 {`${formatDate(tourData?.booking_close)}`}
               </Text>
             </View>
@@ -148,7 +148,7 @@ const DetailsScreen = ({ params }) => {
           <View className="px-4 mt-5">
             <View className="flex flex-row justify-left items-center space-x-3">
               <Ionicons name="thumbs-up-outline" size={24} color={"green"} />
-              <Text className={`text-base  font-bold`}>What is included ?</Text>
+              <Text className={`text-base  font-semibold`}>What is included ?</Text>
             </View>
             <View className="px-1 mt-3 space-y-2">
               {tourData?.include.split(",").map((i, idx) => {
@@ -166,7 +166,7 @@ const DetailsScreen = ({ params }) => {
           <View className="px-4 mt-6">
             <View className="flex flex-row justify-left items-center space-x-3">
               <Ionicons name="thumbs-down-outline" size={24} color={"red"} />
-              <Text className={`text-base  font-bold`}>
+              <Text className={`text-base  font-semibold`}>
                 What is not included ?
               </Text>
             </View>
@@ -186,7 +186,7 @@ const DetailsScreen = ({ params }) => {
           <View className="px-4 mt-6">
             <View className="flex flex-row justify-left items-center space-x-3">
               <Ionicons name="bag-check-outline" size={24} color={"green"} />
-              <Text className={`text-base  font-bold`}>Bag Pack</Text>
+              <Text className={`text-base  font-semibold`}>Bag Pack</Text>
             </View>
             <View className="px-1 mt-3 space-y-2">
               {tourData?.back_pack?.split(",").map((i, idx) => {
@@ -208,7 +208,7 @@ const DetailsScreen = ({ params }) => {
                 size={24}
                 color={"green"}
               />
-              <Text className={`text-base  font-bold`}>Check In Baggage</Text>
+              <Text className={`text-base  font-semibold`}>Check In Baggage</Text>
             </View>
             <View className="px-1 mt-3 space-y-2">
               {tourData?.check_in_baggage?.split(",").map((i, idx) => {
@@ -360,7 +360,7 @@ const DetailsScreen = ({ params }) => {
                         style={{ height: 16, width: 16 }}
                         color={"green"}
                       />
-                      <Text className={`font-bold `}>No Accommodation</Text>
+                      <Text className={`font-semibold `}>No Accommodation</Text>
                     </View>
                   </View>
                   <View className="flex flex-row justify-end items-center px-1">
@@ -401,7 +401,7 @@ const DetailsScreen = ({ params }) => {
             <View className="flex flex-row w-full justify-between items-center">
               <View>
                 <Text className={`text-xs `}>Total Payable</Text>
-                <Text className={`text-xl font-bold `}>{`₹ 12,000`}</Text>
+                <Text className={`text-xl font-semibold `}>{`₹ 12,000`}</Text>
               </View>
               <Button onPress={() => router.push("/payment")}>
                 <View className="h-10 w-40 flex justify-center items-center rounded-lg bg-green-700">

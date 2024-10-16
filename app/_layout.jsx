@@ -64,7 +64,7 @@ export default function RootLayout() {
             options={getOpt("My Tour Details")}
           />
           <Stack.Screen name="payment" options={getOpt("Payment")} />
-          <Stack.Screen name="+not-found" />
+          <Stack.Screen name="+not-found" options={{ headerShown: false }} />
         </Stack>
       </GestureHandlerRootView>
     </Provider>

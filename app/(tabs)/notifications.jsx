@@ -1,4 +1,4 @@
-import { View, ScrollView } from "react-native";
+import { View, ScrollView, ActivityIndicator, Text } from "react-native";
 import React, { useEffect, useState } from "react";
 import Notifications from "../../components/UI/Notifications";
 import { StatusBar } from "expo-status-bar";
@@ -13,14 +13,18 @@ const notifications = () => {
   const [data, setData] = useState([]);
 
   const fetchData = async () => {
+    setLoading(true);
     try {
       const data = await apiRequest(
         `https://trakies-backend.onrender.com/api/notification/get?email=${user.email}`
       );
       setData(data);
-      console.log(data);
+      setLoading(false);
     } catch (error) {
       console.log(error);
+      setError(error?.message);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -35,25 +39,32 @@ const notifications = () => {
         translucent={true}
         animated
       />
-      <ScrollView
-        showsVerticalScrollIndicator={false}
-        contentContainerStyle={{ paddingBottom: 44 }}
-        className="h-full w-full"
-      >
-        <View className="mt-1 px-4">
-          {data.map((i, idx) => {
-            return (
-              <Notifications
-                key={idx}
-                id={i._id}
-                title={i.title}
-                content={i?.content}
-                seen={i.seen}
-              />
-            );
-          })}
+      {loading ? (
+        <View className="h-full w-full flex justify-center items-center">
+          <ActivityIndicator size="large" color="#0000ff" />
+          <Text>Loading...</Text>
         </View>
-      </ScrollView>
+      ) : (
+        <ScrollView
+          showsVerticalScrollIndicator={false}
+          contentContainerStyle={{ paddingBottom: 44 }}
+          className="h-full w-full"
+        >
+          <View className="mt-1 px-4">
+            {data.map((i, idx) => {
+              return (
+                <Notifications
+                  key={idx}
+                  id={i._id}
+                  title={i.title}
+                  content={i?.content}
+                  seen={i.seen}
+                />
+              );
+            })}
+          </View>
+        </ScrollView>
+      )}
     </View>
   );
 };
