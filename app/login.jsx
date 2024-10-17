@@ -52,8 +52,6 @@ const Login = () => {
 
       const userEmail = user.email;
 
-      console.log("email------->", userEmail);
-
       if (userEmail) {
         const roleData = await apiRequest(
           "https://trakies-backend.onrender.com/api/users/signin",

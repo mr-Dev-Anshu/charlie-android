@@ -1,72 +1,93 @@
 import { View, ScrollView, ActivityIndicator, Text } from "react-native";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import Notifications from "../../components/UI/Notifications";
 import { StatusBar } from "expo-status-bar";
 import { apiRequest } from "../../utils/helpers";
 import { useSelector } from "react-redux";
+import { TouchableOpacity } from "react-native-gesture-handler";
+import { router } from "expo-router";
+import LoginReqCard from "../../components/UI/LoginReqCard";
 
-const notifications = () => {
+const NotificationsScreen = () => {
   const { user } = useSelector((state) => state.user);
 
-  const [loading, setLoading] = useState(true);
+  const [initialLoading, setInitialLoading] = useState(true);
   const [error, setError] = useState(false);
   const [data, setData] = useState([]);
 
-  const fetchData = async () => {
-    setLoading(true);
+  const intervalRef = useRef(null);
+
+  const fetchData = async (isInitialFetch = false) => {
+    if (isInitialFetch) {
+      setInitialLoading(true);
+    }
     try {
-      const data = await apiRequest(
+      const newData = await apiRequest(
         `https://trakies-backend.onrender.com/api/notification/get?email=${user.email}`
       );
-      setData(data);
-      setLoading(false);
+      setData(() => {
+        const updatedData = [...newData];
+        return updatedData;
+      });
+      if (isInitialFetch) setInitialLoading(false);
     } catch (error) {
       console.log(error);
       setError(error?.message);
     } finally {
-      setLoading(false);
+      if (isInitialFetch) setInitialLoading(false);
     }
   };
 
   useEffect(() => {
-    fetchData();
-  }, [data]);
+    fetchData(true);
+
+    intervalRef.current = setInterval(() => fetchData(false), 10000);
+
+    return () => clearInterval(intervalRef.current);
+  }, []);
+
   return (
-    <View className="pt-28 h-full w-full px-3">
-      <StatusBar
-        style="dark"
-        backgroundColor="#fff"
-        translucent={true}
-        animated
-      />
-      {loading ? (
-        <View className="h-full w-full flex justify-center items-center">
-          <ActivityIndicator size="large" color="#0000ff" />
-          <Text>Loading...</Text>
+    <>
+      {user ? (
+        <View className="pt-28 h-full w-full px-3">
+          <StatusBar
+            style="dark"
+            backgroundColor="#fff"
+            translucent={true}
+            animated
+          />
+          {initialLoading ? (
+            <View className="h-full w-full flex justify-center items-center">
+              <ActivityIndicator size="large" color="#0000ff" />
+              <Text>Loading...</Text>
+            </View>
+          ) : (
+            <ScrollView
+              showsVerticalScrollIndicator={false}
+              contentContainerStyle={{ paddingBottom: 44 }}
+              className="h-full w-full"
+            >
+              <View className="mt-1 px-4">
+                {data.map((i, idx) => {
+                  return (
+                    <Notifications
+                      key={idx}
+                      id={i._id}
+                      title={i.title}
+                      content={i?.content}
+                      seen={i.seen}
+                    />
+                  );
+                })}
+              </View>
+            </ScrollView>
+          )}
         </View>
       ) : (
-        <ScrollView
-          showsVerticalScrollIndicator={false}
-          contentContainerStyle={{ paddingBottom: 44 }}
-          className="h-full w-full"
-        >
-          <View className="mt-1 px-4">
-            {data.map((i, idx) => {
-              return (
-                <Notifications
-                  key={idx}
-                  id={i._id}
-                  title={i.title}
-                  content={i?.content}
-                  seen={i.seen}
-                />
-              );
-            })}
-          </View>
-        </ScrollView>
+        <LoginReqCard />
       )}
-    </View>
+    </>
   );
 };
 
-export default notifications;
+export default NotificationsScreen;

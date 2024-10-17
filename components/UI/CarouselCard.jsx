@@ -7,7 +7,8 @@ import CarouselImageRender from "./CarouselImageRender";
 import { formatDate, calculateDuration } from "../../utils/helpers.js";
 
 const CarouselCard = ({ tour }) => {
-  const images = tour.images.map((i) => i.url);
+
+  const images = tour.images.filter((i) => !i.type).map((i) => i.url);
 
   return (
     <Link push href={`/details/${tour._id}`} className="ml-5 ">
