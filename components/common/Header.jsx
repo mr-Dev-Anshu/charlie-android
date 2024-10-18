@@ -1,4 +1,4 @@
-import { View, Text  } from "react-native";
+import { View, Text } from "react-native";
 import React from "react";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { useSelector } from "react-redux";
@@ -15,17 +15,17 @@ const Header = () => {
     "https://www.pngitem.com/pimgs/m/146-1468479_my-profile-icon-blank-profile-picture-circle-hd.png";
 
   const handleProfilePress = () => {
-    if (user == null) {
+    if (user === null) {
       router.push("/login");
       return;
     }
-    router.push("/profile");
+    router.push("/(admin)/tours");
   };
 
   return (
-    <View className="absolute mt-[50px] w-full px-4 h-[60px]">
+    <View className="absolute mt-[50px] w-full h-[60px]">
       <View
-        className={` h-full py-3 flex justify-between items-center flex-row px-4 shadow-xl shadow-black bg-white rounded-lg`}
+        className={` h-full py-3 flex justify-between items-center flex-row px-4 shadow-xl shadow-black bg-white`}
       >
         <TouchableOpacity
           onPress={() => router.push("/")}

@@ -62,48 +62,11 @@ const profile = () => {
         showsVerticalScrollIndicator={false}
         contentContainerStyle={{ paddingBottom: 56, paddingHorizontal: 8 }}
       >
+        <View>
+          <Text>Personal Details</Text>
+        </View>
+        <LabelValue label={"Name"} value={user?.given_name} />
         <View className="mt-3 space-y-5">
-          <LinearGradient
-            start={{ x: 0, y: 0 }}
-            end={{ x: 1, y: 0 }}
-            colors={["rgba(10, 92, 18, 1)", "rgba(255, 255, 255, 1)"]}
-            className="rounded-l-full w-full overflow-hidden"
-          >
-            <View className="flex flex-row py-2 px-2 justify-between items-center">
-              <View className=" flex-row flex justify-center items-center">
-                <Image
-                  source={{ uri: picture }}
-                  className="h-12 w-12 rounded-full"
-                />
-                <View className="ml-3">
-                  <Text className="font-bold text-sm text-white/70">Name</Text>
-                  <Text className="text-lg text-white font-bold capitalize">
-                    {user?.given_name}
-                  </Text>
-                </View>
-              </View>
-              <View className="flex justify-center items-center flex-row space-x-5">
-                {profile && (
-                  <TouchableOpacity
-                    onPress={() => router.push("/updateProfile")}
-                  >
-                    <FontAwesome6
-                      name="pen-to-square"
-                      color={"green"}
-                      size={28}
-                    />
-                  </TouchableOpacity>
-                )}
-                {(role !== undefined || role) && (
-                  <TouchableOpacity
-                    onPress={() => router.push("/(admin)/tours")}
-                  >
-                    <Ionicons name="lock-closed" color={"red"} size={28} />
-                  </TouchableOpacity>
-                )}
-              </View>
-            </View>
-          </LinearGradient>
           {profile ? (
             <View>
               <LabelValue
@@ -154,34 +117,38 @@ const profile = () => {
               </TouchableOpacity>
             </View>
           )}
-          <View className="px-2">
-            <View className="flex justify-center items-center">
-              <View className="flex flex-row justify-between items-center px-2 w-full">
-                <Text className="text-xl font-bold text-green-600">
-                  Members
-                </Text>
-                <View className="bg-green-600 h-6 w-6 flex justify-center items-center rounded-full">
-                  <Text className="text-base font-bold text-white">
-                    {members.length}
-                  </Text>
-                </View>
+          <View>
+            {members.length !== 0 ? (
+              <>
+                {members.map((mem, index) => (
+                  <MemberCard data={mem} key={index} />
+                ))}
+              </>
+            ) : (
+              <View className="w-full flex justify-center items-center border border-slate-500/50 rounded-lg p-2">
+                <Text>No Members</Text>
               </View>
-              <View className="w-full border rounded-full border-green-900/30" />
-            </View>
-            {members.length > 0 &&
-              members.map((mem, index) => (
-                <MemberCard data={mem} key={index} />
-              ))}
+            )}
           </View>
           <View className="flex justify-center items-center w-full px-6">
             <TouchableOpacity
               activeOpacity={0.8}
               onPress={() => router.push("/addMember")}
             >
-              <View className="flex justify-center items-center border h-12 rounded-lg flex-row w-full">
-                <Ionicons name="add-circle" size={28} color={"green"} />
-                <Text className="text-green-600 text-xl font-bold ml-3">
+              <View className="flex justify-center items-center flex-row w-full">
+                <Ionicons name="add-outline" size={16} color={"green"} />
+                <Text className="text-green-600 text-base ml-3">
                   Add Member
+                </Text>
+              </View>
+            </TouchableOpacity>
+            <TouchableOpacity
+              activeOpacity={0.8}
+              onPress={() => router.push("/updateProfile")}
+            >
+              <View className="flex justify-center items-center flex-row w-full mt-2">
+                <Text className="text-green-600 text-base ml-3">
+                  Edit Profile
                 </Text>
               </View>
             </TouchableOpacity>

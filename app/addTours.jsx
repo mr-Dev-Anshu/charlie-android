@@ -3,13 +3,17 @@ import {
   Text,
   TextInput,
   TouchableOpacity,
+  Switch,
+  ActivityIndicator,
   ScrollView,
 } from "react-native";
 import React, { useState } from "react";
 import { Ionicons } from "@expo/vector-icons";
-import { Switch } from "galio-framework";
 import { router } from "expo-router";
 import { useSelector } from "react-redux";
+import DateTimePicker from "@react-native-community/datetimepicker";
+import * as ImagePicker from "expo-image-picker";
+import { Image } from "expo-image";
 
 const addTours = () => {
   const { user } = useSelector((state) => state.user);
@@ -17,22 +21,59 @@ const addTours = () => {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const [tourName, setTourName] = useState("");
-  const [budget, setBudget] = useState("");
   const [location, setLocation] = useState("");
   const [description, setDescription] = useState("");
   const [difficulty, setDifficulty] = useState("");
   const [totalSeats, setTotalSeats] = useState("");
   const [distance, setDistance] = useState("");
-  const [startDate, setStartDate] = useState("");
-  const [endDate, setEndDate] = useState("");
   const [bookingCloseDate, setBookingCloseDate] = useState("");
   const [costPerPerson, setCostPerPerson] = useState("");
   const [adminCanReject, setAdminCanReject] = useState(false);
   const [paymentGatewayEnabled, setPaymentGatewayEnabled] = useState(false);
-  const [include, setInclude] = useState("");
-  const [notIncluded, setNotIncluded] = useState("");
-  const [backPack, setBackPack] = useState("");
-  const [checkInBaggage, setCheckInBaggage] = useState("");
+  const [image, setImage] = useState([]);
+
+  console.log("image---->", image);
+
+  // date range picker
+
+  const [startDate, setStartDate] = useState(new Date());
+  const [endDate, setEndDate] = useState(new Date());
+  const [showStartPicker, setShowStartPicker] = useState(false);
+  const [showEndPicker, setShowEndPicker] = useState(false);
+
+  const onChangeStart = (event, selectedDate) => {
+    const currentDate = selectedDate || startDate;
+    setShowStartPicker(false);
+    setStartDate(currentDate);
+  };
+
+  const onChangeEnd = (event, selectedDate) => {
+    const currentDate = selectedDate || endDate;
+    setShowEndPicker(false);
+    setEndDate(currentDate);
+  };
+
+  // date range picker
+
+  // image picker
+  const pickImage = async () => {
+    let result = await ImagePicker.launchImageLibraryAsync({
+      allowsMultipleSelection: true,
+      mediaTypes: ImagePicker.MediaTypeOptions.All,
+      aspect: [4, 3],
+      quality: 1,
+    });
+
+    console.log(result);
+
+    if (!result.canceled) {
+      setImage(result.assets);
+    }
+  };
+
+  const handleCancelImage = (fileName) => {
+    setImage(image.filter((i) => i.fileName !== fileName));
+  };
 
   const submitForm = async () => {
     if (
@@ -145,22 +186,14 @@ const addTours = () => {
               value={tourName}
               placeholderTextColor={"gray"}
               onChangeText={setTourName}
-              className={`border-2 py-2 mb-3 w-full border-green-600 rounded-lg placeholder:text-base placeholder:font-semibold px-3 `}
-            />
-            <TextInput
-              placeholder="Budget"
-              value={budget}
-              placeholderTextColor={"gray"}
-              onChangeText={setBudget}
-              keyboardType="numeric"
-              className={`border-2 py-2 mb-3 w-full border-green-600 rounded-lg placeholder:text-base placeholder:font-semibold px-3 `}
+              className={`border py-2 mb-3 w-full border-slate-500/50 rounded-lg placeholder:text-base  px-3 `}
             />
             <TextInput
               placeholder="Location"
               value={location}
               placeholderTextColor={"gray"}
               onChangeText={setLocation}
-              className={`border-2 py-2 mb-3 w-full border-green-600 rounded-lg placeholder:text-base placeholder:font-semibold px-3 `}
+              className={`border py-2 mb-3 w-full border-slate-500/50 rounded-lg placeholder:text-base  px-3 `}
             />
             <TextInput
               placeholder="Description"
@@ -169,14 +202,14 @@ const addTours = () => {
               placeholderTextColor={"gray"}
               onChangeText={setDescription}
               multiline
-              className={`border-2 mb-3 w-full border-green-600 rounded-lg placeholder:text-base placeholder:font-semibold px-3 h-24 py-2 `}
+              className={`border mb-3 w-full border-slate-500/50 rounded-lg placeholder:text-base  px-3 h-24 py-2 `}
             />
             <TextInput
-              placeholder="Difficulty [e.g., Easy, Medium, Hard]"
+              placeholder="Difficulty [Easy, Medium, Hard]"
               value={difficulty}
               placeholderTextColor={"gray"}
               onChangeText={setDifficulty}
-              className={`border-2 mb-3 w-full border-green-600 rounded-lg placeholder:text-base placeholder:font-semibold py-2 px-3`}
+              className={`border mb-3 w-full border-slate-500/50 rounded-lg placeholder:text-base  py-2 px-3`}
             />
             <TextInput
               placeholder="Total Seats"
@@ -184,36 +217,62 @@ const addTours = () => {
               placeholderTextColor={"gray"}
               onChangeText={setTotalSeats}
               keyboardType="numeric"
-              className={`border-2 py-2 mb-3 w-full border-green-600 rounded-lg placeholder:text-base placeholder:font-semibold px-3 `}
+              className={`border py-2 mb-3 w-full border-slate-500/50 rounded-lg placeholder:text-base  px-3 `}
             />
             <TextInput
-              placeholder="Distance"
+              placeholder="Distance (kms)"
               value={distance}
               placeholderTextColor={"gray"}
               onChangeText={setDistance}
               keyboardType="numeric"
-              className={`border-2 py-2 mb-3 w-full border-green-600 rounded-lg placeholder:text-base placeholder:font-semibold px-3 `}
+              className={`border py-2 mb-3 w-full border-slate-500/50 rounded-lg placeholder:text-base  px-3 `}
             />
-            <TextInput
-              placeholder="Start Date (YYYY-MM-DD)"
-              value={startDate}
-              placeholderTextColor={"gray"}
-              onChangeText={setStartDate}
-              className={`border-2 py-2 mb-3 w-full border-green-600 rounded-lg placeholder:text-base placeholder:font-semibold px-3 `}
-            />
-            <TextInput
-              placeholder="End Date (YYYY-MM-DD)"
-              value={endDate}
-              placeholderTextColor={"gray"}
-              onChangeText={setEndDate}
-              className={`border-2 py-2 mb-3 w-full border-green-600 rounded-lg placeholder:text-base placeholder:font-semibold px-3 `}
-            />
+            <View>
+              <TouchableOpacity onPress={() => setShowStartPicker(true)}>
+                <TextInput
+                  editable={false}
+                  className={`border py-2 mb-3 w-full border-slate-500/50 rounded-lg text-black placeholder:text-base  px-3 `}
+                  value={
+                    startDate
+                      ? startDate.toLocaleDateString()
+                      : "Select Start Date"
+                  }
+                  placeholder="Select Start Date"
+                />
+              </TouchableOpacity>
+              {showStartPicker && (
+                <DateTimePicker
+                  value={startDate}
+                  mode="date"
+                  display="default"
+                  onChange={onChangeStart}
+                />
+              )}
+              <TouchableOpacity onPress={() => setShowEndPicker(true)}>
+                <TextInput
+                  editable={false}
+                  className={`border py-2 mb-3 w-full border-slate-500/50 rounded-lg text-black placeholder:text-base  px-3 `}
+                  value={
+                    endDate ? endDate.toLocaleDateString() : "Select End Date"
+                  }
+                  placeholder="Select End Date"
+                />
+              </TouchableOpacity>
+              {showEndPicker && (
+                <DateTimePicker
+                  value={endDate}
+                  mode="date"
+                  display="default"
+                  onChange={onChangeEnd}
+                />
+              )}
+            </View>
             <TextInput
               placeholder="Booking Close (YYYY-MM-DD)"
               value={bookingCloseDate}
               placeholderTextColor={"gray"}
               onChangeText={setBookingCloseDate}
-              className={`border-2 py-2 mb-3 w-full border-green-600 rounded-lg placeholder:text-base placeholder:font-semibold px-3 `}
+              className={`border py-2 mb-3 w-full border-slate-500/50 rounded-lg placeholder:text-base  px-3 `}
             />
             <TextInput
               placeholder="Cost Per Person"
@@ -221,38 +280,14 @@ const addTours = () => {
               placeholderTextColor={"gray"}
               onChangeText={setCostPerPerson}
               keyboardType="numeric"
-              className={`border-2 py-2 mb-3 w-full border-green-600 rounded-lg placeholder:text-base placeholder:font-semibold px-3 `}
+              className={`border py-2 mb-3 w-full border-slate-500/50 rounded-lg placeholder:text-base  px-3 `}
             />
-            <TextInput
-              placeholder="Included Items (comma separated)"
-              value={include}
-              placeholderTextColor={"gray"}
-              onChangeText={setInclude}
-              className={`border-2 py-2 mb-3 w-full border-green-600 rounded-lg placeholder:text-base placeholder:font-semibold px-3 `}
-            />
-            <TextInput
-              placeholder="Not Included Items (comma separated)"
-              value={notIncluded}
-              placeholderTextColor={"gray"}
-              onChangeText={setNotIncluded}
-              className={`border-2 py-2 mb-3 w-full border-green-600 rounded-lg placeholder:text-base placeholder:font-semibold px-3 `}
-            />
-            <TextInput
-              placeholder="Backpack Items (comma separated)"
-              value={backPack}
-              placeholderTextColor={"gray"}
-              onChangeText={setBackPack}
-              className={`border-2 py-2 mb-3 w-full border-green-600 rounded-lg placeholder:text-base placeholder:font-semibold px-3 `}
-            />
-            <TextInput
-              placeholder="Check-in Baggage Items (comma separated)"
-              value={checkInBaggage}
-              placeholderTextColor={"gray"}
-              onChangeText={setCheckInBaggage}
-              className={`border-2 py-2 mb-3 w-full border-green-600 rounded-lg placeholder:text-base placeholder:font-semibold px-3 `}
-            />
-            <View className="flex-row justify-between items-center w-full mb-3 border-2 py-1 rounded-lg px-2 border-green-600">
-              <Text className={`text-lg font-semibold `}>
+            <View className="flex-row py-2 justify-between items-center w-full mb-3 border  rounded-lg px-2 border-slate-500/50">
+              <Text
+                className={`text-base ${
+                  adminCanReject ? "text-black" : "text-gray-500"
+                } `}
+              >
                 Admin Can Reject Booking?
               </Text>
               <View style={{ transform: [{ scaleX: 0.8 }, { scaleY: 0.8 }] }}>
@@ -264,8 +299,12 @@ const addTours = () => {
                 />
               </View>
             </View>
-            <View className="flex-row justify-between items-center w-full mb-3 border-2 py-1 rounded-lg px-2 border-green-600">
-              <Text className={`text-lg font-semibold `}>
+            <View className="flex-row py-2 justify-between items-center w-full mb-3 border  rounded-lg px-2 border-slate-500/50">
+              <Text
+                className={`text-base ${
+                  paymentGatewayEnabled ? "text-black" : "text-gray-500"
+                }  `}
+              >
                 Payment Gateway Enabled?
               </Text>
               <View style={{ transform: [{ scaleX: 0.8 }, { scaleY: 0.8 }] }}>
@@ -279,33 +318,65 @@ const addTours = () => {
                 />
               </View>
             </View>
+            {image && image.length > 0 ? (
+              <View className="w-full h-fit">
+                {image.map((img, idx) => (
+                  <View className="relative">
+                    <Image
+                      key={idx}
+                      source={{ uri: img.uri }}
+                      style={{
+                        width: "100%",
+                        height: 156,
+                        borderRadius: 10,
+                        marginTop: 10,
+                      }}
+                    />
+                    <TouchableOpacity
+                      activeOpacity={0.5}
+                      onPress={() => handleCancelImage(img.fileName)}
+                      className="absolute top-4 right-2 bg-red-600 rounded-full"
+                    >
+                      <Ionicons
+                        name="close-outline"
+                        size={16}
+                        color={"white"}
+                      />
+                    </TouchableOpacity>
+                  </View>
+                ))}
+              </View>
+            ) : (
+              <TouchableOpacity
+                activeOpacity={0.8}
+                containerStyle={{ width: "100%" }}
+                onPress={pickImage}
+              >
+                <View className="flex h-32 border border-green-700 rounded-lg flex-row justify-center items-center space-x-3">
+                  <Ionicons name="add-circle" size={20} color={"green"} />
+                  <Text className="text-base font-semibold text-green-600">
+                    Upload tour images here
+                  </Text>
+                </View>
+              </TouchableOpacity>
+            )}
           </View>
         </View>
       </ScrollView>
       <View
-        className={` w-full py-2 flex-row justify-between bottom-2 space-x-3 `}
+        className={`w-full py-2 flex-row justify-between bottom-2 space-x-3 `}
       >
         <TouchableOpacity
-          activeOpacity={0.8}
-          onPress={() => router.back()}
-          className="flex-1"
+          activeOpacity={0.7}
+          className="w-full bg-green-700 flex justify-center items-center py-3 rounded-lg"
+          // onPress={submitForm}
+          onPress={() => router.push("/tour/123")}
         >
-          <View className="bg-gray-500 py-2 rounded-lg">
-            <Text className="text-center text-white font-bold text-lg">
-              Cancel
-            </Text>
-          </View>
-        </TouchableOpacity>
-        <TouchableOpacity
-          activeOpacity={0.8}
-          onPress={submitForm}
-          className="flex-1"
-        >
-          <View className="bg-green-600 py-2 rounded-lg">
-            <Text className="text-center text-white font-bold text-lg">
-              {loading ? "Uploading..." : "Proceed"}
-            </Text>
-          </View>
+          {loading ? (
+            <ActivityIndicator color="white" size={"small"} />
+          ) : (
+            <Text style={{ color: "white", fontSize: 18 }}>Submit</Text>
+          )}
         </TouchableOpacity>
       </View>
     </View>

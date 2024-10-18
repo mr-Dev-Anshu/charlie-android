@@ -4,7 +4,6 @@ import FontAwesome6 from "@expo/vector-icons/FontAwesome6";
 import Octicons from "@expo/vector-icons/Octicons";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import Header from "@/components/common/Header";
-import { useColorScheme } from "react-native";
 
 export default function AdminLayout() {
   return (

@@ -4,7 +4,6 @@ import * as SplashScreen from "expo-splash-screen";
 import { useEffect } from "react";
 import "react-native-reanimated";
 import { StatusBar } from "expo-status-bar";
-
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { Provider } from "react-redux";
 import store from "@/redux/store.js";
@@ -49,7 +48,7 @@ export default function RootLayout() {
             name="addTourImgs"
             options={getOpt("Add Tour Images")}
           />
-          <Stack.Screen name="editProfile" options={getOpt("Edit Profile")} />
+          <Stack.Screen name="editProfile" options={getOpt("Create Profile")} />
           <Stack.Screen
             name="updateProfile"
             options={getOpt("Update Profile")}
@@ -58,13 +57,47 @@ export default function RootLayout() {
           <Stack.Screen name="tourmates" options={getOpt("Tour Mates")} />
           <Stack.Screen name="details/[id]" options={getOpt("Tour Details")} />
           <Stack.Screen name="postdetails/[id]" options={getOpt("Post")} />
-          <Stack.Screen name="tour/[id]" options={getOpt("Tour")} />
+          <Stack.Screen name="tour/[id]" options={getOpt("Tour Details")} />
           <Stack.Screen
             name="mytour/[id]"
             options={getOpt("My Tour Details")}
           />
           <Stack.Screen name="payment" options={getOpt("Payment")} />
           <Stack.Screen name="+not-found" options={{ headerShown: false }} />
+          {/* add tour details screens */}
+          <Stack.Screen
+            name="(addTourDetails)/accomodation/[id]"
+            options={getOpt("Accomodations")}
+          />
+          <Stack.Screen
+            name="(addTourDetails)/allocatedCoordinators/[id]"
+            options={getOpt("Allocated Coordinators")}
+          />
+          <Stack.Screen
+            name="(addTourDetails)/checkPoints/[id]"
+            options={getOpt("Check Points")}
+          />
+          <Stack.Screen
+            name="(addTourDetails)/includedNotIncluded/[id]"
+            options={getOpt("Do's & Dont's")}
+          />
+          <Stack.Screen
+            name="(addTourDetails)/myNotes/[id]"
+            options={getOpt("My Notes")}
+          />
+          <Stack.Screen
+            name="(addTourDetails)/tourDetails/[id]"
+            options={getOpt("Tour Details")}
+          />
+          <Stack.Screen
+            name="(addTourDetails)/transportation/[id]"
+            options={getOpt("Transportations")}
+          />
+          <Stack.Screen
+            name="(addTourDetails)/guestsEnrolled/[id]"
+            options={getOpt("Enrolled Guests")}
+          />
+          {/* add tour details screens */}
         </Stack>
       </GestureHandlerRootView>
     </Provider>

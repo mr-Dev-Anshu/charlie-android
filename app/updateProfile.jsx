@@ -32,7 +32,6 @@ const UpdateProfile = () => {
   const [identityProofNumber, setIdentityProofNumber] = useState(
     profile.id_number
   );
-  const [info, setInfo] = useState(profile.Ganesh);
   const [gender, setGender] = useState(profile.gender);
   const [idProofType, setIdProofType] = useState(profile.id_type);
 
@@ -75,7 +74,6 @@ const UpdateProfile = () => {
             address,
             id_type: idProofType,
             id_number: identityProofNumber,
-            Ganesh: info,
           }),
         }
       );
@@ -130,11 +128,10 @@ const UpdateProfile = () => {
             style={{
               textAlign: "center",
               fontSize: 18,
-              fontWeight: "bold",
               paddingVertical: 5,
             }}
           >
-            Enter New Values
+            Enter Updates
           </Text>
           <TextInput
             placeholder={user.name}
@@ -189,11 +186,6 @@ const UpdateProfile = () => {
             onChangeText={setIdentityProofNumber}
             style={styles.input}
           />
-          <TextInput
-            placeholder="How do you know about us?"
-            onChangeText={setInfo}
-            style={styles.input}
-          />
         </View>
       </ScrollView>
       <View
@@ -217,7 +209,7 @@ const UpdateProfile = () => {
           {loading ? (
             <ActivityIndicator size="small" color="#fff" />
           ) : (
-            <Text style={{ color: "#fff", fontWeight: "bold", fontSize: 16 }}>
+            <Text style={{ color: "#fff", fontSize: 16 }}>
               Update Profile
             </Text>
           )}
@@ -229,7 +221,7 @@ const UpdateProfile = () => {
             padding: 8,
             borderRadius: 10,
             borderColor: "#228B22",
-            borderWidth: 2,
+            borderWidth: 1,
             display: "flex",
             justifyContent: "center",
             alignItems: "center",
@@ -247,11 +239,10 @@ const UpdateProfile = () => {
 const styles = {
   input: {
     fontSize: 16,
-    fontWeight: "bold",
     paddingVertical: 12,
     paddingHorizontal: 10,
-    borderColor: "green",
-    borderWidth: 2,
+    borderColor: "gray",
+    borderWidth: 1,
     borderRadius: 10,
     marginTop: 10,
   },

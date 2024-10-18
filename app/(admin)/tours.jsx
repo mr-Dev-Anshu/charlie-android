@@ -8,21 +8,21 @@ const Tours = () => {
   return (
     <View
       style={{
-        flex: 1, 
+        flex: 1,
         marginTop: 112,
         justifyContent: "center",
         alignItems: "center",
         position: "relative",
       }}
-      >
+    >
       <ScrollView
         contentContainerStyle={{
-          flexGrow: 1, 
+          flexGrow: 1,
           justifyContent: "center",
           alignItems: "center",
           paddingHorizontal: 16,
           paddingBottom: 200,
-          paddingHorizontal:16
+          paddingHorizontal: 16,
         }}
         showsVerticalScrollIndicator={false}
       >
@@ -32,58 +32,13 @@ const Tours = () => {
           ))}
         </View>
       </ScrollView>
-      <View
-        style={{
-          flexDirection: "row",
-          justifyContent: "center",
-          alignItems: "center",
-          width: "100%",
-          paddingHorizontal: 12,
-          paddingVertical: 8,
-          position: "absolute",
-          bottom:0,
-          backgroundColor: "white",
-          gap:24
-        }}
-      >
+      <View className="absolute bottom-0 w-full px-6 py-3 bg-white">
         <TouchableOpacity
           activeOpacity={0.7}
+          className="w-full bg-green-700 flex justify-center items-center py-3 rounded-lg"
           onPress={() => router.push("/addTours")}
         >
-          <View
-            style={{
-              backgroundColor: "green",
-              paddingVertical: 8,
-              borderRadius: 10,
-              width: 160,
-              justifyContent: "center",
-              alignItems: "center",
-            }}
-          >
-            <Text style={{ color: "white", fontSize: 18, fontWeight: "600" }}>
-              Add Tour
-            </Text>
-          </View>
-        </TouchableOpacity>
-
-        <TouchableOpacity
-          activeOpacity={0.7}
-          onPress={() => router.push("/addRoles")}
-        >
-          <View
-            style={{
-              backgroundColor: "green",
-              paddingVertical: 8,
-              borderRadius: 10,
-              width: 160,
-              justifyContent: "center",
-              alignItems: "center",
-            }}
-          >
-            <Text style={{ color: "white", fontSize: 18, fontWeight: "600" }}>
-              Add Roles
-            </Text>
-          </View>
+          <Text style={{ color: "white", fontSize: 18 }}>Create Tour</Text>
         </TouchableOpacity>
       </View>
     </View>

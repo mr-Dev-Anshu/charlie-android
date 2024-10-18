@@ -13,7 +13,6 @@ export default function HomeScreen() {
   const dispatch = useDispatch();
   const [isConnected, setIsConnected] = useState(null);
 
-
   const getAllTours = async () => {
     try {
       const response = await fetch(
