@@ -14,6 +14,7 @@ import { useSelector } from "react-redux";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import * as ImagePicker from "expo-image-picker";
 import { Image } from "expo-image";
+import { format } from "date-fns";
 
 const addTours = () => {
   const { user } = useSelector((state) => state.user);
@@ -26,20 +27,19 @@ const addTours = () => {
   const [difficulty, setDifficulty] = useState("");
   const [totalSeats, setTotalSeats] = useState("");
   const [distance, setDistance] = useState("");
-  const [bookingCloseDate, setBookingCloseDate] = useState("");
   const [costPerPerson, setCostPerPerson] = useState("");
   const [adminCanReject, setAdminCanReject] = useState(false);
   const [paymentGatewayEnabled, setPaymentGatewayEnabled] = useState(false);
   const [image, setImage] = useState([]);
 
-  console.log("image---->", image);
-
   // date range picker
 
-  const [startDate, setStartDate] = useState(new Date());
-  const [endDate, setEndDate] = useState(new Date());
+  const [startDate, setStartDate] = useState(null);
+  const [endDate, setEndDate] = useState(null);
+  const [bookingCloseDate, setBookingCloseDate] = useState(null);
   const [showStartPicker, setShowStartPicker] = useState(false);
   const [showEndPicker, setShowEndPicker] = useState(false);
+  const [showBookingClosePicker, setShowBookingClosePicker] = useState(false);
 
   const onChangeStart = (event, selectedDate) => {
     const currentDate = selectedDate || startDate;
@@ -51,6 +51,12 @@ const addTours = () => {
     const currentDate = selectedDate || endDate;
     setShowEndPicker(false);
     setEndDate(currentDate);
+  };
+
+  const onChangeBookingClose = (event, selectedDate) => {
+    const currentDate = selectedDate || bookingCloseDate;
+    setShowBookingClosePicker(false);
+    setBookingCloseDate(currentDate);
   };
 
   // date range picker
@@ -233,16 +239,14 @@ const addTours = () => {
                   editable={false}
                   className={`border py-2 mb-3 w-full border-slate-500/50 rounded-lg text-black placeholder:text-base  px-3 `}
                   value={
-                    startDate
-                      ? startDate.toLocaleDateString()
-                      : "Select Start Date"
+                    startDate ? format(startDate, "yyyy-MM-dd") : new Date()
                   }
                   placeholder="Select Start Date"
                 />
               </TouchableOpacity>
               {showStartPicker && (
                 <DateTimePicker
-                  value={startDate}
+                  value={new Date()}
                   mode="date"
                   display="default"
                   onChange={onChangeStart}
@@ -252,28 +256,39 @@ const addTours = () => {
                 <TextInput
                   editable={false}
                   className={`border py-2 mb-3 w-full border-slate-500/50 rounded-lg text-black placeholder:text-base  px-3 `}
-                  value={
-                    endDate ? endDate.toLocaleDateString() : "Select End Date"
-                  }
+                  value={endDate ? format(endDate, "yyyy-MM-dd") : new Date()}
                   placeholder="Select End Date"
                 />
               </TouchableOpacity>
               {showEndPicker && (
                 <DateTimePicker
-                  value={endDate}
+                  value={new Date()}
                   mode="date"
                   display="default"
                   onChange={onChangeEnd}
                 />
               )}
+              <TouchableOpacity onPress={() => setShowBookingClosePicker(true)}>
+                <TextInput
+                  editable={false}
+                  className={`border py-2 mb-3 w-full border-slate-500/50 rounded-lg text-black placeholder:text-base  px-3 `}
+                  value={
+                    bookingCloseDate
+                      ? format(bookingCloseDate, "yyyy-MM-dd")
+                      : new Date()
+                  }
+                  placeholder="Select Booking Close Date"
+                />
+              </TouchableOpacity>
+              {showBookingClosePicker && (
+                <DateTimePicker
+                  value={new Date()}
+                  mode="date"
+                  display="default"
+                  onChange={onChangeBookingClose}
+                />
+              )}
             </View>
-            <TextInput
-              placeholder="Booking Close (YYYY-MM-DD)"
-              value={bookingCloseDate}
-              placeholderTextColor={"gray"}
-              onChangeText={setBookingCloseDate}
-              className={`border py-2 mb-3 w-full border-slate-500/50 rounded-lg placeholder:text-base  px-3 `}
-            />
             <TextInput
               placeholder="Cost Per Person"
               value={costPerPerson}

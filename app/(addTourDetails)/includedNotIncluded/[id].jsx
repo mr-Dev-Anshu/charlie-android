@@ -1,7 +1,12 @@
-import React, { useState } from "react";
-import { View, Text, TouchableOpacity, ScrollView } from "react-native";
+import React, { useState, useRef } from "react";
+import { View, Text, TouchableOpacity, ScrollView, Animated, LayoutAnimation, UIManager, Platform } from "react-native";
 import { Checkbox } from "react-native-paper";
 import { Ionicons } from "@expo/vector-icons";
+
+if (Platform.OS === "android") {
+  UIManager.setLayoutAnimationEnabledExperimental &&
+    UIManager.setLayoutAnimationEnabledExperimental(true);
+}
 
 const TourDetails = () => {
   const [includedItems, setIncludedItems] = useState([
@@ -23,6 +28,16 @@ const TourDetails = () => {
   const [showIncludedDropdown, setShowIncludedDropdown] = useState(false);
   const [showNotIncludedDropdown, setShowNotIncludedDropdown] = useState(false);
 
+  const handleIncludedDropdown = () => {
+    LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
+    setShowIncludedDropdown(!showIncludedDropdown);
+  };
+
+  const handleNotIncludedDropdown = () => {
+    LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
+    setShowNotIncludedDropdown(!showNotIncludedDropdown);
+  };
+
   const handleIncludedCheckboxChange = (id) => {
     setIncludedItems((prevState) =>
       prevState.map((item) =>
@@ -38,10 +53,12 @@ const TourDetails = () => {
       )
     );
   };
+
   return (
     <ScrollView contentContainerStyle={{ padding: 16 }}>
+      {/* Included Dropdown */}
       <TouchableOpacity
-        onPress={() => setShowIncludedDropdown(!showIncludedDropdown)}
+        onPress={handleIncludedDropdown}
         style={{
           flexDirection: "row",
           justifyContent: "space-between",
@@ -80,7 +97,7 @@ const TourDetails = () => {
         </View>
       )}
       <TouchableOpacity
-        onPress={() => setShowNotIncludedDropdown(!showNotIncludedDropdown)}
+        onPress={handleNotIncludedDropdown}
         style={{
           flexDirection: "row",
           justifyContent: "space-between",

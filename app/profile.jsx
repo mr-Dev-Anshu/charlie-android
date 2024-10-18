@@ -4,10 +4,8 @@ import { useRouter } from "expo-router";
 import LabelValue from "../components/UI/LabelValue";
 import { useSelector } from "react-redux";
 import { TouchableOpacity } from "react-native-gesture-handler";
-import { FontAwesome6, Ionicons } from "@expo/vector-icons";
+import { Ionicons } from "@expo/vector-icons";
 import MemberCard from "../components/UI/MemberCard";
-import { Image } from "expo-image";
-import LinearGradient from "react-native-linear-gradient";
 import { formatDate } from "../utils/helpers";
 
 const profile = () => {
@@ -135,7 +133,7 @@ const profile = () => {
               activeOpacity={0.8}
               onPress={() => router.push("/addMember")}
             >
-              <View className="flex justify-center items-center flex-row w-full">
+              <View className="flex justify-center items-center flex-row w-[165px] border py-2 rounded-xl">
                 <Ionicons name="add-outline" size={16} color={"green"} />
                 <Text className="text-green-600 text-base ml-3">
                   Add Member
@@ -146,12 +144,24 @@ const profile = () => {
               activeOpacity={0.8}
               onPress={() => router.push("/updateProfile")}
             >
-              <View className="flex justify-center items-center flex-row w-full mt-2">
+              <View className="flex justify-center items-center flex-row w-[165px] mt-2 border py-2 rounded-xl">
                 <Text className="text-green-600 text-base ml-3">
                   Edit Profile
                 </Text>
               </View>
             </TouchableOpacity>
+            {role && (
+              <TouchableOpacity
+                activeOpacity={0.8}
+                onPress={() => router.push("/(admin)/tours")}
+              >
+                <View className="flex justify-center items-center flex-row w-[165px] mt-2 border py-2 rounded-xl">
+                  <Text className="text-green-600 text-base ml-3">
+                    Admin Screen
+                  </Text>
+                </View>
+              </TouchableOpacity>
+            )}
           </View>
         </View>
       </ScrollView>
