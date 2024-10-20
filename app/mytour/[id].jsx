@@ -39,7 +39,7 @@ const MyTourDetails = () => {
   }));
 
   return (
-    <View className={`px-4 relative h-full flex items-center`}>
+    <View className={`px-3 relative h-full flex items-center`}>
       <View className={`px-5 w-full flex justify-center items-center`}>
         <View className={`flex flex-row justify-between`}>
           <Pressable onPress={() => handleTabPress("tourInfo")}>
@@ -61,7 +61,7 @@ const MyTourDetails = () => {
           />
         </Animated.View>
       </View>
-      <View className={``}>
+      <View className={`w-full`}>
         {activeTab === "tourInfo" ? (
           <MyTourInfo tour={tour} />
         ) : listView ? (
@@ -71,7 +71,7 @@ const MyTourDetails = () => {
         )}
       </View>
       <View
-        className={`absolute bottom-2 w-full py-2 rounded-xl flex flex-row justify-between `}
+        className={`absolute bottom-0 w-full py-2 px-2 flex flex-row justify-between bg-white`}
       >
         {activeTab === "tourInfo" ? (
           <TouchableOpacity
@@ -79,7 +79,7 @@ const MyTourDetails = () => {
             activeOpacity={0.8}
           >
             <View
-              className={`flex flex-row justify-center items-center bg-gray-500 w-[180px] h-12 space-x-4 rounded-lg`}
+              className={`flex flex-row justify-center items-center bg-gray-500 w-[160px] h-12 space-x-4 rounded-lg`}
             >
               <Ionicons
                 name={"checkmark-circle-outline"}
@@ -95,7 +95,7 @@ const MyTourDetails = () => {
             activeOpacity={0.8}
           >
             <View
-              className={`flex flex-row justify-center items-center bg-gray-500 w-[180px] h-12 space-x-4 rounded-lg`}
+              className={`flex flex-row justify-center items-center bg-gray-500 w-[160px] h-12 space-x-4 rounded-lg`}
             >
               <Ionicons
                 name={listView ? "compass" : "list"}
@@ -110,7 +110,7 @@ const MyTourDetails = () => {
         )}
         <TouchableOpacity activeOpacity={0.8}>
           <View
-            className={`flex flex-row justify-center items-center bg-green-700 w-[180px] h-12 space-x-4 rounded-lg`}
+            className={`flex flex-row justify-center items-center bg-green-700 w-[160px] h-12 space-x-4 rounded-lg`}
           >
             <Ionicons name="qr-code-outline" size={20} color="white" />
             <Text className={` font-semibold`}>Check-In</Text>

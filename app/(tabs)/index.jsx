@@ -4,14 +4,18 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import CarouselComponent from "@/components/CarouselComponent";
 import { View, Text } from "react-native";
 import { useEffect, useState } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { setTour } from "@/redux/slices/tourSlice";
 import { StatusBar } from "expo-status-bar";
 import * as Network from "expo-network";
+import { useRouter } from "expo-router";
 
 export default function HomeScreen() {
   const dispatch = useDispatch();
   const [isConnected, setIsConnected] = useState(null);
+  const { user } = useSelector((state) => state.user);
+  const router = useRouter(); 
+  const [isMounted, setIsMounted] = useState(false);
 
   const getAllTours = async () => {
     try {
@@ -34,11 +38,20 @@ export default function HomeScreen() {
   };
 
   useEffect(() => {
+    setIsMounted(true);
+
     checkNetworkConnection();
-    if (isConnected) {
+    if (isMounted && !user) {
+      router.push("/login");
+    }
+
+    if (isConnected && user) {
       getAllTours();
     }
-  }, [isConnected]);
+    return () => {
+      setIsMounted(false);
+    };
+  }, [isConnected, user, isMounted]);
 
   return (
     <SafeAreaView>

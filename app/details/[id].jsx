@@ -97,7 +97,7 @@ const DetailsScreen = ({ params }) => {
             className="rounded-xl"
           >
             <View
-              className={`flex flex-row justify-between border-2  py-3 px-4 rounded-xl `}
+              className={`flex flex-row justify-between py-3 px-4 rounded-xl`}
             >
               <View className="space-y-2">
                 <Text className={`font-medium `}>Price</Text>

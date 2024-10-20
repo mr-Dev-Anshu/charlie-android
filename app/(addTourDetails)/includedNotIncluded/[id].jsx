@@ -1,5 +1,14 @@
 import React, { useState, useRef } from "react";
-import { View, Text, TouchableOpacity, ScrollView, Animated, LayoutAnimation, UIManager, Platform } from "react-native";
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  ScrollView,
+  Animated,
+  LayoutAnimation,
+  UIManager,
+  Platform,
+} from "react-native";
 import { Checkbox } from "react-native-paper";
 import { Ionicons } from "@expo/vector-icons";
 
@@ -9,6 +18,7 @@ if (Platform.OS === "android") {
 }
 
 const TourDetails = () => {
+  
   const [includedItems, setIncludedItems] = useState([
     { id: 1, label: "Food", checked: false },
     { id: 2, label: "Accommodation", checked: false },
@@ -53,6 +63,24 @@ const TourDetails = () => {
       )
     );
   };
+
+  const includedItemsArray = includedItems.filter(
+    (item) => item.checked === true
+  );
+
+  const notIncludedItemsArray = includedItems.filter(
+    (item) => item.checked === true
+  );
+
+  console.log(
+    "included-notincluded",
+    includedItemsArray,
+    notIncludedItemsArray
+  );
+
+  const handleAdd = ()=>{
+
+  }
 
   return (
     <ScrollView contentContainerStyle={{ padding: 16 }}>

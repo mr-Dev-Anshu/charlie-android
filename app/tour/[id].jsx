@@ -5,9 +5,15 @@ import LinearGradient from "react-native-linear-gradient";
 import { ScrollView, TouchableOpacity } from "react-native-gesture-handler";
 import { Ionicons } from "@expo/vector-icons";
 import { StatusBar } from "expo-status-bar";
+import { useSelector } from "react-redux";
+import { formatDate } from "../../utils/helpers";
 
 const tourDetails = () => {
   const { id } = useLocalSearchParams();
+  const { tour } = useSelector((state) => state.tour);
+
+  const tourDetail = tour.find((item) => item._id === id);
+
   return (
     <View className="flex flex-1 flex-col w-full h-full px-4 justify-between items-center">
       <StatusBar
@@ -27,12 +33,14 @@ const tourDetails = () => {
             className={`flex flex-row justify-between py-3 px-4 rounded-lg `}
           >
             <View className="space-y-2">
-              <Text className={`font-semibold `}>Srishilam Tour</Text>
-              <Text>Mon 12 Jan, 2024</Text>
+              <Text className={`font-semibold `}>{tourDetail.name}</Text>
+              <Text>{formatDate(tourDetail.tour_start)}</Text>
             </View>
             <View className="space-y-2">
-              <Text className={`font-semibold text-right`}>50 Seats</Text>
-              <Text className={`text-right`}>Fri 17 Jan, 2024</Text>
+              <Text
+                className={`font-semibold text-right`}
+              >{`${tourDetail.total_seats} Seats`}</Text>
+              <Text className={`text-right`}>{formatDate(tourDetail.tour_end)}</Text>
             </View>
           </View>
         </LinearGradient>
@@ -133,7 +141,7 @@ const DetailScreenButton = ({ title, href, id }) => {
     <TouchableOpacity
       activeOpacity={0.8}
       onPress={() => router.push(`${href}/${id}`)}
-      className="py-4 border border-gray-500/50 rounded-lg mt-3 w-full"
+      className="py-4 rounded-lg mt-3 w-full bg-white shadow-xl shadow-black/50"
     >
       <View className="flex flex-row justify-between items-center px-2 w-full">
         <Text>{title}</Text>

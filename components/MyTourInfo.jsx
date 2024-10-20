@@ -18,16 +18,16 @@ const MyTourInfo = ({ tour }) => {
         showsVerticalScrollIndicator={false}
       >
         <View className="mt-5">
-          <Text className={`text-base font-bold`}>Tour Name</Text>
-          <Text className={`text-md mt-2 tracking-wider`}>{tour.name}</Text>
+          <Text className={`text-md font-bold`}>Tour Name</Text>
+          <Text className={`text-base mt-2 tracking-wider`}>{tour.name}</Text>
         </View>
         <View className="mt-4">
-          <Text className={`text-base font-bold`}>Description</Text>
-          <Text className={`text-md mt-2 tracking-wider`}>{tour.info}</Text>
+          <Text className={`text-md font-bold`}>Description</Text>
+          <Text className={`text-base mt-2 tracking-wide text-justify`}>{tour.info}</Text>
         </View>
         <View className="mt-3">
-          <Text className={`text-base font-bold`}>Date</Text>
-          <Text className={`text-md mt-2 tracking-wider`}>{tour.date}</Text>
+          <Text className={`text-md font-bold`}>Date</Text>
+          <Text className={`text-base mt-2 tracking-wider`}>{tour.date}</Text>
         </View>
         <View className="px-2 mt-5">
           <View className="flex flex-row justify-left items-center space-x-3">
@@ -148,17 +148,10 @@ const MyTourInfo = ({ tour }) => {
           </View>
         </View>
         <View className="mt-6 px-2">
-          <LinearGradient
-            start={{ x: 0, y: 0 }}
-            end={{ x: 1, y: 0 }}
-            colors={["rgba(10, 110, 1, 1)", "rgba(255, 255, 255, 1)"]}
-            className="rounded-l-md"
-          >
-            <View className="flex flex-row space-x-2 justify-start items-center my-1 ml-2 ">
-              <Ionicons name="bus" size={20} color={"white"} />
-              <Text className={`font-bold`}>Transport Details</Text>
-            </View>
-          </LinearGradient>
+          <View className="flex flex-row space-x-2 justify-start items-center my-1 ml-2 ">
+            <Ionicons name="bus" size={20} color={"green"} />
+            <Text className={`font-bold`}>Transport Details</Text>
+          </View>
           <View className="ml-2 mt-2">
             <View className="mt-2">
               <Text>{`From ${transportDetails?.up?.from} to ${transportDetails?.up?.to}`}</Text>
@@ -201,10 +194,7 @@ const MyTourInfo = ({ tour }) => {
                 </Text>
               </View>
             </View>
-            <View
-              className="w-full h-[1px] mt-2"
-              
-            />
+            <View className="w-full h-[1px] mt-2" />
           </View>
           <View className="ml-2 mt-2">
             <View className="mt-2">
@@ -237,17 +227,10 @@ const MyTourInfo = ({ tour }) => {
           </View>
         </View>
         <View className="mt-6 px-2">
-          <LinearGradient
-            start={{ x: 0, y: 0 }}
-            end={{ x: 1, y: 0 }}
-            colors={["rgba(10, 110, 1, 1)", "rgba(255, 255, 255, 0.2)"]}
-            className="rounded-l-md"
-          >
-            <View className="flex flex-row space-x-2 justify-start items-center my-1 ml-2 ">
-              <Ionicons name="bed" size={20} color={"white"} />
-              <Text className={`font-bold`}>Accomodation Details</Text>
-            </View>
-          </LinearGradient>
+          <View className="flex flex-row space-x-2 justify-start items-center my-1 ml-2 ">
+            <Ionicons name="bed" size={20} color={"green"} />
+            <Text className={`font-bold`}>Accomodation Details</Text>
+          </View>
           <View className="">
             {accomodationDetails.map((details, index) => (
               <AccomodationDetailsElement key={index} details={details} />

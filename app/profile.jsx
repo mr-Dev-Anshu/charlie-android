@@ -20,34 +20,36 @@ const profile = () => {
     user?.picture ||
     "https://www.pngitem.com/pimgs/m/146-1468479_my-profile-icon-blank-profile-picture-circle-hd.png";
 
-  const handleGetMembers = async () => {
-    if (!user?.email) {
-      console.error("User email is not available.");
-      return;
-    }
-
-    try {
-      const response = await fetch(
-        `https://trakies-backend.onrender.com/api/member/get-member?email=${user.email}`,
-        {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
-      );
-
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.message || "Failed to fetch members.");
+    const handleGetMembers = async () => {
+      if (!user?.email) {
+        console.error("User email is not available.");
+        return;
       }
-
-      const data = await response.json();
-      setMembers(data);
-    } catch (error) {
-      console.error("Error fetching members:", error);
-    }
-  };
+    
+      try {
+        const response = await fetch(
+          `https://trakies-backend.onrender.com/api/member/get-member?email=${user.email}`,
+          {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+            },
+          }
+        );
+    
+        const responseText = await response.text();
+    
+        if (!response.ok) {
+          console.error("Error response:", responseText); 
+          throw new Error("Failed to fetch members.");
+        }
+    
+        const data = JSON.parse(responseText);
+        setMembers(data);
+      } catch (error) {
+        console.error("Error fetching members:", error);
+      }
+    };
 
   useEffect(() => {
     handleGetMembers();

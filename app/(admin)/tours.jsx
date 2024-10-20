@@ -1,10 +1,12 @@
 import { View, Text, ScrollView, TouchableOpacity } from "react-native";
 import React from "react";
-import { createdTours } from "../../constants/tours";
 import TourCard from "../../components/admin/UI/TourCard";
 import { router } from "expo-router";
+import { useSelector } from "react-redux";
 
 const Tours = () => {
+  const { tour } = useSelector((state) => state.tour);
+
   return (
     <View
       style={{
@@ -18,7 +20,7 @@ const Tours = () => {
       <ScrollView
         contentContainerStyle={{
           flexGrow: 1,
-          justifyContent: "center",
+          justifyContent: "start",
           alignItems: "center",
           paddingHorizontal: 16,
           paddingBottom: 200,
@@ -26,10 +28,10 @@ const Tours = () => {
         }}
         showsVerticalScrollIndicator={false}
       >
-        <View style={{ width: "100%", alignItems: "center" }}>
-          {createdTours.map((tour, index) => (
-            <TourCard key={index} tour={tour} />
-          ))}
+        <View className="w-full h-fit flex justify-start">
+          {tour.map((item) => {
+            return <TourCard key={item._id} tour={item} />;
+          })}
         </View>
       </ScrollView>
       <View className="absolute bottom-0 w-full px-6 py-3 bg-white">

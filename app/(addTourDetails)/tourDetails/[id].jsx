@@ -1,7 +1,6 @@
 import { View, Text } from "react-native";
 import React from "react";
 import { useLocalSearchParams } from "expo-router";
-import { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
 import LabelValue from "../../../components/UI/LabelValue";
 import { formatDate } from "../../../utils/helpers";
@@ -9,12 +8,8 @@ import { formatDate } from "../../../utils/helpers";
 const TourDetails = () => {
   const { id } = useLocalSearchParams();
   const { tour } = useSelector((state) => state.tour);
-  const [tourData, setTourData] = useState(null);
 
-  useEffect(() => {
-    const t = tour.find((item) => item._id == "67080e71bbaeb11c96d9cde4");
-    setTourData(t);
-  }, []);
+  const tourData = tour.find((item) => item._id === id);
 
   return (
     <View className="px-3">
@@ -30,7 +25,7 @@ const TourDetails = () => {
       />
       <LabelValue
         label={"Booking Close Before"}
-        value={formatDate(tourData?.booking_close)}
+        value={formatDate(tourData?.tour_cost)}
       />
       <LabelValue
         label={"Tour Cost Per Seat (INR)"}

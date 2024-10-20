@@ -15,6 +15,7 @@ import DateTimePicker from "@react-native-community/datetimepicker";
 import * as ImagePicker from "expo-image-picker";
 import { Image } from "expo-image";
 import { format } from "date-fns";
+import { uploadFilesToS3 } from "../utils/uploadFileHelper";
 
 const addTours = () => {
   const { user } = useSelector((state) => state.user);
@@ -84,7 +85,6 @@ const addTours = () => {
   const submitForm = async () => {
     if (
       !tourName ||
-      !budget ||
       !location ||
       !description ||
       !totalSeats ||
@@ -98,13 +98,13 @@ const addTours = () => {
       setError("Please fill in all required fields.");
       return;
     }
+
     setLoading(true);
     try {
       setError("");
 
       const formData = {
         name: tourName,
-        budget,
         location,
         description,
         total_seats: parseInt(totalSeats, 10),
@@ -115,10 +115,6 @@ const addTours = () => {
         tour_cost: costPerPerson,
         can_admin_reject: adminCanReject,
         enable_payment_getway: paymentGatewayEnabled,
-        include: include,
-        not_included: notIncluded,
-        back_pack: backPack,
-        check_in_baggage: checkInBaggage,
         difficulty,
       };
 
@@ -141,25 +137,24 @@ const addTours = () => {
         id: result._id,
       };
 
-      const notify = await fetch(
-        "https://trakies-backend.onrender.com/api/notification/create",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(notificationData),
-        }
-      );
-
-      await notify.json();
-
-      if (response.ok) {
-        const { _id } = result;
-        router.push(`/addTourImgs?id=${_id}`);
+      if (response.status === 201) {
+        await uploadFilesToS3(image, result._id);
+        const notify = await fetch(
+          "https://trakies-backend.onrender.com/api/notification/create",
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(notificationData),
+          }
+        );
+        await notify.json();
       } else {
-        setError(result.message || "Failed to submit tour. Please try again.");
+        setError(result.message || "Please fill in all required fields.");
+        return;
       }
+      router.push(`/(addTourDetails)/tourDetails/${result._id}`);
     } catch (err) {
       console.error("Error submitting tour:", err);
       setError("Error submitting tour. Please try again.");
@@ -385,7 +380,7 @@ const addTours = () => {
           activeOpacity={0.7}
           className="w-full bg-green-700 flex justify-center items-center py-3 rounded-lg"
           // onPress={submitForm}
-          onPress={() => router.push("/tour/123")}
+          onPress={submitForm}
         >
           {loading ? (
             <ActivityIndicator color="white" size={"small"} />
