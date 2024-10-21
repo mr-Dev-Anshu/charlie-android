@@ -18,7 +18,6 @@ if (Platform.OS === "android") {
 }
 
 const TourDetails = () => {
-  
   const [includedItems, setIncludedItems] = useState([
     { id: 1, label: "Food", checked: false },
     { id: 2, label: "Accommodation", checked: false },
@@ -78,91 +77,116 @@ const TourDetails = () => {
     notIncludedItemsArray
   );
 
-  const handleAdd = ()=>{
-
-  }
+  const handleAdd = () => {};
 
   return (
-    <ScrollView contentContainerStyle={{ padding: 16 }}>
-      {/* Included Dropdown */}
-      <TouchableOpacity
-        onPress={handleIncludedDropdown}
-        style={{
-          flexDirection: "row",
-          justifyContent: "space-between",
-          padding: 10,
-          backgroundColor: "#f0f0f0",
-          borderRadius: 8,
-          marginBottom: 10,
-        }}
-      >
-        <Text style={{ fontSize: 16, fontWeight: "bold" }}>Included</Text>
-        <Ionicons
-          name={showIncludedDropdown ? "chevron-up" : "chevron-down"}
-          size={24}
-        />
-      </TouchableOpacity>
+    <View className="h-full px-4">
+      <ScrollView contentContainerStyle={{}}>
+        {/* Included Dropdown */}
+        <TouchableOpacity
+          onPress={handleIncludedDropdown}
+          style={{
+            flexDirection: "row",
+            justifyContent: "space-between",
+            padding: 10,
+            backgroundColor: "#f0f0f0",
+            borderRadius: 8,
+            marginBottom: 10,
+          }}
+        >
+          <Text style={{ fontSize: 16, fontWeight: "bold" }}>Included</Text>
+          <Ionicons
+            name={showIncludedDropdown ? "chevron-up" : "chevron-down"}
+            size={24}
+          />
+        </TouchableOpacity>
 
-      {showIncludedDropdown && (
-        <View style={{ marginBottom: 20 }}>
-          {includedItems.map((item) => (
-            <View
-              key={item.id}
-              style={{
-                flexDirection: "row",
-                alignItems: "center",
-                marginBottom: 8,
-              }}
-            >
-              <Checkbox
-                status={item.checked ? "checked" : "unchecked"}
-                onPress={() => handleIncludedCheckboxChange(item.id)}
-                color={item.checked ? "green" : "#000"}
-              />
-              <Text>{item.label}</Text>
-            </View>
-          ))}
-        </View>
-      )}
-      <TouchableOpacity
-        onPress={handleNotIncludedDropdown}
-        style={{
-          flexDirection: "row",
-          justifyContent: "space-between",
-          padding: 10,
-          backgroundColor: "#f0f0f0",
-          borderRadius: 8,
-        }}
-      >
-        <Text style={{ fontSize: 16, fontWeight: "bold" }}>Not Included</Text>
-        <Ionicons
-          name={showNotIncludedDropdown ? "chevron-up" : "chevron-down"}
-          size={24}
-        />
-      </TouchableOpacity>
+        {showIncludedDropdown && (
+          <View style={{ marginBottom: 20 }}>
+            {includedItems.map((item) => (
+              <View
+                key={item.id}
+                style={{
+                  flexDirection: "row",
+                  alignItems: "center",
+                  marginBottom: 8,
+                }}
+              >
+                <Checkbox
+                  status={item.checked ? "checked" : "unchecked"}
+                  onPress={() => handleIncludedCheckboxChange(item.id)}
+                  color={item.checked ? "green" : "#000"}
+                />
+                <Text>{item.label}</Text>
+              </View>
+            ))}
+          </View>
+        )}
+        <TouchableOpacity
+          onPress={handleNotIncludedDropdown}
+          style={{
+            flexDirection: "row",
+            justifyContent: "space-between",
+            padding: 10,
+            backgroundColor: "#f0f0f0",
+            borderRadius: 8,
+          }}
+        >
+          <Text style={{ fontSize: 16, fontWeight: "bold" }}>Not Included</Text>
+          <Ionicons
+            name={showNotIncludedDropdown ? "chevron-up" : "chevron-down"}
+            size={24}
+          />
+        </TouchableOpacity>
 
-      {showNotIncludedDropdown && (
-        <View style={{ marginBottom: 20 }}>
-          {notIncludedItems.map((item) => (
-            <View
-              key={item.id}
-              style={{
-                flexDirection: "row",
-                alignItems: "center",
-                marginBottom: 8,
-              }}
-            >
-              <Checkbox
-                status={item.checked ? "checked" : "unchecked"}
-                onPress={() => handleNotIncludedCheckboxChange(item.id)}
-                color={item.checked ? "green" : "#000"}
-              />
-              <Text>{item.label}</Text>
-            </View>
-          ))}
-        </View>
-      )}
-    </ScrollView>
+        {showNotIncludedDropdown && (
+          <View style={{ marginBottom: 20 }}>
+            {notIncludedItems.map((item) => (
+              <View
+                key={item.id}
+                style={{
+                  flexDirection: "row",
+                  alignItems: "center",
+                  marginBottom: 8,
+                }}
+              >
+                <Checkbox
+                  status={item.checked ? "checked" : "unchecked"}
+                  onPress={() => handleNotIncludedCheckboxChange(item.id)}
+                  color={item.checked ? "green" : "#000"}
+                />
+                <Text>{item.label}</Text>
+              </View>
+            ))}
+          </View>
+        )}
+      </ScrollView>
+      <View className="w-full flex flex-row justify-between items-center h-16 bg-transparent">
+        <TouchableOpacity
+          activeOpacity={0.8}
+          style={{
+            width: 165,
+            backgroundColor: "#414141",
+            paddingVertical: 12,
+            borderRadius: 8,
+          }}
+        >
+          <Text style={{ textAlign: "center", color: "#fff" }}>Add</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          activeOpacity={0.8}
+          style={{
+            width: 165,
+            paddingVertical: 12,
+            borderRadius: 8,
+            borderWidth: 1,
+            borderColor: "green",
+          }}
+        >
+          <Text style={{ textAlign: "center", color: "green" }}>Update</Text>
+        </TouchableOpacity>
+      </View>
+    </View>
   );
 };
 

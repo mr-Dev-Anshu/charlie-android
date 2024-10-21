@@ -1,5 +1,5 @@
 import { View, Text } from "react-native";
-import React, { useRef, useState } from "react";
+import React, { useMemo, useRef, useState } from "react";
 import { Ionicons } from "@expo/vector-icons";
 import { TextInput, TouchableOpacity } from "react-native-gesture-handler";
 import { Image } from "expo-image";
@@ -9,6 +9,8 @@ import edit from "../../../assets/edit.svg";
 import user from "../../../assets/user.svg";
 import { Modalize } from "react-native-modalize";
 import { Picker } from "@react-native-picker/picker";
+import MapView, { Marker } from "react-native-maps";
+import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplete";
 
 const Checkpoints = () => {
   const editCheckPointRef = useRef(null);
@@ -16,7 +18,29 @@ const Checkpoints = () => {
   const viewMapRef = useRef(null);
   const viewCheckInRef = useRef(null);
 
-  const [selectedValue, setSelectedValue] = useState("option1");
+  const [title, setTitle] = useState("");
+  const [description, setDescription] = useState("");
+  const [location, setLocation] = useState("");
+  const [locationType, setLocationType] = useState("");
+
+  const [region, setRegion] = useState({
+    latitude: 12.9716,
+    longitude: 77.5946,
+    latitudeDelta: 0.0922,
+    longitudeDelta: 0.0421,
+  });
+
+  const handleLocationSelect = (details) => {
+    if (details && details.geometry) {
+      const { lat, lng } = details.geometry.location;
+      setRegion({
+        latitude: lat,
+        longitude: lng,
+        latitudeDelta: 0.0922,
+        longitudeDelta: 0.0421,
+      });
+    }
+  };
 
   return (
     <>
@@ -94,6 +118,8 @@ const Checkpoints = () => {
               <TextInput
                 placeholder="Enter Title"
                 className="text-black text-base mt-1"
+                value={title}
+                onChangeText={(text) => setTitle(text)}
               />
             </View>
             <View className="border mt-3 border-gray-500/50 p-1 px-2 rounded-lg w-full">
@@ -102,6 +128,8 @@ const Checkpoints = () => {
                 multiline={true}
                 numberOfLines={5}
                 textAlignVertical="top"
+                onChangeText={(text) => setDescription(text)}
+                value={description}
                 placeholder="Enter description"
                 className="text-black text-base mt-1"
               />
@@ -109,8 +137,8 @@ const Checkpoints = () => {
             <View className=" justify-center w-full mt-3">
               <View className="border border-gray-500/50 rounded-lg w-full">
                 <Picker
-                  selectedValue={selectedValue}
-                  onValueChange={(itemValue) => setSelectedValue(itemValue)}
+                  selectedValue={locationType}
+                  onValueChange={(itemValue) => setLocationType(itemValue)}
                   className="px-3"
                 >
                   <Picker.Item label="Geo Tagging" value="geoTagging" />
@@ -124,9 +152,11 @@ const Checkpoints = () => {
                 editable={false}
                 placeholder="Pin a location"
                 className="text-black text-base mt-1"
+                value={location}
               />
               <TouchableOpacity
                 activeOpacity={0.6}
+                onPress={() => viewMapRef.current.open()}
                 style={{ position: "absolute", top: -36, right: 10 }}
               >
                 <Image source={marker} className="h-8 w-8" />
@@ -177,7 +207,6 @@ const Checkpoints = () => {
             <View className=" justify-center w-full mt-3">
               <View className="border border-gray-500/50 rounded-lg w-full">
                 <Picker
-                  selectedValue={selectedValue}
                   onValueChange={(itemValue) => setSelectedValue(itemValue)}
                   className="px-3"
                 >
@@ -195,6 +224,7 @@ const Checkpoints = () => {
               />
               <TouchableOpacity
                 activeOpacity={0.6}
+                onPress={() => viewMapRef.current.open()}
                 style={{ position: "absolute", top: -36, right: 10 }}
               >
                 <Image source={marker} className="h-8 w-8" />
@@ -222,51 +252,46 @@ const Checkpoints = () => {
       <Modalize ref={viewMapRef} adjustToContentHeight snapPoint={500}>
         <View className="px-3 py-4 flex justify-between items-center">
           <View className="w-full flex justify-start items-center">
-            <Text className="mt-3 text-xl font-semibold">
-              Create Check Point
-            </Text>
-            <View className="border mt-3 border-gray-500/50 p-1 px-2 rounded-lg w-full">
-              <Text className="text-xs text-gray-500/70">Title</Text>
-              <TextInput
-                placeholder="Enter Title"
-                className="text-black text-base mt-1"
+            <Text className="mt-2 text-xl font-semibold">Select Location</Text>
+            <View className="w-full py-1 pb-10 z-10 border border-gray-500/40 rounded-xl">
+              <GooglePlacesAutocomplete
+                placeholder="Search for a location"
+                minLength={2}
+                fetchDetails={true}
+                onPress={(data, details = null) =>
+                  handleLocationSelect(details)
+                }
+                query={{
+                  key: "AIzaSyB_EhOLUePnuFPSOSSjRyAWZRUb2jWcQ8s",
+                  language: "en",
+                }}
+                styles={{
+                  container: {
+                    position: "absolute",
+                    width: "100%",
+                    zIndex: 1000,
+                  },
+                  textInput: {
+                    height: 44,
+                    paddingHorizontal: 10,
+                    backgroundColor: "#FFFFFF",
+                    borderRadius: 5,
+                    color: "black",
+                    zIndex: 1000,
+                    elevation: 5,
+                  },
+                }}
               />
             </View>
-            <View className="border mt-3 border-gray-500/50 p-1 px-2 rounded-lg w-full">
-              <Text className="text-xs text-gray-500/70">Description</Text>
-              <TextInput
-                multiline={true}
-                numberOfLines={5}
-                textAlignVertical="top"
-                placeholder="Enter description"
-                className="text-black text-base mt-1"
-              />
-            </View>
-            <View className=" justify-center w-full mt-3">
-              <View className="border border-gray-500/50 rounded-lg w-full">
-                <Picker
-                  selectedValue={selectedValue}
-                  onValueChange={(itemValue) => setSelectedValue(itemValue)}
-                  className="px-3"
-                >
-                  <Picker.Item label="Geo Tagging" value="geoTagging" />
-                  <Picker.Item label="QR Code" value="qrCode" />
-                </Picker>
-              </View>
-            </View>
-            <View className="border mt-3 border-gray-500/50 p-1 px-2 rounded-lg w-full relative">
-              <Text className="text-xs text-gray-500/70">Location</Text>
-              <TextInput
-                editable={false}
-                placeholder="Pin a location"
-                className="text-black text-base mt-1"
-              />
-              <TouchableOpacity
-                activeOpacity={0.6}
-                style={{ position: "absolute", top: -36, right: 10 }}
-              >
-                <Image source={marker} className="h-8 w-8" />
-              </TouchableOpacity>
+            <View className="h-[500px] w-full rounded-xl overflow-hidden mt-2 border border-gray-500/50 ">
+              <MapView className="h-[500px] w-full rounded-xl" region={region}>
+                <Marker
+                  coordinate={{
+                    latitude: region.latitude,
+                    longitude: region.longitude,
+                  }}
+                />
+              </MapView>
             </View>
           </View>
           <View className="w-full flex justify-center items-center mt-4">
@@ -281,7 +306,7 @@ const Checkpoints = () => {
               }}
             >
               <Text style={{ textAlign: "center", color: "#fff" }}>
-                Add Notes
+                Add Location
               </Text>
             </TouchableOpacity>
           </View>

@@ -60,7 +60,7 @@ const AddMember = () => {
         setTimeout(() => {
           Alert.alert("Success", "Member added successfully");
         }, 2000);
-        router.back();
+        router.push("/profile");
       } else {
         throw new Error(data.message || "An error occurred");
       }
