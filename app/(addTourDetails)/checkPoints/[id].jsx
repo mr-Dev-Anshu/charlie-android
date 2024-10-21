@@ -11,8 +11,13 @@ import { Modalize } from "react-native-modalize";
 import { Picker } from "@react-native-picker/picker";
 import MapView, { Marker } from "react-native-maps";
 import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplete";
+import { router, useLocalSearchParams } from "expo-router";
+import { idText } from "typescript";
 
 const Checkpoints = () => {
+  const { id } = useLocalSearchParams();
+
+  console.log("tourId---->", id);
   const editCheckPointRef = useRef(null);
   const addCheckPoint = useRef(null);
   const viewMapRef = useRef(null);
@@ -53,7 +58,7 @@ const Checkpoints = () => {
         <View className="w-full absolute bottom-0 flex flex-row justify-center items-center h-16 bg-[#ffffff]">
           <TouchableOpacity
             activeOpacity={0.8}
-            onPress={() => addCheckPoint.current?.open()}
+            onPress={() => router.push(`/createCheckpoints/${id}`)}
             style={{
               width: 350,
               backgroundColor: "green",
@@ -249,7 +254,14 @@ const Checkpoints = () => {
           </View>
         </View>
       </Modalize>
-      <Modalize ref={viewMapRef} adjustToContentHeight snapPoint={500}>
+      <Modalize
+        ref={viewMapRef}
+        adjustToContentHeight
+        snapPoint={500}
+        scrollViewProps={{
+          nestedScrollEnabled: true, // Enable nested scroll behavior
+        }}
+      >
         <View className="px-3 py-4 flex justify-between items-center">
           <View className="w-full flex justify-start items-center">
             <Text className="mt-2 text-xl font-semibold">Select Location</Text>
@@ -267,12 +279,10 @@ const Checkpoints = () => {
                 }}
                 styles={{
                   container: {
-                    position: "absolute",
                     width: "100%",
-                    zIndex: 1000,
+                    zIndex: 1000, // Ensure high zIndex for proper stacking
                   },
                   textInput: {
-                    height: 44,
                     paddingHorizontal: 10,
                     backgroundColor: "#FFFFFF",
                     borderRadius: 5,
@@ -294,6 +304,7 @@ const Checkpoints = () => {
               </MapView>
             </View>
           </View>
+
           <View className="w-full flex justify-center items-center mt-4">
             <TouchableOpacity
               activeOpacity={0.8}

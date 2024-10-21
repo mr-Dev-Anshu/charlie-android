@@ -9,7 +9,7 @@ import { formatDate } from "../../../utils/helpers";
 const TourCard = ({ tour }) => {
   return (
     <Link
-      className="w-full flex flex-1 justify-center items-center mt-2"
+      className="w-full flex flex-1 justify-center items-center mt-4"
       push
       href={`/tour/${tour._id}`}
     >
@@ -40,7 +40,9 @@ const TourCard = ({ tour }) => {
             <Text className="text-gray-600 font-medium">Seats Booked</Text>
             <View className="flex flex-row justify-end items-center mt-2">
               <Text className="text-3xl font-medium text-green-700">32/</Text>
-              <Text className="-mb-1 text-lg font-medium">60</Text>
+              <Text className="-mb-1 text-lg font-medium">
+                {tour.total_seats}
+              </Text>
             </View>
           </View>
           <View className="mt-8 bg-green-700/20 px-4 py-1 rounded-full">

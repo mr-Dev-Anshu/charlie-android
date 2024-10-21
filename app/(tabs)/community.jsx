@@ -74,62 +74,80 @@ const community = () => {
               </TouchableOpacity>
             </View>
           </View>
-          <SafeAreaView style={{ flex: 1, zIndex: 1000 }}>
-            <Modalize
-              modalHeight={500}
-              ref={addPostRef}
-              handlePosition="inside"
-              modalStyle={{ borderRadius: 20, overflow: "hidden" }}
-            >
-              <View className="w-full space-y-4 px-4">
-                <TextInput
-                  placeholder="Write your thoughts...."
-                  keyboardType="default"
-                  className="text-white text-lg h-12 font-semibold w-full mt-5 outline outline-2 outline-green-600 indent-3 border border-green-600 rounded-[10px] p-2"
-                  placeholderTextColor={"gray"}
-                />
-                {images.length !== 0 && (
-                  <View className="flex flex-row flex-wrap space-x-4 justify-center items-center border-2 border-green-600 rounded-lg h-fit p-1">
-                    {images.map((img, idx) => (
-                      <View className="relative h-fit w-fit">
-                        <Image
-                          key={idx}
-                          source={{ uri: img.uri }}
-                          style={{
-                            width: 100,
-                            height: 100,
-                            borderRadius: 10,
-                            marginBottom: 14,
-                          }}
-                        />
-                        <TouchableOpacity
-                          activeOpacity={0.8}
-                          onPress={() => handleUnselect(img.uri)}
-                          className="text-white bg-white border-2 border-gray-500 absolute h-5 w-5  rounded-full -top-2 -right-2 text-center flex justify-center items-center "
-                        >
-                          <Ionicons
-                            name="close-outline"
-                            size={14}
-                            color={"red"}
+          <Modalize
+            modalHeight={500}
+            ref={addPostRef}
+            handlePosition="inside"
+            modalStyle={{ overflow: "hidden", width: "100%" }}
+          >
+            <View className="w-full h-full px-4 flex-1">
+              <ScrollView
+                contentContainerStyle={{
+                  paddingBottom: 20,
+                  flexGrow: 1,
+                }}
+                style={{ width: "100%", flex: 1 }}
+              >
+                <View className="w-full flex-1">
+                  <TextInput
+                    multiline={true}
+                    numberOfLines={10}
+                    textAlignVertical="top"
+                    placeholder="Write your thoughts...."
+                    keyboardType="default"
+                    className="text-white text-lg font-semibold w-full mt-5 
+                     outline outline-2 outline-green-600 indent-3 
+                     border border-green-600 rounded-[10px] p-2"
+                    placeholderTextColor={"gray"}
+                  />
+
+                  {images.length !== 0 && (
+                    <View
+                      className="flex flex-row flex-wrap justify-center 
+                          items-center space-x-4 border-2 border-green-600 
+                          rounded-lg p-1 py-5 mt-4"
+                    >
+                      {images.map((img, idx) => (
+                        <View key={idx} className="relative h-fit w-fit">
+                          <Image
+                            source={{ uri: img.uri }}
+                            style={{
+                              width: 100,
+                              height: 100,
+                              borderRadius: 10,
+                              marginBottom: 14,
+                            }}
                           />
-                        </TouchableOpacity>
-                      </View>
-                    ))}
-                  </View>
-                )}
-                <View className="w-full flex justify-center items-center">
-                  <TouchableOpacity
-                    onPress={pickImage}
-                    className="bg-green-500 px-4 py-2 rounded-lg"
-                  >
-                    <View>
-                      <Text>Add Images</Text>
+                          <TouchableOpacity
+                            activeOpacity={0.8}
+                            onPress={() => handleUnselect(img.uri)}
+                            className="absolute -top-2 -right-2 h-5 w-5 
+                             rounded-full flex justify-center items-center 
+                             border-2 border-gray-500 bg-white"
+                          >
+                            <Ionicons
+                              name="close-outline"
+                              size={14}
+                              color="red"
+                            />
+                          </TouchableOpacity>
+                        </View>
+                      ))}
                     </View>
-                  </TouchableOpacity>
+                  )}
                 </View>
+              </ScrollView>
+              <View className="w-full flex justify-center items-center mt-4">
+                <TouchableOpacity
+                  onPress={pickImage}
+                  className="bg-green-500 w-40 px-4 py-3 rounded-lg 
+                   flex justify-center items-center"
+                >
+                  <Text className="text-white font-semibold">Add Images</Text>
+                </TouchableOpacity>
               </View>
-            </Modalize>
-          </SafeAreaView>
+            </View>
+          </Modalize>
         </>
       ) : (
         <LoginReqCard />

@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import {
   View,
   Text,
@@ -11,6 +11,8 @@ import {
 } from "react-native";
 import { Checkbox } from "react-native-paper";
 import { Ionicons } from "@expo/vector-icons";
+import { useLocalSearchParams } from "expo-router";
+import { apiRequest } from "../../../utils/helpers";
 
 if (Platform.OS === "android") {
   UIManager.setLayoutAnimationEnabledExperimental &&
@@ -18,6 +20,13 @@ if (Platform.OS === "android") {
 }
 
 const TourDetails = () => {
+  const { id } = useLocalSearchParams();
+
+  const [fetchIncluded, setFetchIncluded] = useState([]);
+  const [fetchNotIncluded, setFetchNotIncluded] = useState([]);
+
+  const disableAdd = fetchIncluded || fetchNotIncluded ? true : false;
+
   const [includedItems, setIncludedItems] = useState([
     { id: 1, label: "Food", checked: false },
     { id: 2, label: "Accommodation", checked: false },
@@ -77,12 +86,36 @@ const TourDetails = () => {
     notIncludedItemsArray
   );
 
-  const handleAdd = () => {};
+  const handleGet = async () => {
+    try {
+      const res = await apiRequest(
+        `https://trakies-backend.onrender.com/api/included/get?tourId=${id}`,
+        "GET"
+      );
+      setFetchIncluded(res.data.includedItems.item);
+      setFetchNotIncluded(res.data.notIncluded.item);
+    } catch (error) {
+      console.log("Failed to get included/not-included", error?.message);
+    }
+  };
+
+  const handleAdd = () => {
+    try {
+    } catch (error) {}
+  };
+
+  const handleUpdate = () => {
+    try {
+    } catch (error) {}
+  };
+
+  useEffect(() => {
+    handleGet();
+  }, []);
 
   return (
     <View className="h-full px-4">
       <ScrollView contentContainerStyle={{}}>
-        {/* Included Dropdown */}
         <TouchableOpacity
           onPress={handleIncludedDropdown}
           style={{
@@ -113,9 +146,13 @@ const TourDetails = () => {
                 }}
               >
                 <Checkbox
-                  status={item.checked ? "checked" : "unchecked"}
+                  status={
+                    fetchIncluded?.includes(item.label)
+                      ? "checked"
+                      : "unchecked"
+                  }
                   onPress={() => handleIncludedCheckboxChange(item.id)}
-                  color={item.checked ? "green" : "#000"}
+                  color={fetchIncluded?.includes(item.label) ? "green" : "#000"}
                 />
                 <Text>{item.label}</Text>
               </View>
@@ -151,9 +188,15 @@ const TourDetails = () => {
                 }}
               >
                 <Checkbox
-                  status={item.checked ? "checked" : "unchecked"}
+                  status={
+                    fetchNotIncluded?.includes(item.label)
+                      ? "checked"
+                      : "unchecked"
+                  }
                   onPress={() => handleNotIncludedCheckboxChange(item.id)}
-                  color={item.checked ? "green" : "#000"}
+                  color={
+                    fetchNotIncluded?.includes(item.label) ? "green" : "#000"
+                  }
                 />
                 <Text>{item.label}</Text>
               </View>
@@ -164,6 +207,7 @@ const TourDetails = () => {
       <View className="w-full flex flex-row justify-between items-center h-16 bg-transparent">
         <TouchableOpacity
           activeOpacity={0.8}
+          disabled={disableAdd}
           style={{
             width: 165,
             backgroundColor: "#414141",
@@ -175,6 +219,7 @@ const TourDetails = () => {
         </TouchableOpacity>
         <TouchableOpacity
           activeOpacity={0.8}
+          onPress={() => {}}
           style={{
             width: 165,
             paddingVertical: 12,
