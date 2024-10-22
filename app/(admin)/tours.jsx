@@ -7,31 +7,21 @@ import { useSelector } from "react-redux";
 const Tours = () => {
   const { tour } = useSelector((state) => state.tour);
 
+  console.log("----->", tour);
+
   return (
-    <View
-      style={{
-        flex: 1,
-        marginTop: 112,
-        justifyContent: "center",
-        alignItems: "center",
-        position: "relative",
-      }}
-    >
+    <View className="flex-1 mt-24 h-full flex justify-center items-center relative">
       <ScrollView
-        contentContainerStyle={{
-          flexGrow: 1,
-          justifyContent: "start",
-          alignItems: "center",
-          paddingHorizontal: 16,
-          paddingBottom: 200,
-          paddingHorizontal: 16,
+        contentContainerStyle={{ paddingBottom: 80 }}
+        style={{
+          height: "100%",
+          width: "100%",
         }}
         showsVerticalScrollIndicator={false}
       >
-        <View className="w-full h-fit flex justify-start">
-          {tour.map((item) => {
-            return <TourCard key={item._id} tour={item} />;
-          })}
+        <View className="w-full">
+          {tour.length > 0 &&
+            tour.map((item) => <TourCard key={item?._id} tour={item} />)}
         </View>
       </ScrollView>
       <View className="absolute bottom-0 w-full px-6 py-3 bg-white">

@@ -1,14 +1,45 @@
 import { View } from "react-native";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { tours } from "../../constants/tours.js";
 import MyTourCard from "../../components/UI/MyTourCard";
 import { ScrollView } from "react-native-gesture-handler";
 import { StatusBar } from "expo-status-bar";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import LoginReqCard from "../../components/UI/LoginReqCard.jsx";
+import { setBookedTour } from "../../redux/slices/tourSlice";
 
 const mytours = () => {
-  const { user } = useSelector((state) => state.user);
+  // const { user } = useSelector((state) => state.user);
+
+  // const [myTours, setMyTours] = useState([]);
+
+  // const dispatch = useDispatch();
+
+  // console.log("mytours--->", myTours);
+
+  // const getAllBookedTours = async () => {
+  //   try {
+  //     const res = await fetch(
+  //       `https://trakies-backend.onrender.com/api/booking/get-my-tour?email=${user.email}`
+  //     );
+
+  //     if (res.status !== 200) {
+  //       console.log("Failed to get my tours", res);
+  //       throw new Error("Failed to get my tour");
+  //     }
+
+  //     const resData = await res.json();
+  //     dispatch(setBookedTour(resData.data.tourDetails));
+  //     setMyTours(resData.data.tourDetails);
+  //   } catch (error) {
+  //     console.log("Failed to get my tours", error);
+  //   }
+  // };
+
+  // useEffect(() => {
+  //   getAllBookedTours();
+  // }, []);
+
   return (
     <>
       {user ? (

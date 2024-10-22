@@ -14,6 +14,10 @@ const tourDetails = () => {
 
   const tourDetail = tour.find((item) => item._id === id);
 
+  const handleDeleteTour = () =>{
+    
+  }
+
   return (
     <View className="flex flex-1 flex-col w-full h-full px-4 justify-between items-center">
       <StatusBar

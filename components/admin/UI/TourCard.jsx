@@ -1,27 +1,26 @@
-import { View, Text } from "react-native";
+import { View, Text, TouchableOpacity } from "react-native";
 import React from "react";
 import { Ionicons } from "@expo/vector-icons";
 import { Image } from "expo-image";
-import { Link } from "expo-router";
+import { Link, router } from "expo-router";
 import { shorten } from "../../UI/PostComponent";
 import { formatDate } from "../../../utils/helpers";
 
 const TourCard = ({ tour }) => {
   return (
-    <Link
-      className="w-full flex flex-1 justify-center items-center mt-4"
-      push
-      href={`/tour/${tour._id}`}
+    <TouchableOpacity
+      className="w-full flex flex-1 justify-center items-center mt-3"
+      onPress={() => router.push(`/tour/${tour?._id}`)}
     >
       <View className="flex flex-row justify-between h-[150px] w-[360px] bg-white shadow-xl shadow-black rounded-lg mt-3 p-2 ">
         <View>
           <Text className="text-xl font-medium text-gray-700">
-            {shorten(tour.name, 15)}
+            {shorten(tour?.name, 15)}
           </Text>
           <View className="flex flex-row mt-4 space-x-2 justify-start items-center">
             <Ionicons name="calendar-outline" size={16} color="black" />
-            <Text>{`${formatDate(tour.tour_start)} - ${formatDate(
-              tour.tour_end
+            <Text>{`${formatDate(tour?.tour_start)} - ${formatDate(
+              tour?.tour_end
             )}`}</Text>
           </View>
           <View className="flex flex-row justify-start items-center space ml-4 mt-4">
@@ -41,7 +40,7 @@ const TourCard = ({ tour }) => {
             <View className="flex flex-row justify-end items-center mt-2">
               <Text className="text-3xl font-medium text-green-700">32/</Text>
               <Text className="-mb-1 text-lg font-medium">
-                {tour.total_seats}
+                {tour?.total_seats}
               </Text>
             </View>
           </View>
@@ -52,7 +51,7 @@ const TourCard = ({ tour }) => {
           </View>
         </View>
       </View>
-    </Link>
+    </TouchableOpacity>
   );
 };
 

@@ -6,6 +6,7 @@ import CarouselImageRender from "./CarouselImageRender";
 import Carousel from "react-native-reanimated-carousel";
 
 const MyTourCard = ({ tour }) => {
+  console.log("tour------->", tour);
   const confirmed = 0;
   const pending = 1;
 

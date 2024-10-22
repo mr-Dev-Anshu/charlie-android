@@ -13,12 +13,15 @@ import { Ionicons } from "@expo/vector-icons";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import MyTourCheckPointsListView from "../../components/MyTourCheckPointsListView";
 
+
 const MyTourDetails = () => {
   const { id } = useLocalSearchParams();
+
   const tour = tours.find((tour) => tour.id === Number(id));
   const translateX = useSharedValue(-200);
   const [activeTab, setActiveTab] = useState("tourInfo");
   const [listView, setListView] = useState(true);
+
 
   const handleTabPress = (tabIndex) => {
     setActiveTab(tabIndex);
@@ -34,8 +37,9 @@ const MyTourDetails = () => {
     restSpeedThreshold: 0.01,
   };
 
+ 
   const animatedStyles = useAnimatedStyle(() => ({
-    transform: [{ translateX: withSpring(translateX.value, springConfig) }], // Apply spring animation
+    transform: [{ translateX: withSpring(translateX.value, springConfig) }],
   }));
 
   return (

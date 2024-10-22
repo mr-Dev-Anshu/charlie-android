@@ -1,6 +1,6 @@
-import { View, Text, Dimensions } from "react-native";
+import { View, Text, Dimensions, Alert } from "react-native";
 import { useEffect, useMemo, useRef, useState } from "react";
-import { router, useLocalSearchParams } from "expo-router";
+import { router, useLocalSearchParams, useNavigation } from "expo-router";
 import { Image } from "expo-image";
 import LinearGradient from "react-native-linear-gradient";
 import { Ionicons } from "@expo/vector-icons";
@@ -13,27 +13,35 @@ import Carousel from "react-native-reanimated-carousel";
 import CarouselImageRender from "../../components/UI/CarouselImageRender.jsx";
 import { formatDate } from "../../utils/helpers.js";
 import { StatusBar } from "expo-status-bar";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  setTotalCost,
+  setTourMembers,
+} from "../../redux/slices/bookingSlice.js";
 
 const width = Dimensions.get("window").width;
 
 const DetailsScreen = ({ params }) => {
   const { id } = useLocalSearchParams();
   const { tour } = useSelector((state) => state.tour);
-  const { user } = useSelector((state) => state.user);
+  const { user, profile } = useSelector((state) => state.user);
 
   const [tourData, setTourData] = useState(null);
   const [members, setMembers] = useState([]);
   const [curatedMembers, setCuratedMembers] = useState([]);
 
-  const interestedRef = useRef(null);
   const reserveRef = useRef(null);
+  const interestedRef = useRef(null);
+
+  const dispatch = useDispatch();
+  const navigation = useNavigation();
 
   const handleGetMembers = async () => {
     if (!user?.email) {
       console.error("User email is not available.");
       return;
     }
+
     try {
       const response = await fetch(
         `https://trakies-backend.onrender.com/api/member/get-member?email=${user.email}`,
@@ -41,8 +49,8 @@ const DetailsScreen = ({ params }) => {
       );
 
       if (!response.ok) {
-        const responseText = await response.text();
-        console.error("Error response:", responseText);
+        const errorText = await response.text();
+        console.error("Error response:", errorText);
         throw new Error("Failed to fetch members.");
       }
 
@@ -61,35 +69,83 @@ const DetailsScreen = ({ params }) => {
     );
   };
 
-  const handleRemoveMembers = (id) => {
-    setCuratedMembers((prevData) =>
-      prevData.filter((member) => member.id !== id)
-    );
-  };
-
   useEffect(() => {
-    if (members.length > 0) {
+    if (members.length > 0 && profile) {
       const initialData = members.map((member) => ({
         id: member._id,
         name: member.name,
         age: member.age,
-        email: user.email,
+        gender: member.gender,
+        email: member.email,
         tourId: id,
         isTrekker: false,
         noAccommodation: false,
       }));
-      setCuratedMembers(initialData);
+
+      const loggedInUser = {
+        id: profile._id,
+        name: user?.given_name,
+        age: profile?.age,
+        gender: profile?.gender,
+        email: user.email,
+        tourId: id,
+        isTrekker: false,
+        noAccommodation: false,
+      };
+
+      setCuratedMembers([loggedInUser, ...initialData]);
     }
-  }, [members, user, id]);
+  }, [members, profile, user, id]);
 
   useEffect(() => {
-    handleGetMembers(); 
+    handleGetMembers();
   }, []);
 
   useEffect(() => {
-    const t = tour.find((tourData) => tourData._id === id);
-    if (t) setTourData(t); 
+    const selectedTour = tour.find((tourData) => tourData._id === id);
+    if (selectedTour) setTourData(selectedTour);
   }, [tour, id]);
+
+  const handlePayNow = async () => {
+    if (!tourData) return;
+
+    const totalCost = curatedMembers.length * tourData.tour_cost;
+
+    dispatch(setTourMembers(curatedMembers));
+    dispatch(setTotalCost(totalCost));
+
+    router.push(`/payment?${id}`);
+  };
+
+  const handleReserveButton = () => {
+    if (!profile) {
+      Alert.alert(
+        "Profile not found!",
+        "Create your profile first",
+        [
+          {
+            text: "Go to Profile",
+            onPress: () => router.push("/profile"),
+          },
+          {
+            text: "Cancel",
+            style: "cancel",
+          },
+        ],
+        { cancelable: true }
+      );
+      return;
+    }
+
+    reserveRef.current.open();
+  };
+
+  const handleRemoveMembers = (id) => {
+    if (id === profile?._id) return;
+    setCuratedMembers((prevData) =>
+      prevData.filter((member) => member.id !== id)
+    );
+  };
 
   const images = useMemo(
     () => tourData?.images.filter((i) => !i.type).map((i) => i.url),
@@ -266,10 +322,7 @@ const DetailsScreen = ({ params }) => {
             </Text>
           </View>
         </TouchableOpacity>
-        <TouchableOpacity
-          onPress={() => reserveRef.current?.open()}
-          activeOpacity={0.8}
-        >
+        <TouchableOpacity onPress={handleReserveButton} activeOpacity={0.8}>
           <View className="py-3 bg-green-700 w-[160px] rounded-xl">
             <Text className="text-center text-white font-semibold">
               Reserve Seat
@@ -299,7 +352,7 @@ const DetailsScreen = ({ params }) => {
         ref={reserveRef}
         handlePosition="inside"
         handleStyle={{ backgroundColor: "green" }}
-        modalHeight={600}
+        adjustToContentHeight
       >
         <View className="h-full relative">
           <View className={`flex px-4 h-[600px] rounded-t-lg `}>
@@ -337,16 +390,15 @@ const DetailsScreen = ({ params }) => {
               </TouchableOpacity>
             </ScrollView>
           </View>
-          <View className={`px-4 absolute bottom-0 pb-8 pt-1`}>
+          <View className={`px-4 absolute bottom-0 pb-4 pt-1 bg-white`}>
             <View className="flex flex-row w-full justify-between items-center">
               <View>
                 <Text className={`text-xs `}>Total Payable</Text>
-                <Text className={`text-xl font-semibold `}>{`₹ 12,000`}</Text>
+                <Text className={`text-xl font-semibold `}>{`₹ ${
+                  curatedMembers.length * tourData?.tour_cost
+                }`}</Text>
               </View>
-              <TouchableOpacity
-                activeOpacity={0.8}
-                onPress={() => router.push("/payment")}
-              >
+              <TouchableOpacity activeOpacity={0.8} onPress={handlePayNow}>
                 <View className="h-10 w-40 flex justify-center items-center rounded-lg bg-green-700">
                   <Text className="text-white font-semibold tracking-wider">
                     Pay Now
@@ -367,7 +419,7 @@ const BookingMembers = ({
   handleRemoveMembers,
 }) => {
   return (
-    <View className="space-y-2 mt-2">
+    <View className="space-y-2 mt-2 px-1 py-1 rounded-lg bg-white shadow-xl shadow-black/70">
       <View className="w-full flex flex-row justify-between items-center">
         <Text className={`text-lg font-semibold `}>{member.name}</Text>
         <TouchableOpacity

@@ -331,9 +331,8 @@ const addTours = () => {
             {image && image.length > 0 ? (
               <View className="w-full h-fit">
                 {image.map((img, idx) => (
-                  <View className="relative">
+                  <View key={idx} className="relative">
                     <Image
-                      key={idx}
                       source={{ uri: img.uri }}
                       style={{
                         width: "100%",

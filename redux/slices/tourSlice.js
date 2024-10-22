@@ -2,6 +2,7 @@ import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
   tour: [],
+  bookedTour: [],
 };
 
 const tourSlice = createSlice({
@@ -11,9 +12,12 @@ const tourSlice = createSlice({
     setTour: (state, action) => {
       state.tour = action.payload;
     },
+    setBookedTour: (state, action) => {
+      state.bookedTour = action.payload;
+    },
   },
 });
 
-export const { setTour } = tourSlice.actions;
+export const { setTour, setBookedTour } = tourSlice.actions;
 
 export default tourSlice.reducer;

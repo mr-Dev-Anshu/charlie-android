@@ -1,4 +1,4 @@
-import { View, Text } from "react-native";
+import { View, Text, Alert, ActivityIndicator } from "react-native";
 import React, { useState } from "react";
 import { Image } from "expo-image";
 import { TouchableOpacity } from "react-native-gesture-handler";
@@ -7,9 +7,17 @@ import * as ImagePicker from "expo-image-picker";
 import qr from "../assets/qr.png";
 import share from "../assets/share.svg";
 import download from "../assets/downloadIcon.svg";
+import { useSelector } from "react-redux";
+import { router, useLocalSearchParams } from "expo-router";
+import { apiRequest } from "../utils/helpers";
 
 const payment = () => {
+  const { id } = useLocalSearchParams();
+  const { tourMembers, totalCost } = useSelector((state) => state.booking);
+
   const [image, setImage] = useState(null);
+  const [agree, setAgree] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const pickImage = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
@@ -22,6 +30,53 @@ const payment = () => {
       setImage(result.assets[0]);
     } else {
       setError("Image not selected! Try again");
+    }
+  };
+
+  const handleReserveSeats = async () => {
+    if (!image || !agree) {
+      Alert.alert(
+        "Required fields empty",
+        "1. Add payment proof.\n2. Agree to terms & conditions"
+      );
+      return;
+    }
+    setLoading(true);
+    try {
+      for (let member of tourMembers) {
+        const body = {
+          name: member.name,
+          age: member.age,
+          gender: member.gender,
+          email: member.email,
+          tourId: member.tourId,
+          isTrekker: member.isTrekker,
+          accommodation: member.noAccommodation,
+        };
+
+        const res = await fetch(
+          "https://trakies-backend.onrender.com/api/booking/add",
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(body),
+          }
+        );
+
+        if (res.status !== 201) {
+          console.log(`Failed to book tour for ${member.name}`);
+          throw new Error("Failed to book tour.");
+        }
+      }
+      Alert.alert("Success", "Tour booked successfully for all members.");
+      router.push("/(tabs)/mytours");
+    } catch (error) {
+      console.log("Failed to book tour", error?.message, error);
+      Alert.alert("Oops!", "Something went wrong!\nPlease try again...");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -48,8 +103,8 @@ const payment = () => {
         </View>
         <View className="flex flex-row justify-between items-center mt-4 px-3 py-5">
           <Text>Total Expense</Text>
-          <Text>x 2 seats</Text>
-          <Text className="text-semibold text-base">₹ 4000</Text>
+          <Text>{`x ${tourMembers?.length} seats`}</Text>
+          <Text className="font-semibold text-lg">{`₹ ${totalCost}`}</Text>
         </View>
         <View className="flex justify-center items-center mt-4 w-full">
           <Text>Please Upload screenshot post payment</Text>
@@ -76,7 +131,11 @@ const payment = () => {
         </View>
         <View className="flex flex-row w-full mt-4 justify-center items-center">
           <View className="w-[10%]">
-            <Checkbox />
+            <Checkbox
+              onPress={() => setAgree(!agree)}
+              status={agree ? "checked" : "unchecked"}
+              color="green"
+            />
           </View>
           <Text className="w-[90%] tracking-wide text-base text-justify">
             I hereby agree to sign digital consent and agrees to all Terms and
@@ -104,6 +163,7 @@ const payment = () => {
         </TouchableOpacity>
         <TouchableOpacity
           activeOpacity={0.8}
+          onPress={handleReserveSeats}
           style={{
             width: 165,
             paddingVertical: 12,
@@ -112,9 +172,13 @@ const payment = () => {
             borderColor: "green",
           }}
         >
-          <Text style={{ textAlign: "center", color: "green" }}>
-            Reserve Seat
-          </Text>
+          {loading ? (
+            <ActivityIndicator size={"small"} color={"green"} />
+          ) : (
+            <Text style={{ textAlign: "center", color: "green" }}>
+              Reserve Seat
+            </Text>
+          )}
         </TouchableOpacity>
       </View>
     </View>

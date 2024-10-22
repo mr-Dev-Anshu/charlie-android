@@ -19,7 +19,7 @@ const expense = () => {
   const { tour } = useSelector((state) => state.tour);
   const { user } = useSelector((state) => state.user);
 
-  const toursData = tour.map((t) => {
+  const toursDataForDropdown = tour.map((t) => {
     return { label: t.name, value: t._id };
   });
 
@@ -38,8 +38,14 @@ const expense = () => {
   const [date, setDate] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
-  const [currentTour, setCurrentTour] = useState(toursData[0]?.value);
-  const [tours, setTours] = useState(toursData);
+  const [currentTour, setCurrentTour] = useState(
+    toursDataForDropdown[0]?.value
+  );
+  const [tours, setTours] = useState(toursDataForDropdown);
+
+  const [currentTourData, setCurrentTourData] = useState(null);
+
+  console.log("-------->", currentTourData);
 
   const pickImage = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
@@ -104,6 +110,10 @@ const expense = () => {
   useEffect(() => {
     if (currentTour) {
       fetchExpense();
+    }
+    const data = tour.find((t) => t._id === currentTour);
+    if (data) {
+      setCurrentTourData(data);
     }
   }, [currentTour]);
 
@@ -183,7 +193,9 @@ const expense = () => {
               >
                 <Text className={` font-medium`}>Budget</Text>
                 <Text className={`text-lg font-bold text-blue-600`}>
-                  {`₹${expenseData?.budget}`}
+                  {`₹${
+                    currentTourData?.tour_cost * currentTourData?.total_seats
+                  }`}
                 </Text>
               </View>
               <View

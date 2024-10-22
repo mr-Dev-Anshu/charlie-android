@@ -19,6 +19,7 @@ const AddMember = () => {
 
   const router = useRouter();
   const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
   const [age, setAge] = useState("");
   const [contact, setContact] = useState("");
   const [relation, setRelation] = useState("");
@@ -48,6 +49,7 @@ const AddMember = () => {
           body: JSON.stringify({
             userEmail: user?.email,
             name,
+            email,
             age,
             gender,
             relation,
@@ -112,6 +114,15 @@ const AddMember = () => {
                   className="text-white text-lg font-semibold w-full mt-5 outline outline-2 outline-green-600 indent-3 border border-green-600 rounded-[10px] p-2"
                   placeholderTextColor={"gray"}
                   value={name}
+                />
+                <TextInput
+                  placeholder="Enter Email"
+                  textContentType="name"
+                  autoCapitalize="words"
+                  onChangeText={setEmail}
+                  className="text-white text-lg font-semibold w-full mt-5 outline outline-2 outline-green-600 indent-3 border border-green-600 rounded-[10px] p-2"
+                  placeholderTextColor={"gray"}
+                  value={email}
                 />
                 <TextInput
                   placeholder="Enter Age"
