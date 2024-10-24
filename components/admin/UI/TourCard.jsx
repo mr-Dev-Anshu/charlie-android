@@ -9,6 +9,7 @@ import { formatDate } from "../../../utils/helpers";
 const TourCard = ({ tour }) => {
   return (
     <TouchableOpacity
+      activeOpacity={0.8}
       className="w-full flex flex-1 justify-center items-center mt-3"
       onPress={() => router.push(`/tour/${tour?._id}`)}
     >

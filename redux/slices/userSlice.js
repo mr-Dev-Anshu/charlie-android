@@ -4,6 +4,7 @@ const initialState = {
   user: null,
   role: null,
   profile: null,
+  members: null,
 };
 
 const userSlice = createSlice({
@@ -22,8 +23,13 @@ const userSlice = createSlice({
     setProfile: (state, action) => {
       state.profile = action.payload;
     },
+    setMembers: (state, action) => {
+      state.members = action.payload;
+    },
   },
 });
 
-export const { setUser, clearUser, setRole, setProfile } = userSlice.actions;
+export const { setUser, clearUser, setRole, setProfile, setMembers } =
+  userSlice.actions;
+
 export default userSlice.reducer;

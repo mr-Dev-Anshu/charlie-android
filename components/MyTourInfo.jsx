@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Text, View } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
 import LinearGradient from "react-native-linear-gradient";
@@ -10,6 +10,8 @@ import { TouchableOpacity } from "react-native-gesture-handler";
 import { router } from "expo-router";
 
 const MyTourInfo = ({ tour }) => {
+  const [bookedTourInfo, setBookedTourInfo] = useState([]);
+
   return (
     <View className={`pb-14 `}>
       <ScrollView
@@ -23,7 +25,9 @@ const MyTourInfo = ({ tour }) => {
         </View>
         <View className="mt-4">
           <Text className={`text-md font-bold`}>Description</Text>
-          <Text className={`text-base mt-2 tracking-wide text-justify`}>{tour.info}</Text>
+          <Text className={`text-base mt-2 tracking-wide text-justify`}>
+            {tour.info}
+          </Text>
         </View>
         <View className="mt-3">
           <Text className={`text-md font-bold`}>Date</Text>

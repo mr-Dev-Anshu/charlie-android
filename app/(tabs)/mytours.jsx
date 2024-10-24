@@ -9,36 +9,32 @@ import LoginReqCard from "../../components/UI/LoginReqCard.jsx";
 import { setBookedTour } from "../../redux/slices/tourSlice";
 
 const mytours = () => {
-  // const { user } = useSelector((state) => state.user);
+  const { user } = useSelector((state) => state.user);
+  const { bookedTour } = useSelector((state) => state.tour);
 
-  // const [myTours, setMyTours] = useState([]);
+  const dispatch = useDispatch();
 
-  // const dispatch = useDispatch();
+  const getAllBookedTours = async () => {
+    try {
+      const res = await fetch(
+        `https://trakies-backend.onrender.com/api/booking/get-my-tour?email=${user.email}`
+      );
 
-  // console.log("mytours--->", myTours);
+      if (res.status !== 200) {
+        console.log("Failed to get my tours", res);
+        throw new Error("Failed to get my tour");
+      }
 
-  // const getAllBookedTours = async () => {
-  //   try {
-  //     const res = await fetch(
-  //       `https://trakies-backend.onrender.com/api/booking/get-my-tour?email=${user.email}`
-  //     );
+      const resData = await res.json();
+      dispatch(setBookedTour(resData.data));
+    } catch (error) {
+      console.log("Failed to get my tours", error);
+    }
+  };
 
-  //     if (res.status !== 200) {
-  //       console.log("Failed to get my tours", res);
-  //       throw new Error("Failed to get my tour");
-  //     }
-
-  //     const resData = await res.json();
-  //     dispatch(setBookedTour(resData.data.tourDetails));
-  //     setMyTours(resData.data.tourDetails);
-  //   } catch (error) {
-  //     console.log("Failed to get my tours", error);
-  //   }
-  // };
-
-  // useEffect(() => {
-  //   getAllBookedTours();
-  // }, []);
+  useEffect(() => {
+    getAllBookedTours();
+  }, []);
 
   return (
     <>
@@ -62,8 +58,12 @@ const mytours = () => {
             }}
           >
             <View className="h-full w-full flex justify-center items-center mt-4 pb-28">
-              {tours.map((tour) => (
-                <MyTourCard key={tour.id} tour={tour} />
+              {bookedTour.map((tour, idx) => (
+                <MyTourCard
+                  key={idx}
+                  tour={tour.tourDetails}
+                  status={tour.status}
+                />
               ))}
             </View>
           </ScrollView>

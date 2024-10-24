@@ -11,14 +11,12 @@ const Notifications = ({ id, title, content, seen }) => {
 
   const handleSeen = async () => {
     const userEmail = user.email;
-    console.log(userEmail);
     try {
       await apiRequest(
         "https://trakies-backend.onrender.com/api/notification/update",
         "POST",
         { email: userEmail, notificationId: id }
       );
-      console.log("updated successfully");
     } catch (error) {
       console.log("Failed to update", error);
     }

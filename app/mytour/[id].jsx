@@ -12,16 +12,19 @@ import MyTourCheckPoints from "../../components/MyTourCheckPoints";
 import { Ionicons } from "@expo/vector-icons";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import MyTourCheckPointsListView from "../../components/MyTourCheckPointsListView";
-
+import { useSelector } from "react-redux";
 
 const MyTourDetails = () => {
   const { id } = useLocalSearchParams();
 
-  const tour = tours.find((tour) => tour.id === Number(id));
+  const { bookedTour } = useSelector((state) => state.tour);
+
+  const tour = bookedTour?.find((t) => t.tourDetails._id === Number(id));
+
   const translateX = useSharedValue(-200);
+  
   const [activeTab, setActiveTab] = useState("tourInfo");
   const [listView, setListView] = useState(true);
-
 
   const handleTabPress = (tabIndex) => {
     setActiveTab(tabIndex);
@@ -37,14 +40,13 @@ const MyTourDetails = () => {
     restSpeedThreshold: 0.01,
   };
 
- 
   const animatedStyles = useAnimatedStyle(() => ({
     transform: [{ translateX: withSpring(translateX.value, springConfig) }],
   }));
 
   return (
     <View className={`px-3 relative h-full flex items-center`}>
-      <View className={`px-5 w-full flex justify-center items-center`}>
+      {/* <View className={`px-5 w-full flex justify-center items-center`}>
         <View className={`flex flex-row justify-between`}>
           <Pressable onPress={() => handleTabPress("tourInfo")}>
             <View className={`w-[200px] py-2`}>
@@ -120,7 +122,7 @@ const MyTourDetails = () => {
             <Text className={` font-semibold`}>Check-In</Text>
           </View>
         </TouchableOpacity>
-      </View>
+      </View> */}
     </View>
   );
 };

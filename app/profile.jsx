@@ -2,23 +2,24 @@ import { View, Text, ScrollView } from "react-native";
 import React, { useEffect, useState } from "react";
 import { useRouter } from "expo-router";
 import LabelValue from "../components/UI/LabelValue";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { Ionicons } from "@expo/vector-icons";
 import MemberCard from "../components/UI/MemberCard";
 import { formatDate } from "../utils/helpers";
+import { setMembers } from "../redux/slices/userSlice";
 
 const profile = () => {
+  
   const data = useSelector((state) => state.user);
+
   const { user, role, profile } = data;
 
   const router = useRouter();
 
-  const [members, setMembers] = useState([]);
+  const dispatch = useDispatch();
 
-  const picture =
-    user?.picture ||
-    "https://www.pngitem.com/pimgs/m/146-1468479_my-profile-icon-blank-profile-picture-circle-hd.png";
+  const [membersData, setMembersData] = useState([]);
 
   const handleGetMembers = async () => {
     if (!user?.email) {
@@ -43,7 +44,8 @@ const profile = () => {
         console.error("Error response:", response);
         throw new Error("Failed to fetch members.");
       }
-      setMembers(data);
+      setMembersData(data);
+      dispatch(setMembers(data));
     } catch (error) {
       console.error("Error fetching members:", error);
     }
@@ -51,7 +53,7 @@ const profile = () => {
 
   useEffect(() => {
     handleGetMembers();
-  }, [members]);
+  }, []);
 
   return (
     <View className="h-full w-full px-4 flex justify-center items-center relative">
@@ -116,9 +118,9 @@ const profile = () => {
             </View>
           )}
           <View>
-            {members.length !== 0 ? (
+            {membersData.length !== 0 ? (
               <>
-                {members.map((mem, index) => (
+                {membersData.map((mem, index) => (
                   <MemberCard data={mem} key={index} />
                 ))}
               </>

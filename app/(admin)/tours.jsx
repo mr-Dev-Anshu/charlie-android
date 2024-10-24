@@ -7,8 +7,6 @@ import { useSelector } from "react-redux";
 const Tours = () => {
   const { tour } = useSelector((state) => state.tour);
 
-  console.log("----->", tour);
-
   return (
     <View className="flex-1 mt-24 h-full flex justify-center items-center relative">
       <ScrollView

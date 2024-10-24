@@ -24,42 +24,15 @@ const width = Dimensions.get("window").width;
 const DetailsScreen = ({ params }) => {
   const { id } = useLocalSearchParams();
   const { tour } = useSelector((state) => state.tour);
-  const { user, profile } = useSelector((state) => state.user);
+  const { user, profile, members } = useSelector((state) => state.user);
 
   const [tourData, setTourData] = useState(null);
-  const [members, setMembers] = useState([]);
   const [curatedMembers, setCuratedMembers] = useState([]);
 
   const reserveRef = useRef(null);
   const interestedRef = useRef(null);
 
   const dispatch = useDispatch();
-  const navigation = useNavigation();
-
-  const handleGetMembers = async () => {
-    if (!user?.email) {
-      console.error("User email is not available.");
-      return;
-    }
-
-    try {
-      const response = await fetch(
-        `https://trakies-backend.onrender.com/api/member/get-member?email=${user.email}`,
-        { method: "GET", headers: { "Content-Type": "application/json" } }
-      );
-
-      if (!response.ok) {
-        const errorText = await response.text();
-        console.error("Error response:", errorText);
-        throw new Error("Failed to fetch members.");
-      }
-
-      const data = await response.json();
-      setMembers(data);
-    } catch (error) {
-      console.error("Error fetching members:", error);
-    }
-  };
 
   const handleCheckboxChange = (id, field) => {
     setCuratedMembers((prevData) =>
@@ -97,9 +70,6 @@ const DetailsScreen = ({ params }) => {
     }
   }, [members, profile, user, id]);
 
-  useEffect(() => {
-    handleGetMembers();
-  }, []);
 
   useEffect(() => {
     const selectedTour = tour.find((tourData) => tourData._id === id);

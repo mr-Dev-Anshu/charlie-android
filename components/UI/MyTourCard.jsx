@@ -1,17 +1,21 @@
 import { View, Text, useColorScheme } from "react-native";
 import React from "react";
-import { Link } from "expo-router";
+import { Link, router } from "expo-router";
 import { FontAwesome6, Ionicons } from "@expo/vector-icons";
 import CarouselImageRender from "./CarouselImageRender";
 import Carousel from "react-native-reanimated-carousel";
+import { calculateDuration, formatDate } from "../../utils/helpers";
+import { TouchableOpacity } from "react-native-gesture-handler";
 
-const MyTourCard = ({ tour }) => {
-  console.log("tour------->", tour);
-  const confirmed = 0;
-  const pending = 1;
+const MyTourCard = ({ tour, status }) => {
+  const images = tour.images.filter((i) => !i.type).map((i) => i.url);
 
   return (
-    <Link href={`/mytour/${tour.id}`} className="mt-4">
+    <TouchableOpacity
+      activeOpacity={0.8}
+      onPress={() => router.push(`/mytour/${tour?._id}`)}
+      className="mt-4"
+    >
       <View
         className={`w-[360px] h-[470px] mt-5 rounded-xl overflow-hidden bg-white shadow-xl shadow-black/70 `}
       >
@@ -21,68 +25,67 @@ const MyTourCard = ({ tour }) => {
             width={390}
             height={256}
             autoPlay={true}
-            data={tour.images}
+            data={images}
             autoPlayInterval={2000}
             scrollAnimationDuration={1000}
             renderItem={CarouselImageRender}
           />
         </View>
-
         <View className="flex flex-row justify-between px-3 mt-2">
           <View>
-            <Text className={`text-xl font-bold`}>{tour.name}</Text>
-            <Text>{tour.duration}</Text>
+            <Text className={`text-xl font-bold`}>{tour?.name}</Text>
+            <Text>{calculateDuration(tour?.tour_start, tour?.tour_end)}</Text>
           </View>
-
           <View
             className={`w-28 ${
-              confirmed
-                ? "bg-green-600"
-                : pending
+              status === 1
+                ? "checkmark-circle-outline"
+                : status === 2
                 ? "bg-orange-500"
                 : "bg-red-500"
             } flex flex-row justify-center items-center space-x-2 mt-2 rounded-lg h-6`}
           >
             <Ionicons
               name={`${
-                confirmed
-                  ? "checkmark-circle-outline"
-                  : pending
+                status === 1
+                  ? "bg-green-700"
+                  : status === 2
                   ? "time-outline"
                   : "close-circle-outline"
               }`}
               size={16}
               color={"white"}
             />
-            <Text className="text-center font-bold text-white capitalize">{`${
-              confirmed ? "confirmed" : pending ? "pending" : "rejected"
-            }`}</Text>
+            <Text className="text-center font-bold text-white capitalize">
+              {status === 1 ? "Booked" : status === 2 ? "Pending" : "Rejected"}
+            </Text>
           </View>
         </View>
 
         <View className="p-3 space-y-4 mt-2">
           <View className="flex flex-row space-x-3">
             <Ionicons name="calendar-outline" size={16} color="green" />
-            <Text>{tour.date}</Text>
+            <Text>{`${formatDate(tour?.tour_start)} - ${formatDate(
+              tour.tour_end
+            )}`}</Text>
           </View>
-
           <View className="flex flex-row space-x-4">
             <FontAwesome6 name="person-hiking" size={16} color="green" />
-            <Text>{tour.difficulty}</Text>
+            <Text>{tour?.difficulty}</Text>
           </View>
 
           <View className="flex flex-row space-x-3">
             <FontAwesome6 name="route" size={16} color="green" />
-            <Text>{tour.distance}</Text>
+            <Text>{tour?.distance}</Text>
           </View>
 
           <View className="flex flex-row space-x-3">
             <Ionicons name="person-outline" size={16} color="green" />
-            <Text>{`${tour.seats} seats`}</Text>
+            <Text>{`${tour?.total_seats} seats`}</Text>
           </View>
         </View>
       </View>
-    </Link>
+    </TouchableOpacity>
   );
 };
 

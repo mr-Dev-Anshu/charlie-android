@@ -17,8 +17,6 @@ const UpdateProfile = () => {
   const data = useSelector((state) => state.user);
   const { user, profile } = data;
 
-  console.log("profile------->", profile);
-
   const dispatch = useDispatch();
 
   const [name, setName] = useState(profile.name);

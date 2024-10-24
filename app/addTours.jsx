@@ -16,6 +16,7 @@ import * as ImagePicker from "expo-image-picker";
 import { Image } from "expo-image";
 import { format } from "date-fns";
 import { uploadFilesToS3 } from "../utils/uploadFileHelper";
+import { Picker } from "@react-native-picker/picker";
 
 const addTours = () => {
   const { user } = useSelector((state) => state.user);
@@ -24,10 +25,12 @@ const addTours = () => {
   const [loading, setLoading] = useState(false);
   const [tourName, setTourName] = useState("");
   const [location, setLocation] = useState("");
+  const [state, setState] = useState("");
   const [description, setDescription] = useState("");
   const [difficulty, setDifficulty] = useState("");
   const [totalSeats, setTotalSeats] = useState("");
   const [distance, setDistance] = useState("");
+  const [tourType, setTourType] = useState(null);
   const [costPerPerson, setCostPerPerson] = useState("");
   const [adminCanReject, setAdminCanReject] = useState(false);
   const [paymentGatewayEnabled, setPaymentGatewayEnabled] = useState(false);
@@ -93,7 +96,9 @@ const addTours = () => {
       !endDate ||
       !bookingCloseDate ||
       !costPerPerson ||
-      !difficulty
+      !difficulty ||
+      !state ||
+      !tourType
     ) {
       setError("Please fill in all required fields.");
       return;
@@ -116,6 +121,8 @@ const addTours = () => {
         can_admin_reject: adminCanReject,
         enable_payment_getway: paymentGatewayEnabled,
         difficulty,
+        state,
+        tourType,
       };
 
       const response = await fetch(
@@ -197,6 +204,13 @@ const addTours = () => {
               className={`border py-2 mb-3 w-full border-slate-500/50 rounded-lg placeholder:text-base  px-3 `}
             />
             <TextInput
+              placeholder="State"
+              value={state}
+              placeholderTextColor={"gray"}
+              onChangeText={setStartDate}
+              className={`border py-2 mb-3 w-full border-slate-500/50 rounded-lg placeholder:text-base  px-3 `}
+            />
+            <TextInput
               placeholder="Description"
               textAlignVertical="top"
               value={description}
@@ -212,6 +226,37 @@ const addTours = () => {
               onChangeText={setDifficulty}
               className={`border mb-3 w-full border-slate-500/50 rounded-lg placeholder:text-base  py-2 px-3`}
             />
+            <View className="w-full mb-2">
+              <View className="border border-gray-500/50 rounded-lg w-full">
+                <Picker
+                  selectedValue={tourType}
+                  onValueChange={setTourType}
+                  className="px-3"
+                >
+                  <Picker.Item
+                    style={{ color: "gray" }}
+                    label="Select tour type"
+                    value={null}
+                  />
+                  <Picker.Item label="Trekking" value="Trekking" />
+                  <Picker.Item
+                    label="Sun-rise Trekking"
+                    value="Sun-rise Trekking"
+                  />
+                  <Picker.Item label="Beach Trekking" value="Beach Trekking" />
+                  <Picker.Item
+                    label="Himalaya Trekking"
+                    value="Himalaya Trekking"
+                  />
+                  <Picker.Item label="Expedition" value="Expedition" />
+                  <Picker.Item label="Educational" value="Educational" />
+                  <Picker.Item label="Historic Place" value="Historic Place" />
+                  <Picker.Item label="Adventure" value="Adventure" />
+                  <Picker.Item label="Group Travel" value="Group Travel" />
+                  <Picker.Item label="Day Outing" value="Day Outing" />
+                </Picker>
+              </View>
+            </View>
             <TextInput
               placeholder="Total Seats"
               value={totalSeats}

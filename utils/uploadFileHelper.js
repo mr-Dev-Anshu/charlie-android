@@ -25,7 +25,6 @@ export const uploadFilesToS3 = async (files, id = 12, type) => {
 
       const result = await response.json();
       const presignedUrl = result;
-      console.log(`Pre-signed URL for ${file.fileName}: `, presignedUrl);
 
       const fileData = await FileSystem.readAsStringAsync(file.uri, {
         encoding: FileSystem.EncodingType.Base64,
@@ -40,11 +39,6 @@ export const uploadFilesToS3 = async (files, id = 12, type) => {
         },
       });
 
-      // console.log(
-      //   `File ${file.fileName} uploaded successfully`,
-      //   uploadResponse
-      // );
-
       if (uploadResponse.status === 200) {
         const newImage = await axios.post(
           "https://trakies-backend.onrender.com/api/image/create-image",
@@ -56,14 +50,13 @@ export const uploadFilesToS3 = async (files, id = 12, type) => {
             type,
           }
         );
-        console.log(
-          `Image entry for ${file.fileName} created in DB: `,
-          newImage
-        );
       }
     }
+
+    return true;
   } catch (error) {
     console.error("Error while uploading files", error);
+    return false;
   }
 };
 
@@ -88,7 +81,6 @@ export const uploadFileToS3 = async (file) => {
 
     const result = await response.json();
     const presignedUrl = result;
-    // console.log(`Pre-signed URL for ${file.fileName}: `, presignedUrl);
 
     const fileData = await FileSystem.readAsStringAsync(file.uri, {
       encoding: FileSystem.EncodingType.Base64,

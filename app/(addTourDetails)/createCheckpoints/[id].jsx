@@ -114,8 +114,6 @@ const Page = () => {
         "POST",
         body
       );
-      console.log(res);
-
       if (res) {
         router.push(`/(addTourDetails)/checkPoints/${id}`);
       }

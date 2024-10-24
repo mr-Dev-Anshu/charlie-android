@@ -25,7 +25,16 @@ const TourDetails = () => {
   const [fetchIncluded, setFetchIncluded] = useState([]);
   const [fetchNotIncluded, setFetchNotIncluded] = useState([]);
 
-  const disableAdd = fetchIncluded.length === 0 && fetchNotIncluded.length === 0 ? false : true;
+  const [includedItemId, setIncludedItemId] = useState(null);
+  const [notIncludedItemId, setNotIncludedItemId] = useState(null);
+
+  const [loading, setLoading] = useState(false);
+
+  const disableAdd =
+    fetchIncluded.length === 0 && fetchNotIncluded.length === 0 ? false : true;
+
+  const disabledUpdate =
+    fetchIncluded.length === 0 && fetchNotIncluded.length === 0 ? true : false;
 
   const [includedItems, setIncludedItems] = useState([
     { id: 1, label: "Food", checked: false },
@@ -79,17 +88,20 @@ const TourDetails = () => {
         "GET"
       );
 
+      setIncludedItemId(res.data.includedItems._id);
+      setNotIncludedItemId(res.data.notIncluded._id);
+
       setIncludedItems((prevIncludedItems) =>
         prevIncludedItems.map((item) => ({
           ...item,
-          checked: res.data.includedItems.item.includes(item.label),
+          checked: res?.data?.includedItems?.item.includes(item.label),
         }))
       );
 
       setNotIncludedItems((prevNotIncludedItems) =>
         prevNotIncludedItems.map((item) => ({
           ...item,
-          checked: res.data.notIncluded.item.includes(item.label),
+          checked: res?.data?.notIncluded?.item.includes(item.label),
         }))
       );
 
@@ -108,31 +120,54 @@ const TourDetails = () => {
       .filter((item) => item.checked)
       .map((item) => item.label);
 
-    try {
-      const payload = {
-        tourId: id,
-        includedItems: includedItemsArray,
-        notIncludedItems: notIncludedItemsArray,
-      };
+    if (includedItemsArray.length === 0 && notIncludedItemsArray.length === 0)
+      return;
 
-      const res = await apiRequest(
-        `https://trakies-backend.onrender.com/api/included/update`,
-        "POST",
-        payload
+    setLoading(true);
+
+    try {
+      const includedRes = await fetch(
+        `https://trakies-backend.onrender.com/api/included/update?id=${includedItemId}`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            item: includedItemsArray,
+            tourId: id,
+          }),
+        }
       );
 
-      if (res) {
+      const notIncludedRes = await fetch(
+        `https://trakies-backend.onrender.com/api/notIncluded/update?id=${notIncludedItemId}`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            item: notIncludedItemsArray,
+            tourId: id,
+          }),
+        }
+      );
+
+      if (includedRes.status === 201 && notIncludedRes.status === 201) {
         Alert.alert(
           "Success",
-          "Included/Not included items updated successfully"
+          "Included & Not included items updated successfully."
         );
         handleGet();
       } else {
-        Alert.alert("Error", res.message || "Failed to update items");
+        Alert.alert("Oops!", "Something went wrong\n\nPlease try again.");
+        throw new Error("Failed to update included & Not Included Items.");
       }
     } catch (error) {
-      console.log("Error updating items", error?.message);
-      Alert.alert("Error", "An error occurred while updating items");
+      console.log("Error updating items", error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -144,31 +179,56 @@ const TourDetails = () => {
       .filter((item) => item.checked)
       .map((item) => item.label);
 
-    try {
-      const payload = {
-        tourId: id,
-        includedItems: includedItemsArray,
-        notIncludedItems: notIncludedItemsArray,
-      };
+    if (includedItemsArray.length === 0 && notIncludedItemsArray.length === 0)
+      return;
 
-      const res = await apiRequest(
-        `https://trakies-backend.onrender.com/api/included/add`,
-        "POST",
-        payload
+    setLoading(true);
+    try {
+      const includedRes = await fetch(
+        "https://trakies-backend.onrender.com/api/included/add",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            item: includedItemsArray,
+            tourId: id,
+          }),
+        }
       );
 
-      if (res) {
+      const notIncludedRes = await fetch(
+        "https://trakies-backend.onrender.com/api/notIncluded/add",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            item: notIncludedItemsArray,
+            tourId: id,
+          }),
+        }
+      );
+
+      if (includedRes.status === 201 && notIncludedRes.status === 201) {
         Alert.alert(
           "Success",
-          "Included/Not included items added successfully"
+          "Included & Not included items added successfully"
         );
         handleGet();
       } else {
-        Alert.alert("Error", res.message || "Failed to add items");
+        Alert.alert(
+          "Oops!",
+          "Couldn't add included/notIncluded Items\n\nPlease try again."
+        );
+        throw new Error("Failed to add included & Not Included Items.");
       }
     } catch (error) {
-      console.log("Error adding items", error?.message);
-      Alert.alert("Error", "An error occurred while adding items");
+      console.log("Error adding items", error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -258,8 +318,8 @@ const TourDetails = () => {
       <View className="w-full flex flex-row justify-between items-center h-16 bg-transparent">
         <TouchableOpacity
           activeOpacity={0.8}
-          disabled={disableAdd} 
-          onPress={handleAdd} 
+          disabled={disableAdd}
+          onPress={handleAdd}
           style={{
             width: 165,
             backgroundColor: disableAdd ? "#d3d3d3" : "#414141",
@@ -271,6 +331,7 @@ const TourDetails = () => {
         </TouchableOpacity>
         <TouchableOpacity
           activeOpacity={0.8}
+          disabled={disabledUpdate}
           onPress={handleUpdate}
           style={{
             width: 165,

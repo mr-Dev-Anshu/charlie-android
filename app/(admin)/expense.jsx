@@ -45,16 +45,12 @@ const expense = () => {
 
   const [currentTourData, setCurrentTourData] = useState(null);
 
-  console.log("-------->", currentTourData);
-
   const pickImage = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.All,
       aspect: [4, 3],
       quality: 1,
     });
-
-    console.log(result);
 
     if (!result.canceled) {
       setImage(result.assets[0]);
