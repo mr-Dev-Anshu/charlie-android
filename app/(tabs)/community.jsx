@@ -102,7 +102,7 @@ const Community = () => {
         );
         throw new Error("Failed to post images.");
       }
-      addPostRef.current.close();
+      addPostRef.current?.close();
     } catch (error) {
       console.log(error);
       Alert.alert("Oops!", "Something went wrong\n\nPlease try again");
@@ -249,7 +249,7 @@ const styles = StyleSheet.create({
   },
   shareButtonContainer: {
     position: "absolute",
-    bottom: 10,
+    bottom: 0,
     left: width * 0.05,
     right: width * 0.05,
   },
@@ -281,13 +281,14 @@ const styles = StyleSheet.create({
     fontSize: width * 0.05,
     fontWeight: "bold",
     paddingBottom: height * 0.02,
+    marginTop: 10,
   },
   textInput: {
     borderWidth: 1,
     borderColor: "green",
     borderRadius: 8,
+    width: "100%",
     padding: 10,
-    marginTop: height * 0.02,
     height: height * 0.15,
   },
   imagesContainer: {
@@ -317,10 +318,29 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: "green",
     borderRadius: 8,
+    width: "100%",
     height: height * 0.15,
     justifyContent: "center",
     alignItems: "center",
     marginTop: height * 0.02,
+  },
+  postButtonContainer: {
+    width: "100%",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  postButton: {
+    width: width * 0.6,
+    backgroundColor: "green",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    paddingVertical: height * 0.015,
+    borderRadius: 10,
+  },
+  postButtonText: {
+    color: "white",
   },
 });
 

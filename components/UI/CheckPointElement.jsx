@@ -9,7 +9,7 @@ import {
 } from "react-native";
 import React, { useState, useEffect } from "react";
 import { Ionicons } from "@expo/vector-icons";
-import { CameraView, CameraType, useCameraPermissions } from "expo-camera";
+import { Camera, CameraType, useCameraPermissions } from "expo-camera";
 
 const { height, width } = Dimensions.get("window");
 
@@ -84,12 +84,12 @@ const CheckPointElement = ({ points, index }) => {
         onRequestClose={() => setShowCameraModal(false)}
       >
         <View style={styles.modalOverlay}>
-          <CameraView
+          <Camera
             style={styles.camera}
-            facing={CameraType?.back}
+            type={CameraType.back}
             onBarCodeScanned={scanned ? undefined : handleBarCodeScanned}
             barCodeScannerSettings={{
-              barCodeTypes: [CameraType?.qr],
+              barCodeTypes: ["qr"],
             }}
           />
           <TouchableOpacity

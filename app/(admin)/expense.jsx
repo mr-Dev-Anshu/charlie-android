@@ -1,4 +1,4 @@
-import { Text, View, ActivityIndicator } from "react-native";
+import { Text, View, ActivityIndicator, Alert } from "react-native";
 import React, { useEffect, useRef, useState } from "react";
 import { Modalize } from "react-native-modalize";
 import { Ionicons } from "@expo/vector-icons";
@@ -11,9 +11,9 @@ import {
 import DropDownPicker from "react-native-dropdown-picker";
 import { useSelector } from "react-redux";
 import * as ImagePicker from "expo-image-picker";
-import { uploadFileToS3 } from "../../utils/helpers.js";
 import { formatDate } from "../../utils/helpers.js";
 import { Image } from "expo-image";
+import { uploadFileToS3 } from "../../utils/uploadFileHelper.js";
 
 const expense = () => {
   const { tour } = useSelector((state) => state.tour);
@@ -66,7 +66,6 @@ const expense = () => {
     setLoading(true);
     try {
       const imgUrl = image ? await uploadFileToS3(image) : null;
-
       const newExpense = {
         category: expenseCategory,
         amount,
@@ -76,7 +75,6 @@ const expense = () => {
         tour_id: currentTour,
         name: user.name,
       };
-
       const response = await fetch(
         "https://trakies-backend.onrender.com/api/expanse/add-expanse",
         {
@@ -85,6 +83,10 @@ const expense = () => {
           body: JSON.stringify(newExpense),
         }
       );
+
+      if (response.status !== 201) {
+        throw new Error("Failed to add expense");
+      }
 
       const data = await response.json();
       console.log(data);
@@ -97,6 +99,7 @@ const expense = () => {
       fetchExpense();
     } catch (error) {
       console.error(error);
+      Alert.alert("Oops!", "Something went wrong!\n\nPlease try again");
       setError(error?.message);
     } finally {
       setLoading(false);

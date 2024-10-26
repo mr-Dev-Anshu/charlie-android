@@ -7,6 +7,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { StatusBar } from "expo-status-bar";
 import { useSelector } from "react-redux";
 import { formatDate } from "../../utils/helpers";
+import { ActivityIndicator } from "react-native-paper";
 
 const tourDetails = () => {
   const { id } = useLocalSearchParams();
@@ -15,6 +16,14 @@ const tourDetails = () => {
   const tourDetail = tour.find((item) => item._id === id);
 
   const handleDeleteTour = () => {};
+
+  if (!tourDetail) {
+    return (
+      <View className="h-full w-full flex justify-center items-center">
+        <ActivityIndicator size={"large"} color="green" />
+      </View>
+    );
+  }
 
   return (
     <View className="flex flex-1 flex-col w-full h-full justify-between items-center">
