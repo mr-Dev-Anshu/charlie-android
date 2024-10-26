@@ -8,9 +8,12 @@ import { accomodationDetails, transportDetails } from "../constants/tours.js";
 import AccomodationDetailsElement from "./UI/AccomodationDetailsElement.jsx";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { router } from "expo-router";
+import { formatDate } from "../utils/helpers.js";
 
 const MyTourInfo = ({ tour }) => {
-  const [bookedTourInfo, setBookedTourInfo] = useState([]);
+  
+  const tourDetails = tour.tourDetails;
+  console.log("tour-->", tourDetails);
 
   return (
     <View className={`pb-14 `}>
@@ -21,17 +24,21 @@ const MyTourInfo = ({ tour }) => {
       >
         <View className="mt-5">
           <Text className={`text-md font-bold`}>Tour Name</Text>
-          <Text className={`text-base mt-2 tracking-wider`}>{tour.name}</Text>
+          <Text className={`text-base mt-2 tracking-wider`}>
+            {tourDetails.name}
+          </Text>
         </View>
         <View className="mt-4">
           <Text className={`text-md font-bold`}>Description</Text>
           <Text className={`text-base mt-2 tracking-wide text-justify`}>
-            {tour.info}
+            {tourDetails.description}
           </Text>
         </View>
         <View className="mt-3">
           <Text className={`text-md font-bold`}>Date</Text>
-          <Text className={`text-base mt-2 tracking-wider`}>{tour.date}</Text>
+          <Text className={`text-base mt-2 tracking-wider`}>{`${formatDate(
+            tourDetails.tour_start
+          )} - ${formatDate(tourDetails.tour_start)}`}</Text>
         </View>
         <View className="px-2 mt-5">
           <View className="flex flex-row justify-left items-center space-x-3">

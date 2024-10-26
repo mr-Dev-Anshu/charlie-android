@@ -1,27 +1,34 @@
 import React, { useEffect, useRef, useState } from "react";
-import { View, Text, TouchableOpacity, Alert } from "react-native";
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  Alert,
+  Dimensions,
+  StyleSheet,
+  ActivityIndicator,
+} from "react-native";
 import { ScrollView, TextInput } from "react-native-gesture-handler";
-import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import { Modalize } from "react-native-modalize";
-import { post } from "../../constants/tours";
 import PostComponent from "../../components/UI/PostComponent";
-import { SafeAreaView } from "react-native-safe-area-context";
+import { useSelector } from "react-redux";
+import LoginReqCard from "../../components/UI/LoginReqCard";
 import * as ImagePicker from "expo-image-picker";
 import { Image } from "expo-image";
 import { Ionicons } from "@expo/vector-icons";
-import LoginReqCard from "../../components/UI/LoginReqCard";
-import { useSelector } from "react-redux";
 import { uploadFilesToS3 } from "../../utils/uploadFileHelper";
-import { ActivityIndicator } from "react-native-paper";
+import { SafeAreaView } from "react-native-safe-area-context";
 
-const community = () => {
+const { width, height } = Dimensions.get("window");
+
+const Community = () => {
   const { user } = useSelector((state) => state.user);
-
   const [images, setImages] = useState([]);
   const [text, setText] = useState("");
   const [loading, setLoading] = useState(false);
-
+  const [postLoading, setPostLoading] = useState(false);
   const [allPosts, setAllPosts] = useState([]);
+  const addPostRef = useRef(null);
 
   const handleSelectImages = (existingImages, assets) => {
     setImages([...existingImages, ...assets]);
@@ -39,33 +46,30 @@ const community = () => {
       quality: 1,
     });
 
-    console.log(result);
-
     if (!result.canceled) {
       handleSelectImages(images, result.assets);
     }
   };
 
   const getAllPosts = async () => {
+    setPostLoading(true);
     try {
       const res = await fetch(
         "https://trakies-backend.onrender.com/api/Post/get-posts"
       );
-
       const posts = await res.json();
       setAllPosts(posts.data);
     } catch (error) {
       console.log("Failed to get posts", error);
+    } finally {
+      setPostLoading(false);
     }
   };
 
   const handlePost = async () => {
-    if (!images || !text) {
-      return;
-    }
+    if (!images || !text) return;
 
     setLoading(true);
-
     try {
       const body = {
         userEmail: user.email,
@@ -89,15 +93,12 @@ const community = () => {
       }
 
       const res = await postRes.json();
-
       const imgRes = await uploadFilesToS3(images, res.data._id);
 
       if (!imgRes) {
         await fetch(
           `https://trakies-backend.onrender.com/api/Post/delete-post?id=${res.data._id}`,
-          {
-            method: "DELETE",
-          }
+          { method: "DELETE" }
         );
         throw new Error("Failed to post images.");
       }
@@ -110,103 +111,76 @@ const community = () => {
     }
   };
 
-  const addPostRef = useRef(null);
-
   useEffect(() => {
     getAllPosts();
-  }, [allPosts]);
+  }, []);
 
-  if (allPosts.length === 0) {
+  if (postLoading) {
     return (
-      <View className="w-full h-full flex justify-center items-center">
-        <ActivityIndicator color="green" size={"large"} />
+      <View style={styles.loaderContainer}>
+        <ActivityIndicator size={"large"} color={"green"} />
       </View>
     );
-  } 
+  }
 
   return (
     <>
       {user ? (
-        <>
-          <View className="mt-16 h-full relative">
-            <ScrollView
-              contentContainerStyle={{ paddingBottom: 10, flexGrow: 1 }}
-              showsVerticalScrollIndicator={false}
-              style={{ width: "100%" }}
-            >
-              <View className="px-4 pt-16 w-full">
-                {allPosts.length > 0 &&
-                  allPosts?.map((post, index) => (
-                    <PostComponent key={index} post={post} />
-                  ))}
-              </View>
-            </ScrollView>
-            <View className="h-14 absolute bottom-16 w-full px-4 py-2">
-              <TouchableOpacity
-                activeOpacity={0.8}
-                onPress={() => addPostRef.current?.open()}
-                className="bg-green-700 h-10 py-2 flex justify-center items-center rounded-lg"
-              >
-                <Text className="text-white font-semibold">
-                  Share your experience
-                </Text>
-              </TouchableOpacity>
+        <SafeAreaView style={styles.safeArea}>
+          <ScrollView
+            contentContainerStyle={styles.scrollContainer}
+            showsVerticalScrollIndicator={false}
+          >
+            <View style={styles.postsContainer}>
+              {allPosts.map((post, index) => (
+                <PostComponent key={index} post={post} />
+              ))}
             </View>
+          </ScrollView>
+          <View style={styles.shareButtonContainer}>
+            <TouchableOpacity
+              activeOpacity={0.8}
+              onPress={() => addPostRef.current?.open()}
+              style={styles.shareButton}
+            >
+              <Text style={styles.shareButtonText}>Share your experience</Text>
+            </TouchableOpacity>
           </View>
           <Modalize
             adjustToContentHeight
             ref={addPostRef}
             handlePosition="inside"
-            modalStyle={{ overflow: "hidden", width: "100%" }}
+            modalStyle={styles.modalStyle}
           >
-            <View className="w-full h-full px-4 flex-1 justify-between items-center">
-              <ScrollView
-                contentContainerStyle={{
-                  paddingBottom: 20,
-                  flexGrow: 1,
-                }}
-                style={{ width: "100%", flex: 1 }}
-              >
-                <View className="w-full flex-1">
-                  <View className="py-2 flex justify-center items-center">
-                    <Text className="text-xl font-semibold">
-                      Share your experience with us
-                    </Text>
-                  </View>
+            <View style={styles.modalContainer}>
+              <ScrollView contentContainerStyle={styles.modalScrollContent}>
+                <View style={styles.modalContent}>
+                  <Text style={styles.modalTitle}>
+                    Share your experience with us
+                  </Text>
                   <TextInput
-                    multiline={true}
+                    multiline
                     numberOfLines={6}
                     textAlignVertical="top"
                     onChangeText={setText}
                     value={text}
                     placeholder="Write your thoughts...."
                     keyboardType="default"
-                    className="w-full mt-3 border-2 border-green-700 rounded-lg p-2"
-                    placeholderTextColor={"gray"}
+                    style={styles.textInput}
+                    placeholderTextColor="gray"
                   />
-                  {images.length !== 0 ? (
-                    <View
-                      className="flex flex-row flex-wrap justify-center 
-                          items-center space-x-4 border-2 border-green-600 
-                          rounded-lg p-1 py-5 mt-4"
-                    >
+                  {images.length > 0 ? (
+                    <View style={styles.imagesContainer}>
                       {images.map((img, idx) => (
-                        <View key={idx} className="relative h-fit w-fit">
+                        <View key={idx} style={styles.imageWrapper}>
                           <Image
                             source={{ uri: img.uri }}
-                            style={{
-                              width: 100,
-                              height: 100,
-                              borderRadius: 10,
-                              marginBottom: 14,
-                            }}
+                            style={styles.image}
                           />
                           <TouchableOpacity
                             activeOpacity={0.8}
                             onPress={() => handleUnselect(img.uri)}
-                            className="absolute -top-2 -right-2 h-5 w-5 
-                             rounded-full flex justify-center items-center 
-                             border-2 border-gray-500 bg-white"
+                            style={styles.imageCloseButton}
                           >
                             <Ionicons
                               name="close-outline"
@@ -218,38 +192,36 @@ const community = () => {
                       ))}
                     </View>
                   ) : (
-                    <View className="border-2 border-green-700 flex justify-center items-center h-32 w-full rounded-lg mt-2">
+                    <View style={styles.addImagesPlaceholder}>
                       <Text>Please share the moments you captured</Text>
-                      <View className="w-full flex justify-center items-center mt-1">
-                        <TouchableOpacity
-                          onPress={pickImage}
-                          className="bg-green-700 w-40 px-4 py-3 mt-2 rounded-lg flex justify-center items-center"
-                        >
-                          <Text className="text-white font-semibold">
-                            Add Images
-                          </Text>
-                        </TouchableOpacity>
-                      </View>
+                      <TouchableOpacity
+                        onPress={pickImage}
+                        style={styles.addImagesButton}
+                      >
+                        <Text style={styles.addImagesButtonText}>
+                          Add Images
+                        </Text>
+                      </TouchableOpacity>
                     </View>
                   )}
                 </View>
               </ScrollView>
-              <View className="w-full h-12 px-6">
+              <View style={styles.postButtonContainer}>
                 <TouchableOpacity
                   onPress={handlePost}
                   activeOpacity={0.7}
-                  className="bg-green-700 w-full h-10 flex justify-center items-center py-3 rounded-xl"
+                  style={styles.postButton}
                 >
                   {loading ? (
-                    <ActivityIndicator color="white" size={"small"} />
+                    <ActivityIndicator color="white" size="small" />
                   ) : (
-                    <Text className="font-semibold text-white">Post</Text>
+                    <Text style={styles.postButtonText}>Post</Text>
                   )}
                 </TouchableOpacity>
               </View>
             </View>
           </Modalize>
-        </>
+        </SafeAreaView>
       ) : (
         <LoginReqCard />
       )}
@@ -257,4 +229,99 @@ const community = () => {
   );
 };
 
-export default community;
+const styles = StyleSheet.create({
+  safeArea: {
+    flex: 1,
+  },
+  loaderContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    width: "100%",
+    height: "100%",
+  },
+  scrollContainer: {
+    paddingBottom: height * 0.1,
+  },
+  postsContainer: {
+    paddingHorizontal: width * 0.05,
+    paddingTop: height * 0.08,
+  },
+  shareButtonContainer: {
+    position: "absolute",
+    bottom: 10,
+    left: width * 0.05,
+    right: width * 0.05,
+  },
+  shareButton: {
+    backgroundColor: "green",
+    height: height * 0.06,
+    justifyContent: "center",
+    alignItems: "center",
+    borderRadius: 8,
+  },
+  shareButtonText: {
+    color: "white",
+    fontWeight: "bold",
+  },
+  modalStyle: {
+    width: "100%",
+  },
+  modalContainer: {
+    paddingHorizontal: width * 0.05,
+  },
+  modalScrollContent: {
+    paddingBottom: height * 0.02,
+  },
+  modalContent: {
+    alignItems: "center",
+    width: "100%",
+  },
+  modalTitle: {
+    fontSize: width * 0.05,
+    fontWeight: "bold",
+    paddingBottom: height * 0.02,
+  },
+  textInput: {
+    borderWidth: 1,
+    borderColor: "green",
+    borderRadius: 8,
+    padding: 10,
+    marginTop: height * 0.02,
+    height: height * 0.15,
+  },
+  imagesContainer: {
+    flexDirection: "row",
+    flexWrap: "wrap",
+    justifyContent: "center",
+    paddingTop: height * 0.02,
+  },
+  imageWrapper: {
+    position: "relative",
+    margin: 5,
+  },
+  image: {
+    width: width * 0.25,
+    height: width * 0.25,
+    borderRadius: 10,
+  },
+  imageCloseButton: {
+    position: "absolute",
+    top: -5,
+    right: -5,
+    backgroundColor: "white",
+    borderRadius: 12,
+    padding: 2,
+  },
+  addImagesPlaceholder: {
+    borderWidth: 1,
+    borderColor: "green",
+    borderRadius: 8,
+    height: height * 0.15,
+    justifyContent: "center",
+    alignItems: "center",
+    marginTop: height * 0.02,
+  },
+});
+
+export default Community;

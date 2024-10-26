@@ -102,7 +102,10 @@ export default function RootLayout() {
             name="(addTourDetails)/createCheckpoints/[id]"
             options={getOpt("Create Check Points")}
           />
-          {/* add tour details screens */}
+          <Stack.Screen
+            name="(addTourDetails)/luggage/[id]"
+            options={getOpt("Luggage Items")}
+          />
         </Stack>
       </GestureHandlerRootView>
     </Provider>

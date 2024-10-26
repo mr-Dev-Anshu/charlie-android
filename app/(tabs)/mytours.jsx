@@ -1,14 +1,15 @@
-import { View } from "react-native";
-import React, { useEffect, useState } from "react";
-import { tours } from "../../constants/tours.js";
-import MyTourCard from "../../components/UI/MyTourCard";
+import { View, Dimensions, StyleSheet, Text } from "react-native";
+import React, { useEffect } from "react";
 import { ScrollView } from "react-native-gesture-handler";
 import { StatusBar } from "expo-status-bar";
 import { useDispatch, useSelector } from "react-redux";
-import LoginReqCard from "../../components/UI/LoginReqCard.jsx";
 import { setBookedTour } from "../../redux/slices/tourSlice";
+import MyTourCard from "../../components/UI/MyTourCard";
+import LoginReqCard from "../../components/UI/LoginReqCard.jsx";
 
-const mytours = () => {
+const { width, height } = Dimensions.get("window");
+
+const MyTours = () => {
   const { user } = useSelector((state) => state.user);
   const { bookedTour } = useSelector((state) => state.tour);
 
@@ -36,10 +37,18 @@ const mytours = () => {
     getAllBookedTours();
   }, []);
 
+  if (!bookedTour) {
+    return (
+      <View style={styles.noBookedTourContainer}>
+        <Text>No booked tours</Text>
+      </View>
+    );
+  }
+
   return (
     <>
       {user ? (
-        <View className="mt-24 h-full w-full flex justify-center items-center">
+        <View style={styles.container}>
           <StatusBar
             style="dark"
             backgroundColor="#fff"
@@ -48,16 +57,9 @@ const mytours = () => {
           />
           <ScrollView
             showsVerticalScrollIndicator={false}
-            contentContainerStyle={{
-              width: "100%",
-              display: "flex",
-              justifyConten: "center",
-              alignItems: "center",
-              paddingBottom: 60,
-              paddingHorizontal: 4,
-            }}
+            contentContainerStyle={styles.scrollContainer}
           >
-            <View className="h-full w-full flex justify-center items-center mt-4 pb-28">
+            <View style={styles.toursContainer}>
               {bookedTour.map((tour, idx) => (
                 <MyTourCard
                   key={idx}
@@ -75,4 +77,34 @@ const mytours = () => {
   );
 };
 
-export default mytours;
+const styles = StyleSheet.create({
+  container: {
+    marginTop: height * 0.08,
+    flex: 1,
+    width: "100%",
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "#fff",
+  },
+  scrollContainer: {
+    width: "100%",
+    alignItems: "center",
+    paddingBottom: height * 0.1,
+    paddingHorizontal: width * 0.05,
+  },
+  toursContainer: {
+    width: "100%",
+    alignItems: "center",
+    marginTop: height * 0.05,
+    paddingBottom: height * 0.01,
+  },
+  noBookedTourContainer: {
+    height: "100%",
+    width: "100%",
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+});
+
+export default MyTours;

@@ -1,24 +1,27 @@
-import { View, Text, ScrollView } from "react-native";
+import {
+  View,
+  Text,
+  ScrollView,
+  Dimensions,
+  StyleSheet,
+  TouchableOpacity,
+} from "react-native";
 import React, { useEffect, useState } from "react";
 import { useRouter } from "expo-router";
 import LabelValue from "../components/UI/LabelValue";
 import { useDispatch, useSelector } from "react-redux";
-import { TouchableOpacity } from "react-native-gesture-handler";
 import { Ionicons } from "@expo/vector-icons";
 import MemberCard from "../components/UI/MemberCard";
 import { formatDate } from "../utils/helpers";
 import { setMembers } from "../redux/slices/userSlice";
 
-const profile = () => {
-  
+const { width, height } = Dimensions.get("window");
+
+const Profile = () => {
   const data = useSelector((state) => state.user);
-
   const { user, role, profile } = data;
-
   const router = useRouter();
-
   const dispatch = useDispatch();
-
   const [membersData, setMembersData] = useState([]);
 
   const handleGetMembers = async () => {
@@ -56,17 +59,17 @@ const profile = () => {
   }, []);
 
   return (
-    <View className="h-full w-full px-4 flex justify-center items-center relative">
+    <View style={styles.container}>
       <ScrollView
-        className="h-full w-full py-2"
+        style={styles.scrollView}
         showsVerticalScrollIndicator={false}
-        contentContainerStyle={{ paddingBottom: 56, paddingHorizontal: 8 }}
+        contentContainerStyle={styles.scrollContent}
       >
         <View>
-          <Text>Personal Details</Text>
+          <Text style={styles.titleText}>Personal Details</Text>
         </View>
         <LabelValue label={"Name"} value={user?.given_name} />
-        <View className="mt-3 space-y-5">
+        <View style={styles.detailsContainer}>
           {profile ? (
             <View>
               <LabelValue
@@ -90,34 +93,38 @@ const profile = () => {
                 value={profile.Ganesh}
               />
               <LabelValue
-                label={"Emergency Contact No ?"}
+                label={"Emergency Contact No"}
                 value={profile.emergency_contact}
               />
             </View>
           ) : (
-            <View className="w-full h-[100px] flex justify-center items-center space-y-5">
-              <Text className="text-base font-semibold text-green-700 ">
-                You haven't created your profile yet !
+            <View style={styles.createProfileContainer}>
+              <Text style={styles.createProfileText}>
+                You haven't created your profile yet!
               </Text>
               <TouchableOpacity
                 onPress={() => router.push("/editProfile")}
-                style={{
-                  backgroundColor: "red",
-                  paddingVertical: 10,
-                  paddingHorizontal: 20,
-                  display: "flex",
-                  justifyContent: "center",
-                  alignItems: "center",
-                  borderRadius: 10,
-                }}
+                style={styles.createProfileButton}
               >
-                <Text className="text-white text-base font-bold">
+                <Text style={styles.createProfileButtonText}>
                   Create Profile
                 </Text>
               </TouchableOpacity>
             </View>
           )}
-          <View>
+          <View style={styles.memberContainer}>
+            <View
+              style={{
+                width: "100%",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
+              <Text style={{ fontSize: width * 0.045, fontWeight: "500" }}>
+                Added Members
+              </Text>
+            </View>
             {membersData.length !== 0 ? (
               <>
                 {membersData.map((mem, index) => (
@@ -125,50 +132,145 @@ const profile = () => {
                 ))}
               </>
             ) : (
-              <View className="w-full flex justify-center items-center border border-slate-500/50 rounded-lg p-2">
+              <View style={styles.noMembersContainer}>
                 <Text>No Members</Text>
               </View>
             )}
           </View>
-          <View className="flex justify-center items-center w-full px-6">
+          {role && (
             <TouchableOpacity
               activeOpacity={0.8}
-              onPress={() => router.push("/addMember")}
+              onPress={() => router.push("/(admin)/tours")}
+              style={[styles.adminButton]}
             >
-              <View className="flex justify-center items-center flex-row w-[165px] border py-2 rounded-xl">
-                <Ionicons name="add-outline" size={16} color={"green"} />
-                <Text className="text-green-600 text-base ml-3">
-                  Add Member
-                </Text>
-              </View>
+              <Text style={styles.actionButtonText}>Admin Screen</Text>
             </TouchableOpacity>
-            <TouchableOpacity
-              activeOpacity={0.8}
-              onPress={() => router.push("/updateProfile")}
-            >
-              <View className="flex justify-center items-center flex-row w-[165px] mt-2 border py-2 rounded-xl">
-                <Text className="text-green-600 text-base ml-3">
-                  Edit Profile
-                </Text>
-              </View>
-            </TouchableOpacity>
-            {role && (
-              <TouchableOpacity
-                activeOpacity={0.8}
-                onPress={() => router.push("/(admin)/tours")}
-              >
-                <View className="flex justify-center items-center flex-row w-[165px] mt-2 border py-2 rounded-xl">
-                  <Text className="text-green-600 text-base ml-3">
-                    Admin Screen
-                  </Text>
-                </View>
-              </TouchableOpacity>
-            )}
-          </View>
+          )}
         </View>
       </ScrollView>
+      <View style={styles.actionsContainer}>
+        <TouchableOpacity
+          activeOpacity={0.8}
+          onPress={() => router.push("/addMember")}
+          style={[styles.actionButton, styles.addMemberButton]}
+        >
+          <Ionicons name="add-outline" size={16} color={"white"} />
+          <Text style={[styles.actionButtonText, styles.addMemberButtonText]}>
+            Add Member
+          </Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          activeOpacity={0.8}
+          onPress={() => router.push("/updateProfile")}
+          style={[styles.actionButton, styles.editProfileButton]}
+        >
+          <Text style={styles.actionButtonText}>Edit Profile</Text>
+        </TouchableOpacity>
+      </View>
     </View>
   );
 };
 
-export default profile;
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    width: "100%",
+    paddingHorizontal: width * 0.04,
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: "#fff",
+  },
+  scrollView: {
+    width: "100%",
+  },
+  scrollContent: {
+    paddingBottom: height * 0.03,
+  },
+  titleText: {
+    fontSize: width * 0.05,
+    fontWeight: "bold",
+    marginBottom: height * 0.001,
+  },
+  detailsContainer: {
+    marginTop: height * 0.01,
+    marginBottom: height * 0.05,
+  },
+  createProfileContainer: {
+    height: height * 0.2,
+    justifyContent: "center",
+    alignItems: "center",
+    marginBottom: height * 0.03,
+  },
+  createProfileText: {
+    fontSize: width * 0.045,
+    color: "green",
+    textAlign: "center",
+  },
+  createProfileButton: {
+    backgroundColor: "red",
+    paddingVertical: height * 0.015,
+    paddingHorizontal: width * 0.2,
+    marginTop: height * 0.02,
+    borderRadius: 10,
+    alignItems: "center",
+  },
+  createProfileButtonText: {
+    color: "#fff",
+    fontSize: width * 0.045,
+    fontWeight: "bold",
+  },
+  noMembersContainer: {
+    borderColor: "#999",
+    borderWidth: 1,
+    borderRadius: 10,
+    paddingVertical: height * 0.015,
+    paddingHorizontal: width * 0.1,
+    alignItems: "center",
+    marginVertical: height * 0.02,
+  },
+  actionsContainer: {
+    display: "flex",
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    width: "100%",
+    marginTop: height * 0.002,
+  },
+  actionButton: {
+    display: "flex",
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    borderRadius: 10,
+    width: width * 0.4,
+    paddingVertical: height * 0.01,
+    paddingHorizontal: width * 0.01,
+    marginVertical: height * 0.01,
+  },
+  actionButtonText: {
+    fontSize: width * 0.045,
+    marginLeft: 0.001,
+    color: "white",
+  },
+  addMemberButton: {
+    backgroundColor: "gray",
+    color: "white",
+  },
+  editProfileButton: {
+    backgroundColor: "green",
+  },
+  memberContainer: {
+    marginTop: 12,
+  },
+  adminButton: {
+    backgroundColor: "green",
+    paddingVertical: 10,
+    width: width * 0.5,
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    marginTop: 10,
+  },
+});
+
+export default Profile;

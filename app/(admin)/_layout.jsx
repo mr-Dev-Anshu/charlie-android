@@ -49,7 +49,7 @@ export default function AdminLayout() {
         name="community"
         options={{
           title: "Community",
-          headerShown: false,
+          header: () => <Header />,
           tabBarIcon: ({ color, focused }) => (
             <Ionicons
               name={focused ? "chatbubbles" : "chatbubbles-outline"}
@@ -63,7 +63,7 @@ export default function AdminLayout() {
         name="announcement"
         options={{
           title: "Announcement",
-          headerShown: false,
+          header: () => <Header />,
           tabBarIcon: ({ color, focused }) => (
             <Octicons
               name={focused ? "bell-fill" : "bell"}

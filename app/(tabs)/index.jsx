@@ -2,7 +2,7 @@ import v1 from "@/assets/welcomeTile.svg";
 import { Image } from "expo-image";
 import { SafeAreaView } from "react-native-safe-area-context";
 import CarouselComponent from "@/components/CarouselComponent";
-import { View, Text } from "react-native";
+import { View, Text, Dimensions, StyleSheet } from "react-native";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { setTour } from "@/redux/slices/tourSlice";
@@ -10,11 +10,13 @@ import { StatusBar } from "expo-status-bar";
 import * as Network from "expo-network";
 import { useRouter } from "expo-router";
 
+const { width, height } = Dimensions.get("window");
+
 export default function HomeScreen() {
   const dispatch = useDispatch();
   const [isConnected, setIsConnected] = useState(null);
   const { user } = useSelector((state) => state.user);
-  const router = useRouter(); 
+  const router = useRouter();
   const [isMounted, setIsMounted] = useState(false);
 
   const getAllTours = async () => {
@@ -54,25 +56,57 @@ export default function HomeScreen() {
   }, [isConnected, user, isMounted]);
 
   return (
-    <SafeAreaView>
+    <SafeAreaView style={styles.safeAreaView}>
       <StatusBar
         style="dark"
         backgroundColor="#fff"
         translucent={true}
         animated
       />
-      <View className="flex h-full space-y-5 relative">
+      <View style={styles.container}>
+        <Image source={v1} style={styles.image} />
         {isConnected === false ? (
-          <View className="flex-1 justify-center items-center">
-            <Text style={{ fontSize: 20, color: "red" }}>Mobile data off</Text>
+          <View style={styles.centeredContainer}>
+            <Text style={styles.offlineText}>Mobile data off</Text>
           </View>
         ) : (
-          <>
-            <Image source={v1} className="h-96 top-0 w-full" />
+          <View style={styles.carouselContainer}>
             <CarouselComponent />
-          </>
+          </View>
         )}
       </View>
     </SafeAreaView>
   );
 }
+
+const styles = StyleSheet.create({
+  safeAreaView: {
+    flex: 1,
+    backgroundColor: "#fff",
+  },
+  container: {
+    flex: 1,
+    justifyContent: "flex-start",
+    alignItems: "center",
+  },
+  image: {
+    width: "100%",
+    height: height * 0.45,
+    contentFit: "cover",
+    position:"absolute"
+  },
+  centeredContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  offlineText: {
+    fontSize: width * 0.05,
+    color: "red",
+  },
+  carouselContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+});

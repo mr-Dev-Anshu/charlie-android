@@ -1,13 +1,14 @@
-import { View, Text, ActivityIndicator, Alert } from "react-native";
+import { View, Text, ActivityIndicator, Alert, Dimensions, StyleSheet } from "react-native";
 import React, { useState } from "react";
 import { Image } from "expo-image";
 import { TextInput, TouchableOpacity } from "react-native-gesture-handler";
 import { Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import DropDownPicker from "react-native-dropdown-picker";
-import axios from "axios";
 
-const addRoles = () => {
+const { width, height } = Dimensions.get("window");
+
+const AddRoles = () => {
   const router = useRouter();
   const [email, setEmail] = useState("");
   const [loading, setLoading] = useState(false);
@@ -44,76 +45,55 @@ const addRoles = () => {
   };
 
   return (
-    <View className="h-full w-full">
-      <View className="absolute top-0 left-0 h-full w-full">
+    <View style={styles.container}>
+      <View style={styles.backgroundImageContainer}>
         <Image
-          className="h-full w-full"
+          style={styles.backgroundImage}
           source="https://images.pexels.com/photos/27377328/pexels-photo-27377328/free-photo-of-people-walking-down-a-steep-hill-in-the-jungle.jpeg?auto=compress&cs=tinysrgb&w=600"
         />
       </View>
-      <View className="w-full h-full bg-black/60 flex justify-center items-center space-y-10">
-        <View>
-          <Text className="text-white text-5xl font-bold text-center mt-10">
-            Trekies.
-          </Text>
-        </View>
-        <View className="z-50 w-full px-12">
-          <View className="h-12">
-            {error && (
-              <View className="flex justify-center items-center space-x-5">
-                <Ionicons name="warning-outline" size={24} color="red" />
-                <Text className="text-lg font-bold text-red-700 text-center">
-                  {error}
-                </Text>
-              </View>
-            )}
-          </View>
-          <View className="mt-5">
-            <DropDownPicker
-              open={open}
-              value={value}
-              items={roles}
-              textStyle={{ color: "white", fontWeight: "bold" }}
-              dropDownContainerStyle={{ backgroundColor: "green" }}
-              badgeStyle={{ backgroundColor: "green" }}
-              tickIconStyle={{ color: "white" }}
-              arrowIconStyle={{ color: "white" }}
-              setOpen={setOpen}
-              setValue={setValue}
-              setItems={setRoles}
-              className="bg-[#228B22]"
-            />
-            <TextInput
-              placeholder="Enter Email"
-              textContentType="emailAddress"
-              autoCapitalize="none"
-              keyboardType="email-address"
-              onChangeText={(newText) => setEmail(newText)}
-              className="text-white text-base font-semibold lowercase w-full mt-5 outline outline-2 outline-green-700 indent-3 border border-green-700 rounded-[10px] p-2"
-              placeholderTextColor={"white"}
-              defaultValue={email}
-            />
-          </View>
-          <TouchableOpacity
-            onPress={handleLogin}
-            className="py-3 flex justify-center items-center mt-10 bg-[#228B22] w-full rounded-[10px]"
-          >
+      <View style={styles.overlay}>
+        <Text style={styles.title}>Trekies.</Text>
+        <View style={styles.formContainer}>
+          {error && (
+            <View style={styles.errorContainer}>
+              <Ionicons name="warning-outline" size={width * 0.06} color="red" />
+              <Text style={styles.errorText}>{error}</Text>
+            </View>
+          )}
+          <DropDownPicker
+            open={open}
+            value={value}
+            items={roles}
+            textStyle={{ color: "white", fontWeight: "bold", fontSize: width * 0.04 }}
+            dropDownContainerStyle={styles.dropDownContainer}
+            badgeStyle={{ backgroundColor: "green" }}
+            tickIconStyle={{ color: "white" }}
+            arrowIconStyle={{ color: "white" }}
+            setOpen={setOpen}
+            setValue={setValue}
+            setItems={setRoles}
+            style={styles.dropDownPicker}
+          />
+          <TextInput
+            placeholder="Enter Email"
+            textContentType="emailAddress"
+            autoCapitalize="none"
+            keyboardType="email-address"
+            onChangeText={(newText) => setEmail(newText)}
+            style={styles.textInput}
+            placeholderTextColor="white"
+            defaultValue={email}
+          />
+          <TouchableOpacity onPress={handleLogin} style={styles.proceedButton}>
             {loading ? (
               <ActivityIndicator size={24} color="#00ff00" />
             ) : (
-              <Text className="text-white text-center font-bold text-lg">
-                Proceed
-              </Text>
+              <Text style={styles.proceedButtonText}>Proceed</Text>
             )}
           </TouchableOpacity>
-          <TouchableOpacity
-            onPress={() => router.back()}
-            className="w-full py-2 px-2 rounded-[10px] border-2 border-[#228B22] mt-5 text-white"
-            activeOpacity={0.8}
-          >
-            <Text className="text-white text-center font-bold text-lg">
-              Cancel
-            </Text>
+          <TouchableOpacity onPress={() => router.back()} style={styles.cancelButton}>
+            <Text style={styles.cancelButtonText}>Cancel</Text>
           </TouchableOpacity>
         </View>
       </View>
@@ -121,4 +101,97 @@ const addRoles = () => {
   );
 };
 
-export default addRoles;
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
+  backgroundImageContainer: {
+    ...StyleSheet.absoluteFillObject,
+    width: "100%",
+    height: "100%",
+  },
+  backgroundImage: {
+    width: "100%",
+    height: "100%",
+    contentFit: "cover",
+  },
+  overlay: {
+    ...StyleSheet.absoluteFillObject,
+    backgroundColor: "rgba(0, 0, 0, 0.6)",
+    justifyContent: "center",
+    alignItems: "center",
+    paddingHorizontal: width * 0.1,
+  },
+  title: {
+    color: "white",
+    fontSize: width * 0.1,
+    fontWeight: "bold",
+    textAlign: "center",
+    marginBottom: height * 0.05,
+  },
+  formContainer: {
+    width: "100%",
+    alignItems: "center",
+  },
+  errorContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    marginBottom: height * 0.02,
+  },
+  errorText: {
+    color: "red",
+    fontSize: width * 0.04,
+    fontWeight: "bold",
+    textAlign: "center",
+    marginLeft: width * 0.02,
+  },
+  dropDownPicker: {
+    backgroundColor: "#228B22",
+    width: "100%",
+    marginBottom: height * 0.02,
+  },
+  dropDownContainer: {
+    backgroundColor: "green",
+  },
+  textInput: {
+    color: "white",
+    fontSize: width * 0.045,
+    fontWeight: "600",
+    width: "100%",
+    paddingVertical: height * 0.015,
+    paddingHorizontal: width * 0.03,
+    borderRadius: 10,
+    borderColor: "green",
+    borderWidth: 1,
+    marginBottom: height * 0.03,
+  },
+  proceedButton: {
+    backgroundColor: "#228B22",
+    width: "100%",
+    paddingVertical: height * 0.02,
+    borderRadius: 10,
+    alignItems: "center",
+    marginBottom: height * 0.02,
+  },
+  proceedButtonText: {
+    color: "white",
+    fontSize: width * 0.05,
+    fontWeight: "bold",
+  },
+  cancelButton: {
+    width: "100%",
+    paddingVertical: height * 0.015,
+    borderRadius: 10,
+    borderWidth: 2,
+    borderColor: "#228B22",
+    alignItems: "center",
+  },
+  cancelButtonText: {
+    color: "white",
+    fontSize: width * 0.05,
+    fontWeight: "bold",
+  },
+});
+
+export default AddRoles;

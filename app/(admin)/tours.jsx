@@ -1,38 +1,93 @@
-import { View, Text, ScrollView, TouchableOpacity } from "react-native";
+import { View, Text, ScrollView, TouchableOpacity, Dimensions, StyleSheet } from "react-native";
 import React from "react";
 import TourCard from "../../components/admin/UI/TourCard";
 import { router } from "expo-router";
 import { useSelector } from "react-redux";
 
+const { width, height } = Dimensions.get("window");
+
 const Tours = () => {
   const { tour } = useSelector((state) => state.tour);
 
   return (
-    <View className="flex-1 mt-24 h-full flex justify-center items-center relative">
+    <View style={styles.container}>
       <ScrollView
-        contentContainerStyle={{ paddingBottom: 80 }}
-        style={{
-          height: "100%",
-          width: "100%",
-        }}
+        contentContainerStyle={styles.scrollContainer}
         showsVerticalScrollIndicator={false}
       >
-        <View className="w-full">
-          {tour.length > 0 &&
-            tour.map((item) => <TourCard key={item?._id} tour={item} />)}
+        <View style={styles.tourListContainer}>
+          {tour.length > 0 ? (
+            tour.map((item) => <TourCard key={item?._id} tour={item} />)
+          ) : (
+            <View style={styles.noToursCard}>
+              <Text style={styles.noToursText}>No Tours</Text>
+            </View>
+          )}
         </View>
       </ScrollView>
-      <View className="absolute bottom-0 w-full px-6 py-3 bg-white">
+      <View style={styles.createButtonContainer}>
         <TouchableOpacity
           activeOpacity={0.7}
-          className="w-full bg-green-700 flex justify-center items-center py-3 rounded-lg"
+          style={styles.createButton}
           onPress={() => router.push("/addTours")}
         >
-          <Text style={{ color: "white", fontSize: 18 }}>Create Tour</Text>
+          <Text style={styles.createButtonText}>Create Tour</Text>
         </TouchableOpacity>
       </View>
     </View>
   );
 };
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    paddingTop: height * 0.1,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  scrollContainer: {
+    paddingBottom: height * 0.1,
+    width: "100%",
+  },
+  tourListContainer: {
+    width: "100%",
+    paddingHorizontal: width * 0.04,
+  },
+  noToursCard: {
+    backgroundColor: "green",
+    borderRadius: 10,
+    paddingVertical: height * 0.02,
+    paddingHorizontal: width * 0.05,
+    justifyContent: "center",
+    alignItems: "center",
+    marginVertical: height * 0.02,
+  },
+  noToursText: {
+    color: "white",
+    fontSize: width * 0.045,
+    fontWeight: "bold",
+  },
+  createButtonContainer: {
+    position: "absolute",
+    bottom: 0,
+    width: "100%",
+    paddingHorizontal: width * 0.05,
+    paddingVertical: height * 0.02,
+    backgroundColor: "white",
+  },
+  createButton: {
+    backgroundColor: "green",
+    width: "100%",
+    justifyContent: "center",
+    alignItems: "center",
+    paddingVertical: height * 0.01,
+    borderRadius: 10,
+  },
+  createButtonText: {
+    color: "white",
+    fontSize: width * 0.045,
+    fontWeight: "bold",
+  },
+});
 
 export default Tours;

@@ -43,7 +43,7 @@ const DetailsScreen = ({ params }) => {
   };
 
   useEffect(() => {
-    if (members.length > 0 && profile) {
+    if (members?.length > 0 && profile) {
       const initialData = members.map((member) => ({
         id: member._id,
         name: member.name,
@@ -65,11 +65,9 @@ const DetailsScreen = ({ params }) => {
         isTrekker: false,
         noAccommodation: false,
       };
-
       setCuratedMembers([loggedInUser, ...initialData]);
     }
   }, [members, profile, user, id]);
-
 
   useEffect(() => {
     const selectedTour = tour.find((tourData) => tourData._id === id);

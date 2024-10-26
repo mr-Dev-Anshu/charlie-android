@@ -5,6 +5,8 @@ import {
   Switch,
   TextInput,
   TouchableOpacity,
+  Dimensions,
+  StyleSheet,
 } from "react-native";
 import React, { useRef, useState } from "react";
 import Announcement from "../../components/UI/Announcement";
@@ -13,6 +15,8 @@ import { Modalize } from "react-native-modalize";
 import DropDownPicker from "react-native-dropdown-picker";
 import { useSelector } from "react-redux";
 import { Button } from "react-native";
+
+const { width, height } = Dimensions.get("window");
 
 const AnnouncementScreen = () => {
   const { tour } = useSelector((state) => state.tour);
@@ -27,21 +31,13 @@ const AnnouncementScreen = () => {
   const [open, setOpen] = useState(false);
   const [currentTour, setCurrentTour] = useState(toursData[0]?.value);
   const [tours, setTours] = useState(toursData);
-
-  console.log(currentTour);
-
   const [content, setContent] = useState("");
   const [sendToAll, setSendToAll] = useState(false);
 
   return (
     <>
-      <View className="mt-14 h-full w-full px-3">
-        <View className="flex justify-center items-center py-1">
-          <Text className="text-lg font-semibold text-green-800">
-            Announcements
-          </Text>
-        </View>
-        <View className="px-3">
+      <View style={styles.container}>
+        <View style={styles.dropDownContainer}>
           <DropDownPicker
             open={open}
             value={currentTour}
@@ -52,7 +48,7 @@ const AnnouncementScreen = () => {
             closeOnBackPressed={true}
             placeholder="Select Tour"
             zIndex={1000}
-            textStyle={{ color: "white", fontWeight: "bold", fontSize: 16 }}
+            textStyle={{ color: "white", fontWeight: "bold", fontSize: width * 0.04 }}
             arrowIconStyle={{ tintColor: "white" }}
             tickIconStyle={{ tintColor: "white" }}
             style={{ backgroundColor: "#117004", borderColor: "#117004" }}
@@ -64,55 +60,28 @@ const AnnouncementScreen = () => {
         </View>
         <ScrollView
           showsVerticalScrollIndicator={false}
-          contentContainerStyle={{ paddingBottom: 120, paddingHorizontal: 10 }}
+          contentContainerStyle={styles.scrollViewContent}
         >
-          <View className="mt-1">
+          <View style={styles.announcementContainer}>
             <Announcement />
           </View>
         </ScrollView>
       </View>
-      <View className="bottom-32 pb-2 py-2 bg-white w-full flex justify-center items-center px-12">
+      <View style={styles.buttonContainer}>
         <TouchableOpacity
           activeOpacity={0.7}
           onPress={() => addAnnounceMentRef?.current?.open()}
-          style={{
-            width: "100%",
-            height: 48,
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-            backgroundColor: "#06992d",
-            borderRadius: 10,
-            marginBottom: 20,
-          }}
+          style={styles.newAnnouncementButton}
         >
-          <View className="flex flex-row justify-center items-center space-x-4">
-            <Ionicons name="megaphone-outline" size={20} color="white" />
-            <Text className="text-white text-lg font-semibold">
-              New Announcements
-            </Text>
+          <View style={styles.buttonContent}>
+            <Ionicons name="megaphone-outline" size={width * 0.05} color="white" />
+            <Text style={styles.buttonText}>New Announcements</Text>
           </View>
         </TouchableOpacity>
       </View>
-      <Modalize ref={addAnnounceMentRef} modalHeight={400}>
-        <View
-          style={{
-            padding: 16,
-          }}
-        >
-          <View
-            style={{
-              display: "flex",
-              alignContent: "center",
-              justifyContent: "center",
-              alignItems: "center",
-              width: "100%",
-            }}
-          >
-            <Text style={{ marginBottom: 8, fontWeight: "600", fontSize: 20 }}>
-              Annoucement
-            </Text>
-          </View>
+      <Modalize ref={addAnnounceMentRef} modalHeight={height * 0.5}>
+        <View style={styles.modalContent}>
+          <Text style={styles.modalTitle}>Announcement</Text>
           <TextInput
             value={content}
             multiline
@@ -121,27 +90,11 @@ const AnnouncementScreen = () => {
             textAlignVertical="top"
             onChangeText={setContent}
             placeholder="Enter announcement content..."
-            style={{
-              borderWidth: 3,
-              borderColor: "#ccc",
-              borderRadius: 8,
-              padding: 10,
-              fontWeight: "600",
-              borderStyle: "solid",
-              marginBottom: 16,
-            }}
+            style={styles.textInput}
           />
-          <View
-            style={{
-              flexDirection: "row",
-              alignItems: "center",
-              marginBottom: 16,
-            }}
-          >
+          <View style={styles.switchContainer}>
             <Switch value={sendToAll} onValueChange={setSendToAll} />
-            <Text style={{ marginLeft: 8, fontWeight: "600" }}>
-              Send to all users
-            </Text>
+            <Text style={styles.switchText}>Send to all users</Text>
           </View>
           <Button title="Send" color={"green"} onPress={() => {}} />
         </View>
@@ -149,5 +102,78 @@ const AnnouncementScreen = () => {
     </>
   );
 };
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    marginTop: height * 0.13,
+    paddingHorizontal: width * 0.01,
+  },
+  dropDownContainer: {
+    paddingHorizontal: width * 0.03,
+  },
+  scrollViewContent: {
+    paddingBottom: height * 0.15,
+    paddingHorizontal: width * 0.03,
+  },
+  announcementContainer: {
+    marginTop: height * 0.01,
+  },
+  buttonContainer: {
+    position: "absolute",
+    bottom: height * 0.06,
+    width: "100%",
+    paddingHorizontal: width * 0.03,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  newAnnouncementButton: {
+    width: "100%",
+    height: height * 0.05,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "#06992d",
+    borderRadius: 10,
+    marginBottom: height * 0.001,
+  },
+  buttonContent: {
+    flexDirection: "row",
+    alignItems: "center",
+  },
+  buttonText: {
+    color: "white",
+    fontSize: width * 0.045,
+    fontWeight: "bold",
+    marginLeft: width * 0.02,
+  },
+  modalContent: {
+    padding: width * 0.05,
+  },
+  modalTitle: {
+    fontSize: width * 0.06,
+    fontWeight: "600",
+    textAlign: "center",
+    marginBottom: height * 0.02,
+  },
+  textInput: {
+    borderWidth: 1.5,
+    borderColor: "#ccc",
+    borderRadius: 8,
+    padding: width * 0.04,
+    fontWeight: "600",
+    marginBottom: height * 0.02,
+    fontSize: width * 0.04,
+  },
+  switchContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginBottom: height * 0.02,
+  },
+  switchText: {
+    marginLeft: width * 0.03,
+    fontWeight: "600",
+    fontSize: width * 0.04,
+  },
+});
 
 export default AnnouncementScreen;

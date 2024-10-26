@@ -13,7 +13,7 @@ const PostComponent = ({ post }) => {
       onPress={() => router.push(`/postdetails/${post._id}`)}
     >
       <View
-        className={`h-fit mb-4 px-2 py-2 shadow-xl shadow-black/70 bg-white rounded-lg `}
+        className={`h-fit mb-2 px-2 py-2 border border-gray-500/50  rounded-lg `}
       >
         <Text className={`h-fit`}>{shorten(post?.content, 100)}</Text>
         <View className="flex flex-row w-full justify-center space-x-5 mt-2">

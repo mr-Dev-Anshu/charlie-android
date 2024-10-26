@@ -1,10 +1,10 @@
 import { View } from "react-native";
 import React from "react";
-import { checkPoints } from "../constants/tours";
 import CheckPointElement from "./UI/CheckPointElement";
 import { ScrollView } from "react-native-gesture-handler";
 
-const MyTourCheckPointsListView = () => {
+const MyTourCheckPointsListView = ({ checkPoints }) => {
+  console.log("checkPoints", checkPoints);
   return (
     <ScrollView
       showsVerticalScrollIndicator={false}
@@ -15,7 +15,7 @@ const MyTourCheckPointsListView = () => {
     >
       <View>
         {checkPoints.map((points, index) => (
-          <CheckPointElement key={index} points={points} />
+          <CheckPointElement key={index} points={points} index={index} />
         ))}
       </View>
     </ScrollView>

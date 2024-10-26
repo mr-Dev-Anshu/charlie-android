@@ -14,9 +14,7 @@ const tourDetails = () => {
 
   const tourDetail = tour.find((item) => item._id === id);
 
-  const handleDeleteTour = () =>{
-    
-  }
+  const handleDeleteTour = () => {};
 
   return (
     <View className="flex flex-1 flex-col w-full h-full px-4 justify-between items-center">
@@ -44,7 +42,9 @@ const tourDetails = () => {
               <Text
                 className={`font-semibold text-right`}
               >{`${tourDetail.total_seats} Seats`}</Text>
-              <Text className={`text-right`}>{formatDate(tourDetail.tour_end)}</Text>
+              <Text className={`text-right`}>
+                {formatDate(tourDetail.tour_end)}
+              </Text>
             </View>
           </View>
         </LinearGradient>
@@ -137,6 +137,11 @@ const DetailTitle = [
     id: 8,
     title: "My Notes",
     href: "/(addTourDetails)/myNotes",
+  },
+  {
+    id: 9,
+    title: "Bag Pack & Check-in Baggage",
+    href: "/(addTourDetails)/luggage",
   },
 ];
 

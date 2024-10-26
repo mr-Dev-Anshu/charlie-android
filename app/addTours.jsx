@@ -6,6 +6,8 @@ import {
   Switch,
   ActivityIndicator,
   ScrollView,
+  Dimensions,
+  StyleSheet,
 } from "react-native";
 import React, { useState } from "react";
 import { Ionicons } from "@expo/vector-icons";
@@ -17,6 +19,8 @@ import { Image } from "expo-image";
 import { format } from "date-fns";
 import { uploadFilesToS3 } from "../utils/uploadFileHelper";
 import { Picker } from "@react-native-picker/picker";
+
+const { width, height } = Dimensions.get("window");
 
 const addTours = () => {
   const { user } = useSelector((state) => state.user);
@@ -37,7 +41,6 @@ const addTours = () => {
   const [image, setImage] = useState([]);
 
   // date range picker
-
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
   const [bookingCloseDate, setBookingCloseDate] = useState(null);
@@ -63,9 +66,6 @@ const addTours = () => {
     setBookingCloseDate(currentDate);
   };
 
-  // date range picker
-
-  // image picker
   const pickImage = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
       allowsMultipleSelection: true,
@@ -73,8 +73,6 @@ const addTours = () => {
       aspect: [4, 3],
       quality: 1,
     });
-
-    console.log(result);
 
     if (!result.canceled) {
       setImage(result.assets);
@@ -171,270 +169,326 @@ const addTours = () => {
   };
 
   return (
-    <View className="h-full w-full px-4">
+    <View style={styles.container}>
       <ScrollView
-        className="h-full w-full py-2"
+        contentContainerStyle={styles.scrollViewContent}
         showsVerticalScrollIndicator={false}
-        contentContainerStyle={{ paddingBottom: 44 }}
       >
-        <View className="flex justify-center items-center ">
+        <View style={styles.innerContainer}>
           {error && (
-            <View className="flex flex-row justify-center items-center space-x-3 h-6">
-              <Ionicons name="warning" size={24} color={"red"} />
-              <Text
-                className={`text-base font-semibold tracking-wider text-red-600`}
-              >
-                {error}
-              </Text>
+            <View style={styles.errorContainer}>
+              <Ionicons name="warning" size={24} color="red" />
+              <Text style={styles.errorText}>{error}</Text>
             </View>
           )}
-          <View className="w-full py-2">
-            <TextInput
-              placeholder="Tour Name"
-              value={tourName}
-              placeholderTextColor={"gray"}
-              onChangeText={setTourName}
-              className={`border py-2 mb-3 w-full border-slate-500/50 rounded-lg placeholder:text-base  px-3 `}
-            />
-            <TextInput
-              placeholder="Location"
-              value={location}
-              placeholderTextColor={"gray"}
-              onChangeText={setLocation}
-              className={`border py-2 mb-3 w-full border-slate-500/50 rounded-lg placeholder:text-base  px-3 `}
-            />
-            <TextInput
-              placeholder="State"
-              value={state}
-              placeholderTextColor={"gray"}
-              onChangeText={setStartDate}
-              className={`border py-2 mb-3 w-full border-slate-500/50 rounded-lg placeholder:text-base  px-3 `}
-            />
-            <TextInput
-              placeholder="Description"
-              textAlignVertical="top"
-              value={description}
-              placeholderTextColor={"gray"}
-              onChangeText={setDescription}
-              multiline
-              className={`border mb-3 w-full border-slate-500/50 rounded-lg placeholder:text-base  px-3 h-24 py-2 `}
-            />
-            <TextInput
-              placeholder="Difficulty [Easy, Medium, Hard]"
-              value={difficulty}
-              placeholderTextColor={"gray"}
-              onChangeText={setDifficulty}
-              className={`border mb-3 w-full border-slate-500/50 rounded-lg placeholder:text-base  py-2 px-3`}
-            />
-            <View className="w-full mb-2">
-              <View className="border border-gray-500/50 rounded-lg w-full">
-                <Picker
-                  selectedValue={tourType}
-                  onValueChange={setTourType}
-                  className="px-3"
-                >
-                  <Picker.Item
-                    style={{ color: "gray" }}
-                    label="Select tour type"
-                    value={null}
-                  />
-                  <Picker.Item label="Trekking" value="Trekking" />
-                  <Picker.Item
-                    label="Sun-rise Trekking"
-                    value="Sun-rise Trekking"
-                  />
-                  <Picker.Item label="Beach Trekking" value="Beach Trekking" />
-                  <Picker.Item
-                    label="Himalaya Trekking"
-                    value="Himalaya Trekking"
-                  />
-                  <Picker.Item label="Expedition" value="Expedition" />
-                  <Picker.Item label="Educational" value="Educational" />
-                  <Picker.Item label="Historic Place" value="Historic Place" />
-                  <Picker.Item label="Adventure" value="Adventure" />
-                  <Picker.Item label="Group Travel" value="Group Travel" />
-                  <Picker.Item label="Day Outing" value="Day Outing" />
-                </Picker>
-              </View>
-            </View>
-            <TextInput
-              placeholder="Total Seats"
-              value={totalSeats}
-              placeholderTextColor={"gray"}
-              onChangeText={setTotalSeats}
-              keyboardType="numeric"
-              className={`border py-2 mb-3 w-full border-slate-500/50 rounded-lg placeholder:text-base  px-3 `}
-            />
-            <TextInput
-              placeholder="Distance (kms)"
-              value={distance}
-              placeholderTextColor={"gray"}
-              onChangeText={setDistance}
-              keyboardType="numeric"
-              className={`border py-2 mb-3 w-full border-slate-500/50 rounded-lg placeholder:text-base  px-3 `}
-            />
-            <View>
-              <TouchableOpacity onPress={() => setShowStartPicker(true)}>
-                <TextInput
-                  editable={false}
-                  className={`border py-2 mb-3 w-full border-slate-500/50 rounded-lg text-black placeholder:text-base  px-3 `}
-                  value={
-                    startDate ? format(startDate, "yyyy-MM-dd") : new Date()
-                  }
-                  placeholder="Select Start Date"
-                />
-              </TouchableOpacity>
-              {showStartPicker && (
-                <DateTimePicker
-                  value={new Date()}
-                  mode="date"
-                  display="default"
-                  onChange={onChangeStart}
-                />
-              )}
-              <TouchableOpacity onPress={() => setShowEndPicker(true)}>
-                <TextInput
-                  editable={false}
-                  className={`border py-2 mb-3 w-full border-slate-500/50 rounded-lg text-black placeholder:text-base  px-3 `}
-                  value={endDate ? format(endDate, "yyyy-MM-dd") : new Date()}
-                  placeholder="Select End Date"
-                />
-              </TouchableOpacity>
-              {showEndPicker && (
-                <DateTimePicker
-                  value={new Date()}
-                  mode="date"
-                  display="default"
-                  onChange={onChangeEnd}
-                />
-              )}
-              <TouchableOpacity onPress={() => setShowBookingClosePicker(true)}>
-                <TextInput
-                  editable={false}
-                  className={`border py-2 mb-3 w-full border-slate-500/50 rounded-lg text-black placeholder:text-base  px-3 `}
-                  value={
-                    bookingCloseDate
-                      ? format(bookingCloseDate, "yyyy-MM-dd")
-                      : new Date()
-                  }
-                  placeholder="Select Booking Close Date"
-                />
-              </TouchableOpacity>
-              {showBookingClosePicker && (
-                <DateTimePicker
-                  value={new Date()}
-                  mode="date"
-                  display="default"
-                  onChange={onChangeBookingClose}
-                />
-              )}
-            </View>
-            <TextInput
-              placeholder="Cost Per Person"
-              value={costPerPerson}
-              placeholderTextColor={"gray"}
-              onChangeText={setCostPerPerson}
-              keyboardType="numeric"
-              className={`border py-2 mb-3 w-full border-slate-500/50 rounded-lg placeholder:text-base  px-3 `}
-            />
-            <View className="flex-row py-2 justify-between items-center w-full mb-3 border  rounded-lg px-2 border-slate-500/50">
-              <Text
-                className={`text-base ${
-                  adminCanReject ? "text-black" : "text-gray-500"
-                } `}
-              >
-                Admin Can Reject Booking?
-              </Text>
-              <View style={{ transform: [{ scaleX: 0.8 }, { scaleY: 0.8 }] }}>
-                <Switch
-                  trackColor={"green"}
-                  value={adminCanReject}
-                  onChange={() => setAdminCanReject(!adminCanReject)}
-                  ios_backgroundColor={"gray"}
-                />
-              </View>
-            </View>
-            <View className="flex-row py-2 justify-between items-center w-full mb-3 border  rounded-lg px-2 border-slate-500/50">
-              <Text
-                className={`text-base ${
-                  paymentGatewayEnabled ? "text-black" : "text-gray-500"
-                }  `}
-              >
-                Payment Gateway Enabled?
-              </Text>
-              <View style={{ transform: [{ scaleX: 0.8 }, { scaleY: 0.8 }] }}>
-                <Switch
-                  trackColor={"green"}
-                  value={paymentGatewayEnabled}
-                  onChange={() =>
-                    setPaymentGatewayEnabled(!paymentGatewayEnabled)
-                  }
-                  ios_backgroundColor={"gray"}
-                />
-              </View>
-            </View>
-            {image && image.length > 0 ? (
-              <View className="w-full h-fit">
-                {image.map((img, idx) => (
-                  <View key={idx} className="relative">
-                    <Image
-                      source={{ uri: img.uri }}
-                      style={{
-                        width: "100%",
-                        height: 156,
-                        borderRadius: 10,
-                        marginTop: 10,
-                      }}
-                    />
-                    <TouchableOpacity
-                      activeOpacity={0.5}
-                      onPress={() => handleCancelImage(img.fileName)}
-                      className="absolute top-4 right-2 bg-red-600 rounded-full"
-                    >
-                      <Ionicons
-                        name="close-outline"
-                        size={16}
-                        color={"white"}
-                      />
-                    </TouchableOpacity>
-                  </View>
-                ))}
-              </View>
-            ) : (
-              <TouchableOpacity
-                activeOpacity={0.8}
-                containerStyle={{ width: "100%" }}
-                onPress={pickImage}
-              >
-                <View className="flex h-32 border border-green-700 rounded-lg flex-row justify-center items-center space-x-3">
-                  <Ionicons name="add-circle" size={20} color={"green"} />
-                  <Text className="text-base font-semibold text-green-600">
-                    Upload tour images here
-                  </Text>
-                </View>
-              </TouchableOpacity>
+          <TextInput
+            placeholder="Tour Name"
+            value={tourName}
+            placeholderTextColor="gray"
+            onChangeText={setTourName}
+            style={styles.input}
+          />
+          <TextInput
+            placeholder="Location"
+            value={location}
+            placeholderTextColor="gray"
+            onChangeText={setLocation}
+            style={styles.input}
+          />
+          <TextInput
+            placeholder="State"
+            value={state}
+            placeholderTextColor="gray"
+            onChangeText={setState}
+            style={styles.input}
+          />
+          <TextInput
+            placeholder="Description"
+            value={description}
+            onChangeText={setDescription}
+            placeholderTextColor="gray"
+            multiline
+            style={[styles.input, styles.descriptionInput]}
+          />
+          <TextInput
+            placeholder="Difficulty [Easy, Medium, Hard]"
+            value={difficulty}
+            placeholderTextColor="gray"
+            onChangeText={setDifficulty}
+            style={styles.input}
+          />
+          <View style={styles.pickerContainer}>
+            <Picker selectedValue={tourType} onValueChange={setTourType}>
+              <Picker.Item label="Select tour type" value={null} />
+              <Picker.Item label="Trekking" value="Trekking" />
+              <Picker.Item
+                label="Sun-rise Trekking"
+                value="Sun-rise Trekking"
+              />
+              <Picker.Item label="Beach Trekking" value="Beach Trekking" />
+              <Picker.Item
+                label="Himalaya Trekking"
+                value="Himalaya Trekking"
+              />
+              <Picker.Item label="Expedition" value="Expedition" />
+              <Picker.Item label="Educational" value="Educational" />
+              <Picker.Item label="Historic Place" value="Historic Place" />
+              <Picker.Item label="Adventure" value="Adventure" />
+              <Picker.Item label="Group Travel" value="Group Travel" />
+              <Picker.Item label="Day Outing" value="Day Outing" />
+            </Picker>
+          </View>
+          <TextInput
+            placeholder="Total Seats"
+            value={totalSeats}
+            placeholderTextColor="gray"
+            onChangeText={setTotalSeats}
+            keyboardType="numeric"
+            style={styles.input}
+          />
+          <TextInput
+            placeholder="Distance (kms)"
+            value={distance}
+            placeholderTextColor="gray"
+            onChangeText={setDistance}
+            keyboardType="numeric"
+            style={styles.input}
+          />
+          <View style={{ width: "100%" }}>
+            <TouchableOpacity onPress={() => setShowStartPicker(true)}>
+              <TextInput
+                editable={false}
+                className={`border py-2 mb-3 w-full border-slate-500/50 rounded-lg text-black placeholder:text-base  px-3 `}
+                value={startDate ? format(startDate, "yyyy-MM-dd") : new Date()}
+                placeholder="Select Start Date"
+              />
+            </TouchableOpacity>
+            {showStartPicker && (
+              <DateTimePicker
+                value={new Date()}
+                mode="date"
+                display="default"
+                onChange={onChangeStart}
+              />
+            )}
+            <TouchableOpacity onPress={() => setShowEndPicker(true)}>
+              <TextInput
+                editable={false}
+                className={`border py-2 mb-3 w-full border-slate-500/50 rounded-lg text-black placeholder:text-base  px-3 `}
+                value={endDate ? format(endDate, "yyyy-MM-dd") : new Date()}
+                placeholder="Select End Date"
+              />
+            </TouchableOpacity>
+            {showEndPicker && (
+              <DateTimePicker
+                value={new Date()}
+                mode="date"
+                display="default"
+                onChange={onChangeEnd}
+              />
+            )}
+            <TouchableOpacity onPress={() => setShowBookingClosePicker(true)}>
+              <TextInput
+                editable={false}
+                className={`border py-2 mb-3 w-full border-slate-500/50 rounded-lg text-black placeholder:text-base  px-3 `}
+                value={
+                  bookingCloseDate
+                    ? format(bookingCloseDate, "yyyy-MM-dd")
+                    : new Date()
+                }
+                placeholder="Select Booking Close Date"
+              />
+            </TouchableOpacity>
+            {showBookingClosePicker && (
+              <DateTimePicker
+                value={new Date()}
+                mode="date"
+                display="default"
+                onChange={onChangeBookingClose}
+              />
             )}
           </View>
+          <TextInput
+            placeholder="Cost Per Person"
+            value={costPerPerson}
+            placeholderTextColor="gray"
+            onChangeText={setCostPerPerson}
+            keyboardType="numeric"
+            style={styles.input}
+          />
+          <View style={styles.switchContainer}>
+            <Text style={styles.switchLabel}>Admin Can Reject Booking?</Text>
+            <Switch
+              trackColor={{ true: "green", false: "gray" }}
+              value={adminCanReject}
+              onValueChange={setAdminCanReject}
+              ios_backgroundColor="gray"
+            />
+          </View>
+          <View style={styles.switchContainer}>
+            <Text style={styles.switchLabel}>Payment Gateway Enabled?</Text>
+            <Switch
+              trackColor={{ true: "green", false: "gray" }}
+              value={paymentGatewayEnabled}
+              onValueChange={setPaymentGatewayEnabled}
+              ios_backgroundColor="gray"
+            />
+          </View>
+          {image.length > 0 ? (
+            <View style={styles.imageContainer}>
+              {image.map((img, idx) => (
+                <View key={idx} style={styles.imageWrapper}>
+                  <Image source={{ uri: img.uri }} style={styles.image} />
+                  <TouchableOpacity
+                    onPress={() => handleCancelImage(img.fileName)}
+                    style={styles.closeButton}
+                  >
+                    <Ionicons name="close-outline" size={16} color="white" />
+                  </TouchableOpacity>
+                </View>
+              ))}
+            </View>
+          ) : (
+            <TouchableOpacity onPress={pickImage} style={styles.imagePicker}>
+              <Ionicons name="add-circle" size={20} color="green" />
+              <Text style={styles.imagePickerText}>
+                Upload tour images here
+              </Text>
+            </TouchableOpacity>
+          )}
         </View>
       </ScrollView>
       <View
-        className={`w-full py-2 flex-row justify-between bottom-2 space-x-3 `}
+        style={{
+          width: "100%",
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+        }}
       >
-        <TouchableOpacity
-          activeOpacity={0.7}
-          className="w-full bg-green-700 flex justify-center items-center py-3 rounded-lg"
-          // onPress={submitForm}
-          onPress={submitForm}
-        >
+        <TouchableOpacity onPress={submitForm} style={styles.submitButton}>
           {loading ? (
-            <ActivityIndicator color="white" size={"small"} />
+            <ActivityIndicator color="white" />
           ) : (
-            <Text style={{ color: "white", fontSize: 18 }}>Submit</Text>
+            <Text style={styles.submitButtonText}>Submit</Text>
           )}
         </TouchableOpacity>
       </View>
     </View>
   );
 };
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    paddingHorizontal: width * 0.05,
+  },
+  scrollViewContent: {
+    paddingBottom: height * 0.1,
+  },
+  innerContainer: {
+    width: "100%",
+    alignItems: "center",
+  },
+  errorContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginBottom: height * 0.02,
+  },
+  errorText: {
+    color: "red",
+    fontSize: width * 0.04,
+    marginLeft: width * 0.02,
+  },
+  input: {
+    width: "100%",
+    paddingVertical: height * 0.015,
+    paddingHorizontal: width * 0.03,
+    borderRadius: 10,
+    borderColor: "gray",
+    borderWidth: 1,
+    marginBottom: height * 0.015,
+    fontSize: width * 0.04,
+  },
+  descriptionInput: {
+    height: height * 0.12,
+    textAlignVertical: "top",
+  },
+  pickerContainer: {
+    borderWidth: 1,
+    borderColor: "gray",
+    borderRadius: 10,
+    width: "100%",
+    marginBottom: height * 0.015,
+  },
+  switchContainer: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    width: "100%",
+    paddingVertical: height * 0.015,
+    borderColor: "gray",
+    borderWidth: 1,
+    borderRadius: 10,
+    paddingHorizontal: width * 0.03,
+    marginBottom: height * 0.015,
+  },
+  switchLabel: {
+    fontSize: width * 0.04,
+  },
+  imageContainer: {
+    width: "100%",
+    marginTop: height * 0.015,
+  },
+  imageWrapper: {
+    position: "relative",
+    width: "100%",
+    height: 156,
+    marginBottom: 10,
+  },
+  image: {
+    width: "100%",
+    height: "100%",
+    borderRadius: 10,
+  },
+  closeButton: {
+    position: "absolute",
+    top: 8,
+    right: 8,
+    backgroundColor: "red",
+    borderRadius: 12,
+    padding: 4,
+  },
+  imagePicker: {
+    height: 100,
+    width: "100%",
+    borderColor: "green",
+    borderWidth: 1,
+    borderRadius: 10,
+    justifyContent: "center",
+    alignItems: "center",
+    flexDirection: "row",
+    marginBottom: height * 0.015,
+  },
+  imagePickerText: {
+    fontSize: width * 0.04,
+    color: "green",
+    marginLeft: width * 0.02,
+  },
+  submitButton: {
+    position: "absolute",
+    bottom: height * 0.02,
+    width: "100%",
+    backgroundColor: "#228B22",
+    paddingVertical: height * 0.009,
+    borderRadius: 10,
+    alignItems: "center",
+  },
+  submitButtonText: {
+    color: "white",
+    fontSize: width * 0.045,
+    fontWeight: "bold",
+  },
+});
 
 export default addTours;

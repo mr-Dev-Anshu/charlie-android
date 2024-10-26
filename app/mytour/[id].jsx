@@ -1,7 +1,6 @@
 import { View, Text, Pressable } from "react-native";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useLocalSearchParams } from "expo-router";
-import { tours } from "../../constants/tours";
 import Animated, {
   useSharedValue,
   withSpring,
@@ -19,16 +18,41 @@ const MyTourDetails = () => {
 
   const { bookedTour } = useSelector((state) => state.tour);
 
-  const tour = bookedTour?.find((t) => t.tourDetails._id === Number(id));
+  const [loading, setLoading] = useState();
+  const [includeNotIncluded, setIncludedNotIncluded] = useState();
+  const [checkPoints, setCheckPoints] = useState();
+  const [luggage, setLuggage] = useState();
+
+  const tour = bookedTour?.find((t) => t.tourDetails._id === id);
 
   const translateX = useSharedValue(-200);
-  
+
   const [activeTab, setActiveTab] = useState("tourInfo");
   const [listView, setListView] = useState(true);
 
   const handleTabPress = (tabIndex) => {
     setActiveTab(tabIndex);
     translateX.value = tabIndex === "tourInfo" ? -200 : 0;
+  };
+
+  const handleGetLuggage = () => {};
+
+  const handleGetCheckPoints = async () => {
+    setLoading(true);
+    try {
+      const response = await fetch(
+        `https://trakies-backend.onrender.com/api/get-points?id=${id}`
+      );
+      if (response.status !== 200) {
+        throw new Error("Failed to get checkpoints.");
+      }
+      const result = await response.json();
+      setCheckPoints(result);
+    } catch (error) {
+      console.log("error:", error);
+    } finally {
+      setLoading(false);
+    }
   };
 
   const springConfig = {
@@ -44,9 +68,13 @@ const MyTourDetails = () => {
     transform: [{ translateX: withSpring(translateX.value, springConfig) }],
   }));
 
+  useEffect(() => {
+    handleGetCheckPoints();
+  }, []);
+
   return (
     <View className={`px-3 relative h-full flex items-center`}>
-      {/* <View className={`px-5 w-full flex justify-center items-center`}>
+      <View className={`px-5 w-full flex justify-center items-center`}>
         <View className={`flex flex-row justify-between`}>
           <Pressable onPress={() => handleTabPress("tourInfo")}>
             <View className={`w-[200px] py-2`}>
@@ -71,7 +99,7 @@ const MyTourDetails = () => {
         {activeTab === "tourInfo" ? (
           <MyTourInfo tour={tour} />
         ) : listView ? (
-          <MyTourCheckPointsListView />
+          <MyTourCheckPointsListView checkPoints={checkPoints} />
         ) : (
           <MyTourCheckPoints />
         )}
@@ -122,7 +150,7 @@ const MyTourDetails = () => {
             <Text className={` font-semibold`}>Check-In</Text>
           </View>
         </TouchableOpacity>
-      </View> */}
+      </View>
     </View>
   );
 };

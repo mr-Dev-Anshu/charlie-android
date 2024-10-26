@@ -17,7 +17,7 @@ const MyTourCard = ({ tour, status }) => {
       className="mt-4"
     >
       <View
-        className={`w-[360px] h-[470px] mt-5 rounded-xl overflow-hidden bg-white shadow-xl shadow-black/70 `}
+        className={`w-[360px] h-[470px] rounded-xl overflow-hidden bg-white shadow-xl shadow-black/70 `}
       >
         <View className="h-[256px] w-full">
           <Carousel

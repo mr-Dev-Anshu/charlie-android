@@ -9,7 +9,6 @@ import share from "../assets/share.svg";
 import download from "../assets/downloadIcon.svg";
 import { useSelector } from "react-redux";
 import { router, useLocalSearchParams } from "expo-router";
-import { apiRequest } from "../utils/helpers";
 
 const payment = () => {
   const { id } = useLocalSearchParams();
