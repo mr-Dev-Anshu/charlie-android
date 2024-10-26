@@ -1,4 +1,11 @@
-import { ActivityIndicator, Text, TouchableOpacity, View, Dimensions, StyleSheet } from "react-native";
+import {
+  ActivityIndicator,
+  Text,
+  TouchableOpacity,
+  View,
+  Dimensions,
+  StyleSheet,
+} from "react-native";
 import { Image } from "expo-image";
 import React, { useEffect, useState } from "react";
 import { router } from "expo-router";
@@ -188,7 +195,7 @@ const styles = StyleSheet.create({
     backgroundColor: "rgba(96, 96, 96, 0.8)",
     width: "100%",
     borderRadius: 10,
-    paddingVertical: height * 0.01,
+    paddingVertical: height * 0.02,
     alignItems: "center",
     flexDirection: "row",
     justifyContent: "center",

@@ -99,7 +99,7 @@ const MyTourDetails = () => {
         {activeTab === "tourInfo" ? (
           <MyTourInfo tour={tour} />
         ) : listView ? (
-          <MyTourCheckPointsListView checkPoints={checkPoints} />
+          <MyTourCheckPointsListView checkPoints={checkPoints} tourId={id} />
         ) : (
           <MyTourCheckPoints />
         )}
