@@ -128,7 +128,7 @@ const Checkpoints = () => {
 
   return (
     <>
-      <View className="px-3 relative h-full w-full flex justify-start items-center">
+      <View className="px-4 relative h-full w-full flex justify-start items-center">
         {allCheckPoints?.map((point, index) => (
           <CheckPointCard
             point={point}
@@ -140,7 +140,7 @@ const Checkpoints = () => {
             handleQr={handleQr}
           />
         ))}
-        <View className="w-full absolute bottom-0 flex flex-row justify-center items-center space-x-5 h-16 bg-[#ffffff]">
+        <View className="w-full absolute bottom-0 flex flex-row justify-center items-center space-x-5 h-16 bg-transparent">
           <TouchableOpacity
             activeOpacity={0.8}
             onPress={handleQrModal}

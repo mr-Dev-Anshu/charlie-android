@@ -17,14 +17,14 @@ const tourDetails = () => {
   const handleDeleteTour = () => {};
 
   return (
-    <View className="flex flex-1 flex-col w-full h-full px-4 justify-between items-center">
+    <View className="flex flex-1 flex-col w-full h-full justify-between items-center">
       <StatusBar
         style="dark"
         backgroundColor="#fff"
         translucent={true}
         animated
       />
-      <View className="mt-2 w-full">
+      <View className="mt-2 w-full px-4">
         <LinearGradient
           start={{ x: 0, y: 0 }}
           end={{ x: 1, y: 0 }}
@@ -54,6 +54,7 @@ const tourDetails = () => {
           marginTop: 10,
           width: "100%",
           paddingBottom: 80,
+          paddingHorizontal: 25,
         }}
         showsVerticalScrollIndicator={false}
       >
@@ -68,7 +69,7 @@ const tourDetails = () => {
           ))}
         </View>
       </ScrollView>
-      <View className="w-full flex flex-row justify-between items-center h-16 bg-transparent">
+      <View className="w-full flex flex-row justify-between items-center h-16 bg-transparent px-6">
         <TouchableOpacity
           activeOpacity={0.8}
           style={{

@@ -65,7 +65,7 @@ const Profile = () => {
         showsVerticalScrollIndicator={false}
         contentContainerStyle={styles.scrollContent}
       >
-        <View>
+        <View style={{ paddingVertical: 7 }}>
           <Text style={styles.titleText}>Personal Details</Text>
         </View>
         <LabelValue label={"Name"} value={user?.given_name} />
@@ -155,9 +155,7 @@ const Profile = () => {
           style={[styles.actionButton, styles.addMemberButton]}
         >
           <Ionicons name="add-outline" size={16} color={"white"} />
-          <Text style={[styles.actionButtonText, styles.addMemberButtonText]}>
-            Add Member
-          </Text>
+          <Text style={[styles.actionButtonText]}>Add Member</Text>
         </TouchableOpacity>
         <TouchableOpacity
           activeOpacity={0.8}
@@ -188,11 +186,11 @@ const styles = StyleSheet.create({
   },
   titleText: {
     fontSize: width * 0.05,
-    fontWeight: "bold",
+    fontWeight: "500",
     marginBottom: height * 0.001,
   },
   detailsContainer: {
-    marginTop: height * 0.01,
+    marginTop: height * 0.001,
     marginBottom: height * 0.05,
   },
   createProfileContainer: {
@@ -241,7 +239,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "center",
-    borderRadius: 10,
+    borderRadius: 6,
     width: width * 0.4,
     paddingVertical: height * 0.01,
     paddingHorizontal: width * 0.01,

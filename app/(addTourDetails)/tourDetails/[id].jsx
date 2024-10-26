@@ -5,7 +5,6 @@ import { useSelector } from "react-redux";
 import LabelValue from "../../../components/UI/LabelValue";
 import { formatDate } from "../../../utils/helpers";
 import { ScrollView } from "react-native-gesture-handler";
-import { Image } from "expo-image";
 
 const TourDetails = () => {
   const { id } = useLocalSearchParams();
@@ -46,11 +45,6 @@ const TourDetails = () => {
           label={"Payment gateway enabled ?"}
           value={tourData?.enable_payment_getway ? "Yes" : "No"}
         />
-        {/* <View className="space-y-4 pb-6">
-          {images.map((i, idx) => {
-            return <Image key={idx} source={i} className="w-full h-[200px] rounded-xl" />;
-          })}
-        </View> */}
       </ScrollView>
     </View>
   );

@@ -1,4 +1,11 @@
-import { View, Text, ScrollView, TouchableOpacity, Dimensions, StyleSheet } from "react-native";
+import {
+  View,
+  Text,
+  ScrollView,
+  TouchableOpacity,
+  Dimensions,
+  StyleSheet,
+} from "react-native";
 import React from "react";
 import TourCard from "../../components/admin/UI/TourCard";
 import { router } from "expo-router";
@@ -52,6 +59,7 @@ const styles = StyleSheet.create({
   tourListContainer: {
     width: "100%",
     paddingHorizontal: width * 0.04,
+    paddingTop: 10,
   },
   noToursCard: {
     backgroundColor: "green",

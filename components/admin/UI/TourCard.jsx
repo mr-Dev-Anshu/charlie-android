@@ -10,7 +10,7 @@ const TourCard = ({ tour }) => {
   return (
     <TouchableOpacity
       activeOpacity={0.8}
-      className="w-full flex flex-1 justify-center items-center mt-3"
+      className="w-full flex flex-1 justify-center items-center mt-2"
       onPress={() => router.push(`/tour/${tour?._id}`)}
     >
       <View className="flex flex-row justify-between h-[150px] w-[360px] bg-white shadow-xl shadow-black rounded-lg mt-3 p-2 ">

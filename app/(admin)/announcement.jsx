@@ -121,9 +121,9 @@ const styles = StyleSheet.create({
   },
   buttonContainer: {
     position: "absolute",
-    bottom: height * 0.06,
+    bottom: height * 0.009,
     width: "100%",
-    paddingHorizontal: width * 0.03,
+    paddingHorizontal: width * 0.06,
     justifyContent: "center",
     alignItems: "center",
   },
@@ -132,7 +132,7 @@ const styles = StyleSheet.create({
     height: height * 0.05,
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "#06992d",
+    backgroundColor: "green",
     borderRadius: 10,
     marginBottom: height * 0.001,
   },
@@ -143,7 +143,7 @@ const styles = StyleSheet.create({
   buttonText: {
     color: "white",
     fontSize: width * 0.045,
-    fontWeight: "bold",
+    fontWeight: "600",
     marginLeft: width * 0.02,
   },
   modalContent: {

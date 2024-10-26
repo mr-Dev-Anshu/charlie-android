@@ -385,6 +385,7 @@ const styles = StyleSheet.create({
   },
   scrollViewContent: {
     paddingBottom: height * 0.1,
+    paddingTop: 15,
   },
   innerContainer: {
     width: "100%",

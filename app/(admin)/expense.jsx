@@ -259,13 +259,13 @@ const expense = () => {
           </>
         )}
         <View
-          className={`flex flex-grow flex-row justify-between items-center w-full bottom-14 px-3 py-2 bg-white `}
+          className={`flex flex-grow flex-row justify-between items-center w-full bottom-14 px-3 py-2 bg-transparent `}
         >
           <TouchableOpacity
             activeOpacity={0.7}
             onPress={() => exportExcelSheet?.current?.open()}
           >
-            <View className="bg-green-600 py-1.5 rounded-xl flex justify-center items-center w-[160px]">
+            <View className="bg-green-700 py-2 rounded-lg flex justify-center items-center w-[160px]">
               <Text className="text-white text-base font-semibold">
                 Export Excel
               </Text>
@@ -275,7 +275,7 @@ const expense = () => {
             activeOpacity={0.7}
             onPress={() => addExpenseDetailRef?.current?.open()}
           >
-            <View className="bg-green-600 py-1.5 rounded-xl flex justify-center  items-center w-[160px]">
+            <View className="bg-green-700 py-2 rounded-lg flex justify-center  items-center w-[160px]">
               <Text className="text-white text-base font-semibold">
                 Add Expense
               </Text>

@@ -151,7 +151,9 @@ const Community = () => {
             <View style={styles.modalContainer}>
               <ScrollView contentContainerStyle={styles.modalScrollContent}>
                 <View style={styles.modalContent}>
-                  <Text style={styles.modalTitle}>Share your experience with us</Text>
+                  <Text style={styles.modalTitle}>
+                    Share your experience with us
+                  </Text>
                   <TextInput
                     multiline
                     numberOfLines={6}
@@ -167,13 +169,20 @@ const Community = () => {
                     <View style={styles.imagesContainer}>
                       {images.map((img, idx) => (
                         <View key={idx} style={styles.imageWrapper}>
-                          <Image source={{ uri: img.uri }} style={styles.image} />
+                          <Image
+                            source={{ uri: img.uri }}
+                            style={styles.image}
+                          />
                           <TouchableOpacity
                             activeOpacity={0.8}
                             onPress={() => handleUnselect(img.uri)}
                             style={styles.imageCloseButton}
                           >
-                            <Ionicons name="close-outline" size={14} color="red" />
+                            <Ionicons
+                              name="close-outline"
+                              size={14}
+                              color="red"
+                            />
                           </TouchableOpacity>
                         </View>
                       ))}
@@ -181,15 +190,24 @@ const Community = () => {
                   ) : (
                     <View style={styles.addImagesPlaceholder}>
                       <Text>Please share the moments you captured</Text>
-                      <TouchableOpacity onPress={pickImage} style={styles.addImagesButton}>
-                        <Text style={styles.addImagesButtonText}>Add Images</Text>
+                      <TouchableOpacity
+                        onPress={pickImage}
+                        style={styles.addImagesButton}
+                      >
+                        <Text style={styles.addImagesButtonText}>
+                          Add Images
+                        </Text>
                       </TouchableOpacity>
                     </View>
                   )}
                 </View>
               </ScrollView>
               <View style={styles.postButtonContainer}>
-                <TouchableOpacity onPress={handlePost} activeOpacity={0.7} style={styles.postButton}>
+                <TouchableOpacity
+                  onPress={handlePost}
+                  activeOpacity={0.7}
+                  style={styles.postButton}
+                >
                   {loading ? (
                     <ActivityIndicator color="white" size="small" />
                   ) : (
@@ -233,7 +251,7 @@ const styles = StyleSheet.create({
   },
   shareButton: {
     backgroundColor: "green",
-    height: height * 0.04,
+    height: height * 0.045,
     justifyContent: "center",
     alignItems: "center",
     borderRadius: 8,
@@ -259,13 +277,15 @@ const styles = StyleSheet.create({
     fontSize: width * 0.05,
     fontWeight: "bold",
     paddingBottom: height * 0.02,
+    marginTop: 10,
   },
   textInput: {
     borderWidth: 1,
     borderColor: "green",
     borderRadius: 8,
     padding: 10,
-    marginTop: height * 0.02,
+    width: "100%",
+    marginTop: height * 0.002,
     height: height * 0.15,
   },
   imagesContainer: {
@@ -273,6 +293,7 @@ const styles = StyleSheet.create({
     flexWrap: "wrap",
     justifyContent: "center",
     paddingTop: height * 0.02,
+    width: "100%",
   },
   imageWrapper: {
     position: "relative",
@@ -295,10 +316,30 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: "green",
     borderRadius: 8,
+    width: "100%",
     height: height * 0.15,
     justifyContent: "center",
     alignItems: "center",
     marginTop: height * 0.02,
+  },
+  postButtonContainer: {
+    width: "100%",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  postButton: {
+    backgroundColor: "green",
+    width: width * 0.6,
+    paddingVertical: height * 0.01,
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    borderRadius: 10,
+  },
+  postButtonText: {
+    color: "white",
+    fontSize: height * 0.02,
   },
 });
 

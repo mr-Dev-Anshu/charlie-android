@@ -142,10 +142,10 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     borderWidth: 1,
     borderColor: "#ccc",
+    backgroundColor: "white",
   },
   itemText: {
     flex: 1,
-    backgroundColor: "white",
   },
   input: {
     padding: height * 0.015,
