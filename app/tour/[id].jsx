@@ -1,6 +1,6 @@
-import { View, Text, Pressable } from "react-native";
-import React from "react";
-import { Link, router, useLocalSearchParams } from "expo-router";
+import { View, Text, Pressable, Alert } from "react-native";
+import React, { useState } from "react";
+import { router, useLocalSearchParams } from "expo-router";
 import LinearGradient from "react-native-linear-gradient";
 import { ScrollView, TouchableOpacity } from "react-native-gesture-handler";
 import { Ionicons } from "@expo/vector-icons";
@@ -12,10 +12,37 @@ import { ActivityIndicator } from "react-native-paper";
 const tourDetails = () => {
   const { id } = useLocalSearchParams();
   const { tour } = useSelector((state) => state.tour);
+  const { user } = useSelector((state) => state.user);
+
+  const [loading, setLoading] = useState(false);
 
   const tourDetail = tour.find((item) => item._id === id);
 
-  const handleDeleteTour = () => {};
+  const handleDeleteTour = async () => {
+    setLoading(true);
+    try {
+      const response = await fetch(
+        `https://trakies-backend.onrender.com/api/tour/delete-tour?id=${id}`,
+        {
+          method: "DELETE",
+          headers: {
+            "x-user-email": user.email,
+          },
+        }
+      );
+
+      if (response.status !== 200) {
+        throw new Error("Failed to delete");
+      }
+      Alert.alert("Success", "Tour deleted.");
+      router.push("/(admin)/tours");
+    } catch (error) {
+      Alert.alert("Oops!", "Something went wrong...\n\nPlease try again.");
+      console.log("error:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   if (!tourDetail) {
     return (
@@ -92,6 +119,7 @@ const tourDetails = () => {
         </TouchableOpacity>
         <TouchableOpacity
           activeOpacity={0.8}
+          onPress={handleDeleteTour}
           style={{
             width: 165,
             paddingVertical: 12,
@@ -100,7 +128,13 @@ const tourDetails = () => {
             borderColor: "red",
           }}
         >
-          <Text style={{ textAlign: "center", color: "red" }}>Delete Tour</Text>
+          {loading ? (
+            <ActivityIndicator size={"small"} color="red" />
+          ) : (
+            <Text style={{ textAlign: "center", color: "red" }}>
+              Delete Tour
+            </Text>
+          )}
         </TouchableOpacity>
       </View>
     </View>
@@ -117,6 +151,11 @@ const DetailTitle = [
     id: 2,
     title: "What is included/not-included",
     href: "/(addTourDetails)/includedNotIncluded",
+  },
+  {
+    id: 9,
+    title: "Bag Pack & Check-in Baggage",
+    href: "/(addTourDetails)/luggage",
   },
   {
     id: 3,
@@ -147,11 +186,6 @@ const DetailTitle = [
     id: 8,
     title: "My Notes",
     href: "/(addTourDetails)/myNotes",
-  },
-  {
-    id: 9,
-    title: "Bag Pack & Check-in Baggage",
-    href: "/(addTourDetails)/luggage",
   },
 ];
 

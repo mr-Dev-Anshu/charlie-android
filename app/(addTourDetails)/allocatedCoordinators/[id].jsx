@@ -1,92 +1,269 @@
-import { View, Text } from "react-native";
-import React from "react";
-import { Image } from "expo-image";
-import { Checkbox } from "react-native-paper";
+import { View, Text, Alert } from "react-native";
+import React, { useEffect, useRef, useState } from "react";
 import { TouchableOpacity } from "react-native-gesture-handler";
-import qr from "../../../assets/qr.png";
-import share from "../../../assets/share.svg";
-import download from "../../../assets/downloadIcon.svg";
+import { Modalize } from "react-native-modalize";
+import { TextInput } from "react-native";
+import { router, useLocalSearchParams } from "expo-router";
+import { ActivityIndicator } from "react-native-paper";
 
 const AllocatedCoordinators = () => {
+  const { id } = useLocalSearchParams();
+  console.log(id);
+
+  const [name, setName] = useState("");
+  const [gender, setGender] = useState("");
+  const [age, setAge] = useState("");
+  const [email, setEmail] = useState("");
+  const [phone, setPhone] = useState("");
+
+  const [coordinators, setCoordinators] = useState([]);
+  const [filteredCoordinators, setFilteredCoordinators] = useState([]);
+  const [coordinatorLoading, setCoordinatorLoading] = useState(false);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [loading, setLoading] = useState(false);
+
+  const addCoordinatorRef = useRef(null);
+
+  const handleAddCoordinator = async () => {
+    setLoading(true);
+    if (!name || !gender || !age || !email || !phone) {
+      Alert.alert("Field empty!", "All fields are required");
+      setLoading(false);
+      return;
+    }
+    try {
+      const body = { name, gender, age, email, phone, track_id: id };
+      console.log(body);
+      const response = await fetch(
+        `https://trakies-backend.onrender.com/api/lead/create-lead`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(body),
+        }
+      );
+      console.log(response.status);
+      if (response.status !== 201) {
+        throw new Error("Failed to add coordinator");
+      }
+      Alert.alert("Success", "Coordinator added successfully.");
+      addCoordinatorRef.current?.close();
+      getAllCoordinators();
+    } catch (error) {
+      Alert.alert("Oops!", "Something went wrong...\n\nPlease try again");
+      console.log("Error:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const getAllCoordinators = async () => {
+    setCoordinatorLoading(true);
+    try {
+      const response = await fetch(
+        `https://trakies-backend.onrender.com/api/lead/get-leads?tourId=${id}`
+      );
+      if (response.status !== 200) {
+        throw new Error("Failed to fetch coordinators");
+      }
+      const result = await response.json();
+      setCoordinators(result);
+      setFilteredCoordinators(result);
+    } catch (error) {
+      Alert.alert("Oops!", "Something went wrong...\n\nPlease try again");
+      router.push("/(addTourDetails)/tourDetails");
+    } finally {
+      setCoordinatorLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    getAllCoordinators();
+  }, []);
+
+  useEffect(() => {
+    if (searchTerm === "") {
+      setFilteredCoordinators(coordinators);
+    } else {
+      const filtered = coordinators.filter((coordinator) =>
+        coordinator.name.toLowerCase().includes(searchTerm.toLowerCase())
+      );
+      setFilteredCoordinators(filtered);
+    }
+  }, [searchTerm, coordinators]);
+
+  if (coordinatorLoading) {
+    return (
+      <View className="w-full h-full flex justify-center items-center">
+        <ActivityIndicator size={"large"} color="green" />
+      </View>
+    );
+  }
+
   return (
-    <View className="h-full w-full flex justify-between px-3">
-      <View className="w-full">
-        <View className="flex justify-center items-center mt-4">
-          <Text className="text-xl font-semibold">Srishailm Trek</Text>
-        </View>
-        <View className="flex justify-center items-center">
-          <View className="py-5">
-            <Image source={qr} className="h-52 w-52" />
+    <>
+      <View className="h-full w-full flex justify-between px-3">
+        <View>
+          <TextInput
+            placeholder="Search by name"
+            value={searchTerm}
+            onChangeText={setSearchTerm}
+            style={{
+              borderWidth: 1,
+              borderColor: "gray",
+              padding: 6,
+              paddingHorizontal: 10,
+              borderRadius: 8,
+              marginBottom: 10,
+            }}
+          />
+          <View className="w-full">
+            {filteredCoordinators.map((i) => (
+              <CoordinatorCard
+                key={i._id}
+                name={i.name}
+                age={i.age}
+                gender={i.gender}
+                phone={i.phone}
+              />
+            ))}
           </View>
         </View>
-        <View className="flex flex-row justify-between items-center w-full px-6 mt-2">
-          <View className="flex flex-row justify-center items-center">
-            <Image source={share} className="h-5 w-5" />
-            <Text className="text-base pl-3">Share QR Code</Text>
-          </View>
-          <View className="flex flex-row justify-center items-center">
-            <Image source={download} className="h-5 w-5" />
-            <Text className="text-base pl-3">Download QR Code</Text>
-          </View>
-        </View>
-        <View className="flex flex-row justify-between items-center mt-4 px-3">
-          <Text>Total Expense</Text>
-          <Text>x 2 seats</Text>
-          <Text>4000</Text>
-        </View>
-        <View className="flex justify-center items-center mt-4 w-full">
-          <Text>Please Upload screenshot post payment</Text>
+        <View className="w-full flex flex-row justify-center items-center h-16 bg-transparent">
           <TouchableOpacity
-            activeOpacity={0.6}
-            containerStyle={{ flexGrow: 1, width: "100%" }}
+            activeOpacity={0.8}
+            style={{
+              width: 265,
+              paddingVertical: 12,
+              borderRadius: 8,
+              borderWidth: 1,
+              borderColor: "green",
+            }}
+            onPress={() => addCoordinatorRef.current?.open()}
           >
-            <View className="border h-32 w-full rounded-xl mt-1 border-green-600 flex justify-center items-center">
-              <Text className="text-green-800">Upload your payment proof</Text>
-            </View>
+            <Text style={{ textAlign: "center", color: "green" }}>
+              Add Coordinator
+            </Text>
           </TouchableOpacity>
         </View>
-        <View className="flex flex-row w-full mt-4 justify-center items-center">
-          <View className="w-[10%]">
-            <Checkbox />
-          </View>
-          <Text className="w-[90%] tracking-wide text-base text-justify">
-            I hereby agree to sign digital consent and agrees to all Terms and
-            Conditions,
-          </Text>
-        </View>
-        <View className="flex flex-row mt-4 justify-start items-center">
-          <Image source={download} className="h-5 w-5" />
-          <Text className="pl-3 text-base text-green-700">
-            View and download consent form.
-          </Text>
-        </View>
       </View>
-      <View className="w-full flex flex-row justify-between items-center h-16 bg-transparent">
-        <TouchableOpacity
-          activeOpacity={0.8}
-          style={{
-            width: 165,
-            backgroundColor: "#414141",
-            paddingVertical: 12,
-            borderRadius: 8,
-          }}
-        >
-          <Text style={{ textAlign: "center", color: "#fff" }}>Cancel</Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          activeOpacity={0.8}
-          style={{
-            width: 165,
-            paddingVertical: 12,
-            borderRadius: 8,
-            borderWidth: 1,
-            borderColor: "green",
-          }}
-        >
-          <Text style={{ textAlign: "center", color: "green" }}>
-            Reserve Seat
+
+      <Modalize ref={addCoordinatorRef} adjustToContentHeight>
+        <View style={{ padding: 20 }}>
+          <Text style={{ fontSize: 18, fontWeight: "bold", marginBottom: 20 }}>
+            Add Coordinator
           </Text>
-        </TouchableOpacity>
+
+          {/* Coordinator Form Fields */}
+          <TextInput
+            placeholder="Name"
+            value={name}
+            onChangeText={setName}
+            style={{
+              borderWidth: 1,
+              borderColor: "gray",
+              padding: 10,
+              borderRadius: 8,
+              marginBottom: 10,
+            }}
+          />
+          <TextInput
+            placeholder="Gender"
+            value={gender}
+            autoCapitalize="words"
+            onChangeText={setGender}
+            style={{
+              borderWidth: 1,
+              borderColor: "gray",
+              padding: 10,
+              borderRadius: 8,
+              marginBottom: 10,
+            }}
+          />
+
+          <TextInput
+            placeholder="Age"
+            value={age}
+            keyboardType="numeric"
+            onChangeText={setAge}
+            style={{
+              borderWidth: 1,
+              borderColor: "gray",
+              padding: 10,
+              borderRadius: 8,
+              marginBottom: 10,
+            }}
+          />
+
+          <TextInput
+            placeholder="Email"
+            value={email}
+            keyboardType="email-address"
+            onChangeText={setEmail}
+            style={{
+              borderWidth: 1,
+              borderColor: "gray",
+              padding: 10,
+              borderRadius: 8,
+              marginBottom: 10,
+            }}
+          />
+
+          <TextInput
+            placeholder="Phone Number"
+            value={phone}
+            keyboardType="phone-pad"
+            onChangeText={setPhone}
+            style={{
+              borderWidth: 1,
+              borderColor: "gray",
+              padding: 10,
+              borderRadius: 8,
+              marginBottom: 10,
+            }}
+          />
+
+          <TouchableOpacity
+            onPress={handleAddCoordinator}
+            style={{
+              marginTop: 20,
+              backgroundColor: "green",
+              paddingVertical: 12,
+              borderRadius: 8,
+            }}
+          >
+            {loading ? (
+              <ActivityIndicator size={"small"} color="white" />
+            ) : (
+              <Text style={{ textAlign: "center", color: "white" }}>
+                Submit
+              </Text>
+            )}
+          </TouchableOpacity>
+        </View>
+      </Modalize>
+    </>
+  );
+};
+
+const CoordinatorCard = ({ gender, name, age, phone }) => {
+  const col =
+    gender === "Male" || gender === "male"
+      ? "bg-green-500/20"
+      : "bg-red-500/20";
+  const textCol =
+    gender === "Male" || gender === "male" ? "text-green-700" : "text-red-700";
+  return (
+    <View className="w-full p-1.5 bg-white shadow-xl shadow-black/70 rounded-lg mt-2">
+      <View className="flex flex-row justify-between items-center">
+        <Text
+          className={`h-6 w-6 ${col} flex justify-center items-center text-center rounded-full ${textCol} font-semibold`}
+        >
+          {gender.charAt(0)}
+        </Text>
+        <Text>{name}</Text>
+        <Text>{age} Yrs</Text>
+        <Text>{phone}</Text>
       </View>
     </View>
   );

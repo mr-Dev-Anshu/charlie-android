@@ -29,7 +29,7 @@ const Profile = () => {
       console.error("User email is not available.");
       return;
     }
-
+  
     try {
       const response = await fetch(
         `https://trakies-backend.onrender.com/api/member/get-member?email=${user.email}`,
@@ -40,13 +40,12 @@ const Profile = () => {
           },
         }
       );
-
-      const data = await response.json();
-
       if (response.status !== 200) {
-        console.error("Error response:", response);
+        const text = await response.text();
+        console.error("Error response:", response.status, text);
         throw new Error("Failed to fetch members.");
       }
+      const data = await response.json();
       setMembersData(data);
       dispatch(setMembers(data));
     } catch (error) {

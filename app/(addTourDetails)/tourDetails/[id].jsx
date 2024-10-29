@@ -12,10 +12,6 @@ const TourDetails = () => {
 
   const tourData = tour.find((item) => item._id === id);
 
-  const images = tourData.images?.filter((i) => !i.type).map((i) => i.url);
-
-  console.log(images);
-
   return (
     <View className="px-3 h-full justify-between items-center">
       <ScrollView showsVerticalScrollIndicator={false} className="w-full">

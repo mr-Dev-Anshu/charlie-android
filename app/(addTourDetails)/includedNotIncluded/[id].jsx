@@ -2,233 +2,124 @@ import React, { useState, useEffect } from "react";
 import {
   View,
   Text,
+  TextInput,
   TouchableOpacity,
   ScrollView,
-  LayoutAnimation,
-  UIManager,
-  Platform,
   Alert,
+  StyleSheet,
+  Dimensions,
+  ActivityIndicator,
 } from "react-native";
-import { Checkbox } from "react-native-paper";
-import { Ionicons } from "@expo/vector-icons";
 import { useLocalSearchParams } from "expo-router";
-import { apiRequest } from "../../../utils/helpers";
+import trashIcon from "../../../assets/trash-04.svg";
+import { useSelector } from "react-redux";
+import { Image } from "expo-image";
 
-if (Platform.OS === "android") {
-  UIManager.setLayoutAnimationEnabledExperimental &&
-    UIManager.setLayoutAnimationEnabledExperimental(true);
-}
+const { width, height } = Dimensions.get("window");
 
 const TourDetails = () => {
   const { id } = useLocalSearchParams();
+  const { user } = useSelector((state) => state.user);
 
-  const [fetchIncluded, setFetchIncluded] = useState([]);
-  const [fetchNotIncluded, setFetchNotIncluded] = useState([]);
+  console.log(id);
 
-  const [includedItemId, setIncludedItemId] = useState(null);
-  const [notIncludedItemId, setNotIncludedItemId] = useState(null);
-
+  const [includedItems, setIncludedItems] = useState([]);
+  const [notIncludedItems, setNotIncludedItems] = useState([]);
+  const [newItem, setNewItem] = useState("");
+  const [isIncludedTab, setIsIncludedTab] = useState(true);
   const [loading, setLoading] = useState(false);
-
-  const disableAdd =
-    fetchIncluded.length === 0 && fetchNotIncluded.length === 0 ? false : true;
-
-  const disabledUpdate =
-    fetchIncluded.length === 0 && fetchNotIncluded.length === 0 ? true : false;
-
-  const [includedItems, setIncludedItems] = useState([
-    { id: 1, label: "Food", checked: false },
-    { id: 2, label: "Accommodation", checked: false },
-    { id: 3, label: "Transport", checked: false },
-    { id: 4, label: "Guide", checked: false },
-    { id: 5, label: "Insurance", checked: false },
-  ]);
-
-  const [notIncludedItems, setNotIncludedItems] = useState([
-    { id: 1, label: "Flights", checked: false },
-    { id: 2, label: "Personal Expenses", checked: false },
-    { id: 3, label: "Visa Fees", checked: false },
-    { id: 4, label: "Alcohol", checked: false },
-    { id: 5, label: "Extra Activities", checked: false },
-  ]);
-
-  const [showIncludedDropdown, setShowIncludedDropdown] = useState(false);
-  const [showNotIncludedDropdown, setShowNotIncludedDropdown] = useState(false);
-
-  const handleIncludedDropdown = () => {
-    LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
-    setShowIncludedDropdown(!showIncludedDropdown);
-  };
-
-  const handleNotIncludedDropdown = () => {
-    LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
-    setShowNotIncludedDropdown(!showNotIncludedDropdown);
-  };
-
-  const handleIncludedCheckboxChange = (id) => {
-    setIncludedItems((prevState) =>
-      prevState.map((item) =>
-        item.id === id ? { ...item, checked: !item.checked } : item
-      )
-    );
-  };
-
-  const handleNotIncludedCheckboxChange = (id) => {
-    setNotIncludedItems((prevState) =>
-      prevState.map((item) =>
-        item.id === id ? { ...item, checked: !item.checked } : item
-      )
-    );
-  };
+  const [getLoading, setGetLoading] = useState(false);
 
   const handleGet = async () => {
+    setGetLoading(true);
     try {
-      const res = await apiRequest(
-        `https://trakies-backend.onrender.com/api/included/get?tourId=${id}`,
-        "GET"
+      const response1 = await fetch(
+        `https://trakies-backend.onrender.com/api/included/get?tourId=${id}`
       );
 
-      setIncludedItemId(res.data.includedItems._id);
-      setNotIncludedItemId(res.data.notIncluded._id);
-
-      setIncludedItems((prevIncludedItems) =>
-        prevIncludedItems.map((item) => ({
-          ...item,
-          checked: res?.data?.includedItems?.item.includes(item.label),
-        }))
+      const response2 = await fetch(
+        `https://trakies-backend.onrender.com/api/notIncluded/get?tourId=${id}`
       );
 
-      setNotIncludedItems((prevNotIncludedItems) =>
-        prevNotIncludedItems.map((item) => ({
-          ...item,
-          checked: res?.data?.notIncluded?.item.includes(item.label),
-        }))
-      );
+      if (response1.status !== 200 || response2.status !== 200) {
+        throw new Error("Failed to fetch luggage items");
+      }
 
-      setFetchIncluded(res.data.includedItems.item);
-      setFetchNotIncluded(res.data.notIncluded.item);
+      const result1 = await response1.json();
+      const result2 = await response2.json();
+
+      console.log("results---->", result1, result2);
+
+      setIncludedItems(Array.isArray(result1) ? result1 : []);
+      setNotIncludedItems(Array.isArray(result2) ? result2 : []);
     } catch (error) {
-      console.log("Failed to get included/not-included", error?.message);
+      console.log("Failed to fetch included/not-included items", error);
+      Alert.alert("Error", "Could not fetch items.\n\nPlease try again.");
+    } finally {
+      setGetLoading(false);
     }
   };
 
-  const handleUpdate = async () => {
-    const includedItemsArray = includedItems
-      .filter((item) => item.checked)
-      .map((item) => item.label);
-    const notIncludedItemsArray = notIncludedItems
-      .filter((item) => item.checked)
-      .map((item) => item.label);
+  console.log(includedItems, notIncludedItems);
 
-    if (includedItemsArray.length === 0 && notIncludedItemsArray.length === 0)
-      return;
-
+  const handleAddItem = async () => {
+    if (!newItem.trim()) return;
     setLoading(true);
-
     try {
-      const includedRes = await fetch(
-        `https://trakies-backend.onrender.com/api/included/update?id=${includedItemId}`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            item: includedItemsArray,
-            tourId: id,
-          }),
-        }
-      );
+      const url = isIncludedTab
+        ? `https://trakies-backend.onrender.com/api/included/add`
+        : `https://trakies-backend.onrender.com/api/notIncluded/add`;
 
-      const notIncludedRes = await fetch(
-        `https://trakies-backend.onrender.com/api/notIncluded/update?id=${notIncludedItemId}`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            item: notIncludedItemsArray,
-            tourId: id,
-          }),
-        }
-      );
+      const body = {
+        tourId: id,
+        item: newItem,
+      };
 
-      if (includedRes.status === 201 && notIncludedRes.status === 201) {
-        Alert.alert(
-          "Success",
-          "Included & Not included items updated successfully."
-        );
-        handleGet();
-      } else {
-        Alert.alert("Oops!", "Something went wrong\n\nPlease try again.");
-        throw new Error("Failed to update included & Not Included Items.");
+      const response = await fetch(url, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "x-user-email": user.email,
+        },
+        body: JSON.stringify(body),
+      });
+
+      if (response.status !== 201) {
+        throw new Error("Failed to add item");
       }
+
+      Alert.alert("Success", "Item added successfully.");
+      handleGet();
+      setNewItem("");
     } catch (error) {
-      console.log("Error updating items", error);
+      console.log("Error adding item:", error);
+      Alert.alert("Error", "Something went wrong. Please try again.");
     } finally {
       setLoading(false);
     }
   };
 
-  const handleAdd = async () => {
-    const includedItemsArray = includedItems
-      .filter((item) => item.checked)
-      .map((item) => item.label);
-    const notIncludedItemsArray = notIncludedItems
-      .filter((item) => item.checked)
-      .map((item) => item.label);
-
-    if (includedItemsArray.length === 0 && notIncludedItemsArray.length === 0)
-      return;
-
-    setLoading(true);
+  const handleDelete = async (itemId) => {
     try {
-      const includedRes = await fetch(
-        "https://trakies-backend.onrender.com/api/included/add",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            item: includedItemsArray,
-            tourId: id,
-          }),
-        }
-      );
+      const url = isIncludedTab
+        ? `https://trakies-backend.onrender.com/api/included/delete?id=${itemId}`
+        : `https://trakies-backend.onrender.com/api/notIncluded/delete?id=${itemId}`;
 
-      const notIncludedRes = await fetch(
-        "https://trakies-backend.onrender.com/api/notIncluded/add",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            item: notIncludedItemsArray,
-            tourId: id,
-          }),
-        }
-      );
+      const response = await fetch(url, {
+        method: "DELETE",
+        headers: {
+          "x-user-email": user.email,
+        },
+      });
 
-      if (includedRes.status === 201 && notIncludedRes.status === 201) {
-        Alert.alert(
-          "Success",
-          "Included & Not included items added successfully"
-        );
-        handleGet();
-      } else {
-        Alert.alert(
-          "Oops!",
-          "Couldn't add included/notIncluded Items\n\nPlease try again."
-        );
-        throw new Error("Failed to add included & Not Included Items.");
+      if (response.status !== 200) {
+        throw new Error("Failed to delete item");
       }
+      Alert.alert("Success", "Item deleted successfully.");
+      handleGet();
     } catch (error) {
-      console.log("Error adding items", error);
-    } finally {
-      setLoading(false);
+      console.log("Error deleting item:", error);
+      Alert.alert("Error", "Could not delete item. Please try again.");
     }
   };
 
@@ -237,115 +128,135 @@ const TourDetails = () => {
   }, []);
 
   return (
-    <View className="h-full px-4">
-      <ScrollView>
+    <View style={styles.container}>
+      <View style={styles.tabContainer}>
         <TouchableOpacity
-          onPress={handleIncludedDropdown}
-          style={{
-            flexDirection: "row",
-            justifyContent: "space-between",
-            padding: 10,
-            backgroundColor: "#f0f0f0",
-            borderRadius: 8,
-            marginBottom: 10,
-          }}
-        >
-          <Text style={{ fontSize: 16, fontWeight: "bold" }}>Included</Text>
-          <Ionicons
-            name={showIncludedDropdown ? "chevron-up" : "chevron-down"}
-            size={24}
-          />
-        </TouchableOpacity>
-        {showIncludedDropdown && (
-          <View style={{ marginBottom: 20 }}>
-            {includedItems.map((item) => (
-              <View
-                key={item.id}
-                style={{
-                  flexDirection: "row",
-                  alignItems: "center",
-                  marginBottom: 8,
-                }}
-              >
-                <Checkbox
-                  status={item.checked ? "checked" : "unchecked"}
-                  onPress={() => handleIncludedCheckboxChange(item.id)}
-                  color={item.checked ? "green" : "#000"}
-                />
-                <Text>{item.label}</Text>
-              </View>
-            ))}
-          </View>
-        )}
-        <TouchableOpacity
-          onPress={handleNotIncludedDropdown}
-          style={{
-            flexDirection: "row",
-            justifyContent: "space-between",
-            padding: 10,
-            backgroundColor: "#f0f0f0",
-            borderRadius: 8,
-          }}
-        >
-          <Text style={{ fontSize: 16, fontWeight: "bold" }}>Not Included</Text>
-          <Ionicons
-            name={showNotIncludedDropdown ? "chevron-up" : "chevron-down"}
-            size={24}
-          />
-        </TouchableOpacity>
-        {showNotIncludedDropdown && (
-          <View style={{ marginBottom: 20 }}>
-            {notIncludedItems.map((item) => (
-              <View
-                key={item.id}
-                style={{
-                  flexDirection: "row",
-                  alignItems: "center",
-                  marginBottom: 8,
-                }}
-              >
-                <Checkbox
-                  status={item.checked ? "checked" : "unchecked"}
-                  onPress={() => handleNotIncludedCheckboxChange(item.id)}
-                  color={item.checked ? "green" : "#000"}
-                />
-                <Text>{item.label}</Text>
-              </View>
-            ))}
-          </View>
-        )}
-      </ScrollView>
-      <View className="w-full flex flex-row justify-between items-center h-16 bg-transparent">
-        <TouchableOpacity
+          onPress={() => setIsIncludedTab(true)}
           activeOpacity={0.8}
-          disabled={disableAdd}
-          onPress={handleAdd}
-          style={{
-            width: 165,
-            backgroundColor: disableAdd ? "#d3d3d3" : "#414141",
-            paddingVertical: 12,
-            borderRadius: 8,
-          }}
+          style={isIncludedTab ? styles.activeTab : styles.tab}
         >
-          <Text style={{ textAlign: "center", color: "#fff" }}>Add</Text>
+          <Text style={styles.tabText}>Included</Text>
         </TouchableOpacity>
         <TouchableOpacity
+          onPress={() => setIsIncludedTab(false)}
           activeOpacity={0.8}
-          disabled={disabledUpdate}
-          onPress={handleUpdate}
-          style={{
-            width: 165,
-            paddingVertical: 12,
-            borderRadius: 8,
-            borderWidth: 1,
-            borderColor: "green",
-          }}
+          style={!isIncludedTab ? styles.activeTab : styles.tab}
         >
-          <Text style={{ textAlign: "center", color: "green" }}>Update</Text>
+          <Text style={styles.tabText}>Not Included</Text>
         </TouchableOpacity>
       </View>
+
+      {getLoading ? (
+        <View style={styles.loaderContainer}>
+          <ActivityIndicator size="large" color="green" />
+        </View>
+      ) : (
+        <ScrollView style={styles.listContainer}>
+          {(isIncludedTab ? includedItems : notIncludedItems).map((i) => (
+            <View key={i?._id} style={styles.listItem}>
+              <Text style={styles.itemText}>{i?.item}</Text>
+              <TouchableOpacity
+                activeOpacity={0.7}
+                onPress={() => handleDelete(i?._id)}
+              >
+                <Image source={trashIcon} className="h-4 w-4" />
+              </TouchableOpacity>
+            </View>
+          ))}
+        </ScrollView>
+      )}
+
+      <TextInput
+        style={styles.input}
+        placeholder="Add new item"
+        value={newItem}
+        onChangeText={setNewItem}
+      />
+      <TouchableOpacity
+        onPress={handleAddItem}
+        style={styles.addButton}
+        disabled={newItem === "" || loading ? true : false}
+      >
+        {loading ? (
+          <ActivityIndicator size="small" color="white" />
+        ) : (
+          <Text style={styles.addButtonText}>Add Item</Text>
+        )}
+      </TouchableOpacity>
     </View>
   );
 };
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    padding: width * 0.05,
+    backgroundColor: "#f5f5f5",
+  },
+  tabContainer: {
+    flexDirection: "row",
+    marginBottom: height * 0.02,
+    borderRadius: 10,
+    overflow: "hidden",
+  },
+  tab: {
+    flex: 1,
+    padding: height * 0.015,
+    backgroundColor: "#787878",
+    alignItems: "center",
+  },
+  activeTab: {
+    flex: 1,
+    padding: height * 0.015,
+    backgroundColor: "green",
+    alignItems: "center",
+  },
+  tabText: {
+    color: "white",
+    fontWeight: "bold",
+  },
+  listContainer: {
+    flex: 1,
+    marginBottom: height * 0.02,
+  },
+  listItem: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    marginBottom: height * 0.01,
+    paddingHorizontal: width * 0.03,
+    paddingVertical: height * 0.01,
+    borderRadius: 5,
+    borderWidth: 1,
+    borderColor: "#ccc",
+    backgroundColor: "white",
+  },
+  itemText: {
+    flex: 1,
+  },
+  input: {
+    padding: height * 0.015,
+    backgroundColor: "white",
+    borderRadius: 5,
+    borderWidth: 1,
+    borderColor: "#ccc",
+    marginBottom: height * 0.02,
+  },
+  addButton: {
+    padding: height * 0.015,
+    backgroundColor: "green",
+    alignItems: "center",
+    borderRadius: 5,
+  },
+  addButtonText: {
+    color: "white",
+    fontWeight: "bold",
+  },
+  loaderContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+});
 
 export default TourDetails;

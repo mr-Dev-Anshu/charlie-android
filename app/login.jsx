@@ -46,40 +46,60 @@ const Login = () => {
   const getUserProfile = async (token) => {
     if (!token) return;
     setLoading(true);
-
+  
     try {
-      const user = await apiRequest(
-        "https://www.googleapis.com/oauth2/v2/userinfo",
-        "GET",
-        null,
-        {
+      const response = await fetch("https://www.googleapis.com/oauth2/v2/userinfo", {
+        method: "GET",
+        headers: {
           Authorization: `Bearer ${token}`,
-        }
-      );
-
+        },
+      });
+  
+      if (response.status !== 200) {
+        const text = await response.text();
+        console.error("Error fetching Google user data:", text);
+        throw new Error("Failed to fetch Google user data.");
+      }
+  
+      const user = await response.json();
       dispatch(setUser(user));
       await storeUserData(user);
-
+  
       const userEmail = user.email;
-
+  
       if (userEmail) {
-        const roleData = await apiRequest(
-          "https://trakies-backend.onrender.com/api/users/signin",
-          "POST",
-          { email: userEmail }
-        );
-
-        if (roleData) {
-          dispatch(setRole(roleData));
+        const roleResponse = await fetch("https://trakies-backend.onrender.com/api/users/signin", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ email: userEmail }),
+        });
+  
+        if (roleResponse.status !== 200) {
+          const text = await roleResponse.text();
+          console.error("Error fetching role data:", text);
+          throw new Error("Failed to fetch role data.");
         }
-
-        const profileData = await apiRequest(
-          "https://trakies-backend.onrender.com/api/users/getProfile",
-          "GET",
-          null,
-          { email: userEmail }
-        );
-
+  
+        const roleData = await roleResponse.json();
+        dispatch(setRole(roleData));
+  
+        const profileResponse = await fetch("https://trakies-backend.onrender.com/api/users/getProfile", {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            email: userEmail,
+          },
+        });
+  
+        if (profileResponse.status !== 200) {
+          const text = await profileResponse.text();
+          console.error("Error fetching profile data:", text);
+          throw new Error("Failed to fetch profile data.");
+        }
+  
+        const profileData = await profileResponse.json();
         if (profileData && !profileData.error) {
           dispatch(setProfile(profileData));
         }

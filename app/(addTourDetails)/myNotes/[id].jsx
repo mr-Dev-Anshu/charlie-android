@@ -1,5 +1,5 @@
-import { View, Text } from "react-native";
-import React, { useRef } from "react";
+import { View, Text, Alert } from "react-native";
+import React, { useEffect, useRef, useState } from "react";
 import { useLocalSearchParams } from "expo-router";
 import { Image } from "expo-image";
 import trash from "../../../assets/trash-04.svg";
@@ -8,18 +8,138 @@ import {
   TextInput,
   TouchableOpacity,
 } from "react-native-gesture-handler";
-import { Checkbox } from "react-native-paper";
+import { ActivityIndicator, Checkbox } from "react-native-paper";
 import { Modalize } from "react-native-modalize";
 
 const Mynotes = () => {
   const { id } = useLocalSearchParams();
 
-  const handleDeleteNotes = () => {
+  const [title, setTitle] = useState("");
+  const [description, setDescription] = useState("");
+  const [loading, setLoading] = useState(false);
+
+  const [notes, setNotes] = useState([]);
+  const [notesLoading, setNotesLoading] = useState(false);
+
+  const handleAddNotes = async () => {
+    if (!title || !description) {
+      Alert.alert("Fields empty", "Please enter Title and Description");
+      return;
+    }
+    setLoading(true);
+    const body = {
+      tourId: id,
+      title,
+      description,
+    };
     try {
-    } catch (error) {}
+      const response = await fetch(
+        `https://trakies-backend.onrender.com/api/notes/create`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(body),
+        }
+      );
+
+      if (response.status !== 201) {
+        throw new Error("Faild to add notes");
+      }
+      Alert.alert("Success", "Note Added.");
+      addNotesRef.current?.close();
+      handleGetNotes();
+    } catch (error) {
+      Alert.alert("Oops!", "Notes not added. \n\n Please try again..");
+      console.log("Error:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleDeleteNotes = async (noteId) => {
+    try {
+      const response = await fetch(
+        `https://trakies-backend.onrender.com/api/notes/delete?id=${noteId}`,
+        {
+          method: "DELETE",
+        }
+      );
+
+      if (response.status !== 200) {
+        throw new Error("Failed to delete note");
+      }
+      Alert.alert("Deleted", "Note deleted successfully.");
+      handleGetNotes();
+    } catch (error) {
+      Alert.alert("Oops!", "Note not deleted. Please try again.");
+      console.log("Error:", error);
+    }
+  };
+
+  const handleOnCheck = async (noteId, checked) => {
+    try {
+      const body = {
+        checked: !checked,
+      };
+      const response = await fetch(
+        `https://trakies-backend.onrender.com/api/notes/update?id=${noteId}`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(body),
+        }
+      );
+
+      if (response.status !== 201) {
+        throw new Error("Failed to update note");
+      }
+      handleGetNotes();
+    } catch (error) {
+      Alert.alert("Oops!", "Note status not updated.\n\nPlease try again.");
+      console.log("Error:", error);
+    }
+  };
+
+  const handleGetNotes = async () => {
+    setNotesLoading(true);
+    try {
+      const response = await fetch(
+        `https://trakies-backend.onrender.com/api/notes/get?tourId=${id}`
+      );
+
+      if (response.status !== 200) {
+        throw new Error("Failed to fetch notes");
+      }
+      const result = await response.json();
+
+      console.log(result);
+
+      setNotes(result);
+    } catch (error) {
+      Alert.alert("Oops!", "Something went wrong\n\n Please try again...");
+      console.log("Error:", error);
+    } finally {
+      setNotesLoading(false);
+    }
   };
 
   const addNotesRef = useRef(null);
+
+  useEffect(() => {
+    handleGetNotes();
+  }, []);
+
+  if (notesLoading) {
+    return (
+      <View className="w-full h-full flex justify-center items-center">
+        <ActivityIndicator color="green" size={"large"} />
+      </View>
+    );
+  }
 
   return (
     <>
@@ -30,7 +150,15 @@ const Mynotes = () => {
             showsVerticalScrollIndicator={false}
           >
             {notes.map((i) => (
-              <NotesCard key={i.id} title={i.title} content={i.content} />
+              <NotesCard
+                key={i._id}
+                id={i._id}
+                title={i.title}
+                description={i.description}
+                handleDeleteNotes={() => handleDeleteNotes(i._id)}
+                handleOnCheck={() => handleOnCheck(i._id, i.checked)}
+                checked={i.checked}
+              />
             ))}
           </ScrollView>
         </View>
@@ -59,6 +187,7 @@ const Mynotes = () => {
               <Text className="text-xs text-gray-500/70">Title</Text>
               <TextInput
                 placeholder="Enter Title"
+                onChangeText={setTitle}
                 className="text-black text-base mt-1"
               />
             </View>
@@ -67,6 +196,7 @@ const Mynotes = () => {
               <TextInput
                 multiline={true}
                 numberOfLines={5}
+                onChangeText={setDescription}
                 textAlignVertical="top"
                 placeholder="Enter description"
                 className="text-black text-base mt-1"
@@ -76,7 +206,7 @@ const Mynotes = () => {
           <View className="w-full flex justify-center items-center mt-4">
             <TouchableOpacity
               activeOpacity={0.8}
-              onPress={() => addNotesRef.current?.open()}
+              onPress={handleAddNotes}
               style={{
                 width: 350,
                 backgroundColor: "green",
@@ -84,9 +214,13 @@ const Mynotes = () => {
                 borderRadius: 8,
               }}
             >
-              <Text style={{ textAlign: "center", color: "#fff" }}>
-                Add Notes
-              </Text>
+              {loading ? (
+                <ActivityIndicator size={"small"} color="white" />
+              ) : (
+                <Text style={{ textAlign: "center", color: "#fff" }}>
+                  Submit
+                </Text>
+              )}
             </TouchableOpacity>
           </View>
         </View>
@@ -95,39 +229,30 @@ const Mynotes = () => {
   );
 };
 
-const notes = [
-  {
-    id: 1,
-    title: "Food Containers",
-    content: "Total required containers are 50. Different sizes.",
-  },
-  {
-    id: 2,
-    title: "Food Containers",
-    content: "Total required containers are 50. Different sizes.",
-  },
-];
-
-const NotesCard = ({ title, content }) => {
-  const checked = 1;
-
+const NotesCard = ({
+  title,
+  description,
+  checked,
+  handleDeleteNotes,
+  handleOnCheck,
+}) => {
   return (
     <View className="h-fit w-full border border-gray-500/50 rounded-xl p-2 py-2 mt-2">
       <View className="flex flex-row justify-between items-center">
         <View className="flex flex-row justify-start items-center">
           <Checkbox
             status={checked ? "checked" : "unchecked"}
-            onPress={() => {}}
+            onPress={handleOnCheck}
             color={checked ? "green" : "#000"}
           />
           <Text className="text-base font-semibold">{title}</Text>
         </View>
-        <TouchableOpacity activeOpacity={0.5}>
+        <TouchableOpacity activeOpacity={0.5} onPress={handleDeleteNotes}>
           <Image source={trash} className="h-4 w-4" />
         </TouchableOpacity>
       </View>
       <View className="px-2">
-        <Text className="mt-1">{content}</Text>
+        <Text className="mt-1">{description}</Text>
       </View>
     </View>
   );
