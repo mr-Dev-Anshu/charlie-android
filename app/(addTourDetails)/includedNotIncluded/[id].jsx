@@ -14,6 +14,7 @@ import { useLocalSearchParams } from "expo-router";
 import trashIcon from "../../../assets/trash-04.svg";
 import { useSelector } from "react-redux";
 import { Image } from "expo-image";
+import { Ionicons } from "@expo/vector-icons";
 
 const { width, height } = Dimensions.get("window");
 
@@ -145,24 +146,32 @@ const TourDetails = () => {
           <Text style={styles.tabText}>Not Included</Text>
         </TouchableOpacity>
       </View>
-
       {getLoading ? (
         <View style={styles.loaderContainer}>
           <ActivityIndicator size="large" color="green" />
         </View>
       ) : (
         <ScrollView style={styles.listContainer}>
-          {(isIncludedTab ? includedItems : notIncludedItems).map((i) => (
-            <View key={i?._id} style={styles.listItem}>
-              <Text style={styles.itemText}>{i?.item}</Text>
-              <TouchableOpacity
-                activeOpacity={0.7}
-                onPress={() => handleDelete(i?._id)}
-              >
-                <Image source={trashIcon} className="h-4 w-4" />
-              </TouchableOpacity>
+          {(isIncludedTab ? includedItems : notIncludedItems).length === 0 ? (
+            <View className="h-44 w-full flex justify-center items-center mt-10">
+              <Ionicons name="document-outline" size={48} color="green" />
+              <Text className="text-xl font-semibold mt-4">
+                No items added yet
+              </Text>
             </View>
-          ))}
+          ) : (
+            (isIncludedTab ? includedItems : notIncludedItems).map((i) => (
+              <View key={i?._id} style={styles.listItem}>
+                <Text style={styles.itemText}>{i?.item}</Text>
+                <TouchableOpacity
+                  activeOpacity={0.7}
+                  onPress={() => handleDelete(i?._id)}
+                >
+                  <Image source={trashIcon} className="h-4 w-4" />
+                </TouchableOpacity>
+              </View>
+            ))
+          )}
         </ScrollView>
       )}
 

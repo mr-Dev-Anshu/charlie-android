@@ -129,17 +129,29 @@ const Checkpoints = () => {
   return (
     <>
       <View className="px-4 relative h-full w-full flex justify-start items-center">
-        {allCheckPoints?.map((point, index) => (
-          <CheckPointCard
-            point={point}
-            key={index}
-            idx={index}
-            editRef={editCheckPointRef}
-            mapRef={viewMapRef}
-            checkInsRef={viewCheckInRef}
-            handleQr={handleQr}
-          />
-        ))}
+        {allCheckPoints.length === 0 ? (
+          <View className="h-full w-full flex justify-center items-center -mt-10">
+            <Ionicons name="navigate-circle-outline" size={48} color={"green"} />
+            <Text className="text-xl font-semibold mt-4">
+              No checkpoints added yet
+            </Text>
+          </View>
+        ) : (
+          <>
+            {allCheckPoints?.map((point, index) => (
+              <CheckPointCard
+                point={point}
+                key={index}
+                idx={index}
+                editRef={editCheckPointRef}
+                mapRef={viewMapRef}
+                checkInsRef={viewCheckInRef}
+                handleQr={handleQr}
+              />
+            ))}
+          </>
+        )}
+
         <View className="w-full absolute bottom-0 flex flex-row justify-center items-center space-x-5 h-16 bg-transparent">
           <TouchableOpacity
             activeOpacity={0.8}

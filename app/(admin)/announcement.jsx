@@ -48,7 +48,11 @@ const AnnouncementScreen = () => {
             closeOnBackPressed={true}
             placeholder="Select Tour"
             zIndex={1000}
-            textStyle={{ color: "white", fontWeight: "bold", fontSize: width * 0.04 }}
+            textStyle={{
+              color: "white",
+              fontWeight: "bold",
+              fontSize: width * 0.04,
+            }}
             arrowIconStyle={{ tintColor: "white" }}
             tickIconStyle={{ tintColor: "white" }}
             style={{ backgroundColor: "#117004", borderColor: "#117004" }}
@@ -74,12 +78,16 @@ const AnnouncementScreen = () => {
           style={styles.newAnnouncementButton}
         >
           <View style={styles.buttonContent}>
-            <Ionicons name="megaphone-outline" size={width * 0.05} color="white" />
+            <Ionicons
+              name="megaphone-outline"
+              size={width * 0.05}
+              color="white"
+            />
             <Text style={styles.buttonText}>New Announcements</Text>
           </View>
         </TouchableOpacity>
       </View>
-      <Modalize ref={addAnnounceMentRef} modalHeight={height * 0.5}>
+      <Modalize ref={addAnnounceMentRef} adjustToContentHeight>
         <View style={styles.modalContent}>
           <Text style={styles.modalTitle}>Announcement</Text>
           <TextInput

@@ -49,6 +49,11 @@ const AllocatedCoordinators = () => {
       Alert.alert("Success", "Coordinator added successfully.");
       addCoordinatorRef.current?.close();
       getAllCoordinators();
+      setName("");
+      setGender("");
+      setAge("");
+      setEmail("");
+      setPhone("");
     } catch (error) {
       Alert.alert("Oops!", "Something went wrong...\n\nPlease try again");
       console.log("Error:", error);

@@ -16,6 +16,7 @@ import { Image } from "expo-image";
 import { uploadFileToS3 } from "../../utils/uploadFileHelper.js";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { format as formatDateFns } from "date-fns";
+import LabelValue from "../../components/UI/LabelValue.jsx";
 
 const expense = () => {
   const { tour } = useSelector((state) => state.tour);
@@ -30,6 +31,8 @@ const expense = () => {
   const exportExcelSheet = useRef(null);
 
   const [open, setOpen] = useState(false);
+
+  const [showExpenseDetails, setShowExpenseDetails] = useState(null);
 
   const [expenseData, setExpenseData] = useState(null);
 
@@ -169,6 +172,17 @@ const expense = () => {
     }
   };
 
+  const handleShowExpenseDetails = (id) => {
+    try {
+      const dataToShow = expenseData.expanses.find((i) => i._id === id);
+      console.log(id, dataToShow);
+      setShowExpenseDetails(dataToShow);
+      showExpenseDetailRef.current?.open();
+    } catch (error) {
+      console.log("Failed to find data", error);
+    }
+  };
+
   return (
     <>
       <View className="mt-16 h-full w-full relative px-3">
@@ -258,7 +272,7 @@ const expense = () => {
                       </Text>
                       <TouchableOpacity
                         activeOpacity={0.6}
-                        onPress={() => showExpenseDetailRef?.current?.open()}
+                        onPress={() => handleShowExpenseDetails(item._id)}
                       >
                         <Ionicons
                           name="eye-outline"
@@ -299,8 +313,32 @@ const expense = () => {
         </View>
       </View>
       <Modalize ref={showExpenseDetailRef} adjustToContentHeight>
-        <View>
-          <Text>Hello</Text>
+        <View className="px-3">
+          <View className="flex justify-center items-center py-2">
+            <Text className="text-xl font-semibold">Expense Details</Text>
+          </View>
+          <LabelValue label={"Category"} value={showExpenseDetails?.category} />
+          <LabelValue label={"Notes"} value={showExpenseDetails?.note} />
+          <LabelValue label={"Added By"} value={showExpenseDetails?.name} />
+          <LabelValue label={"Amount"} value={showExpenseDetails?.amount} />
+          <LabelValue
+            label={"Date"}
+            value={formatDate(showExpenseDetails?.date)}
+          />
+          <View className="w-full h-300 py-3 flex justify-center items-center">
+            <Image
+              source={showExpenseDetails?.receipt}
+              className="w-44 h-44 object-cover"
+            />
+          </View>
+          <View className="w-full flex justify-center items-center mb-3">
+            <TouchableOpacity
+              activeOpacity={0.7}
+              className="w-56 bg-red-700 rounded-lg py-2 flex justify-center items-center"
+            >
+              <Text className="text-white font-semibold">Delete</Text>
+            </TouchableOpacity>
+          </View>
         </View>
       </Modalize>
       <Modalize ref={exportExcelSheet} adjustToContentHeight>

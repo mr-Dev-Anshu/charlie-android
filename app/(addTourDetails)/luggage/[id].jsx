@@ -14,6 +14,7 @@ import { Image } from "expo-image";
 import { router, useLocalSearchParams } from "expo-router";
 import { ActivityIndicator } from "react-native-paper";
 import { useSelector } from "react-redux";
+import { Ionicons } from "@expo/vector-icons";
 
 const { width, height } = Dimensions.get("window");
 
@@ -150,17 +151,28 @@ const Luggage = () => {
         </TouchableOpacity>
       </View>
       <ScrollView style={styles.listContainer}>
-        {(isBackpack ? backpackItems : checkInItems).map((i, index) => (
-          <View key={index} style={styles.listItem}>
-            <Text>{i?.item}</Text>
-            <TouchableOpacity
-              activeOpacity={0.5}
-              onPress={() => handleDelete(i?._id)}
-            >
-              <Image source={trashIcon} className="h-4 w-4" />
-            </TouchableOpacity>
-          </View>
-        ))}
+        <ScrollView style={styles.listContainer}>
+          {(isBackpack ? backpackItems : checkInItems).length === 0 ? (
+            <View className="h-44 w-full flex justify-center items-center mt-10">
+              <Ionicons name="document-outline" size={48} color="green" />
+              <Text className="text-xl font-semibold mt-4">
+                No items added yet
+              </Text>
+            </View>
+          ) : (
+            (isBackpack ? backpackItems : checkInItems).map((i, index) => (
+              <View key={index} style={styles.listItem}>
+                <Text>{i?.item}</Text>
+                <TouchableOpacity
+                  activeOpacity={0.5}
+                  onPress={() => handleDelete(i?._id)}
+                >
+                  <Image source={trashIcon} className="h-4 w-4" />
+                </TouchableOpacity>
+              </View>
+            ))
+          )}
+        </ScrollView>
       </ScrollView>
       <TextInput
         style={styles.input}

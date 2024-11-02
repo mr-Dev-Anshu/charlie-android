@@ -10,6 +10,7 @@ import {
 } from "react-native-gesture-handler";
 import { ActivityIndicator, Checkbox } from "react-native-paper";
 import { Modalize } from "react-native-modalize";
+import { Ionicons } from "@expo/vector-icons";
 
 const Mynotes = () => {
   const { id } = useLocalSearchParams();
@@ -145,22 +146,31 @@ const Mynotes = () => {
     <>
       <View className="px-3 py-2 flex justify-start items-center w-full h-full relative">
         <View className="w-full">
-          <ScrollView
-            contentContainerStyle={{ width: "100%", paddingBottom: 80 }}
-            showsVerticalScrollIndicator={false}
-          >
-            {notes.map((i) => (
-              <NotesCard
-                key={i._id}
-                id={i._id}
-                title={i.title}
-                description={i.description}
-                handleDeleteNotes={() => handleDeleteNotes(i._id)}
-                handleOnCheck={() => handleOnCheck(i._id, i.checked)}
-                checked={i.checked}
-              />
-            ))}
-          </ScrollView>
+          {notes.length === 0 ? (
+            <View className="h-full w-full flex justify-center items-center -mt-10">
+              <Ionicons name="document-outline" size={48} color={"green"} />
+              <Text className="text-xl font-semibold mt-4">
+                No notes added yet
+              </Text>
+            </View>
+          ) : (
+            <ScrollView
+              contentContainerStyle={{ width: "100%", paddingBottom: 80 }}
+              showsVerticalScrollIndicator={false}
+            >
+              {notes.map((i) => (
+                <NotesCard
+                  key={i._id}
+                  id={i._id}
+                  title={i.title}
+                  description={i.description}
+                  handleDeleteNotes={() => handleDeleteNotes(i._id)}
+                  handleOnCheck={() => handleOnCheck(i._id, i.checked)}
+                  checked={i.checked}
+                />
+              ))}
+            </ScrollView>
+          )}
         </View>
         <View className="w-full absolute bottom-0 flex flex-row justify-center items-center h-16 bg-[#FFFFFFFF]">
           <TouchableOpacity

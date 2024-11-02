@@ -192,6 +192,7 @@ const Community = () => {
                       <Text>Please share the moments you captured</Text>
                       <TouchableOpacity
                         onPress={pickImage}
+                        activeOpacity={0.6}
                         style={styles.addImagesButton}
                       >
                         <Text style={styles.addImagesButtonText}>
@@ -340,6 +341,16 @@ const styles = StyleSheet.create({
   postButtonText: {
     color: "white",
     fontSize: height * 0.02,
+  },
+  addImagesButton: {
+    backgroundColor: "green",
+    paddingHorizontal: 24,
+    marginTop: 10,
+    paddingVertical: 10,
+    borderRadius: 12,
+  },
+  addImagesButtonText: {
+    color: "white",
   },
 });
 
