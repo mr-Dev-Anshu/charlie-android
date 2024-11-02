@@ -75,7 +75,10 @@
     "react-native-vector-icons": "^10.1.0",
     "react-native-web": "~0.19.10",
     "react-redux": "^9.1.2",
-    "reanimated-bottom-sheet": "^1.0.0-alpha.22"
+    "reanimated-bottom-sheet": "^1.0.0-alpha.22",
+    "xlsx": "^0.18.5",
+    "expo-sharing": "~12.0.1",
+    "expo-intent-launcher": "~11.0.1"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",

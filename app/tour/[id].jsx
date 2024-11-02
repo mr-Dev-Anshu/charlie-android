@@ -187,6 +187,11 @@ const DetailTitle = [
     title: "My Notes",
     href: "/(addTourDetails)/myNotes",
   },
+  {
+    id: 10,
+    title: "Export Details",
+    href: "/(addTourDetails)/exportDetails",
+  },
 ];
 
 const DetailScreenButton = ({ title, href, id }) => {

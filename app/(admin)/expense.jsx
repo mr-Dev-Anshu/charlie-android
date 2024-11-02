@@ -14,6 +14,8 @@ import * as ImagePicker from "expo-image-picker";
 import { formatDate } from "../../utils/helpers.js";
 import { Image } from "expo-image";
 import { uploadFileToS3 } from "../../utils/uploadFileHelper.js";
+import DateTimePicker from "@react-native-community/datetimepicker";
+import { format as formatDateFns } from "date-fns";
 
 const expense = () => {
   const { tour } = useSelector((state) => state.tour);
@@ -41,6 +43,9 @@ const expense = () => {
   const [currentTour, setCurrentTour] = useState(
     toursDataForDropdown[0]?.value
   );
+
+  const [showDatePicker, setShowDatePicker] = useState(false);
+
   const [tours, setTours] = useState(toursDataForDropdown);
 
   const [currentTourData, setCurrentTourData] = useState(null);
@@ -75,6 +80,7 @@ const expense = () => {
         tour_id: currentTour,
         name: user.name,
       };
+
       const response = await fetch(
         "https://trakies-backend.onrender.com/api/expanse/add-expanse",
         {
@@ -106,6 +112,13 @@ const expense = () => {
     }
   };
 
+  const handleDateChange = (event, selectedDate) => {
+    setShowDatePicker(false);
+    if (selectedDate) {
+      setDate(formatDateFns(selectedDate, "yyyy-MM-dd"));
+    }
+  };
+
   useEffect(() => {
     if (currentTour) {
       fetchExpense();
@@ -125,9 +138,10 @@ const expense = () => {
       const data = await res.json();
 
       setExpenseData({
-        budget: data.budget.budget,
+        budget: data.budget,
         expanses: data.expanses,
         spent: data.spent[0]?.spent || 0,
+        balance: data?.balance,
       });
     } catch (error) {
       console.error("Failed to load expenses --->", error.message);
@@ -192,9 +206,7 @@ const expense = () => {
               >
                 <Text className={` font-medium`}>Budget</Text>
                 <Text className={`text-lg font-bold text-blue-600`}>
-                  {`₹${
-                    currentTourData?.tour_cost * currentTourData?.total_seats
-                  }`}
+                  {`₹${expenseData?.budget}`}
                 </Text>
               </View>
               <View
@@ -210,7 +222,7 @@ const expense = () => {
               >
                 <Text className={` font-medium`}>Balance</Text>
                 <Text className={`text-lg font-bold text-green-600`}>
-                  {`₹${expenseData?.budget - expenseData?.spent}`}
+                  {`₹${expenseData?.balance}`}
                 </Text>
               </View>
             </View>
@@ -286,21 +298,21 @@ const expense = () => {
           </TouchableOpacity>
         </View>
       </View>
-      <Modalize ref={showExpenseDetailRef} modalHeight={500}>
+      <Modalize ref={showExpenseDetailRef} adjustToContentHeight>
         <View>
           <Text>Hello</Text>
         </View>
       </Modalize>
-      <Modalize ref={exportExcelSheet} modalHeight={400}>
+      <Modalize ref={exportExcelSheet} adjustToContentHeight>
         <View>
           <Text>Hello</Text>
         </View>
       </Modalize>
-      <Modalize ref={addExpenseDetailRef} modalHeight={500}>
+      <Modalize ref={addExpenseDetailRef} adjustToContentHeight>
         <View className="flex justify-center items-center py-2">
           <Text className="text-lg font-semibold">Add Expense Details</Text>
         </View>
-        <View className="px-6 pt-3 flex justify-center items-center space-y-3 ">
+        <View className="px-6 pt-3 flex justify-center items-center space-y-3 w-full ">
           <TextInput
             placeholder="Category [e.g., Food, Accomodation]..."
             onChangeText={setExpenseCategory}
@@ -313,20 +325,45 @@ const expense = () => {
             placeholder="Note"
             multiline
             numberOfLines={2}
+            textAlignVertical="top"
             onChangeText={setNote}
             autoCapitalize="none"
             keyboardType="default"
             className="text-black text-base font-semibold px-2 lowercase w-full outline-green-700 indent-3 border-2 border-green-700 rounded-[10px] p-1.5"
             placeholderTextColor={"#7d7d7d"}
           />
-          <TextInput
-            placeholder="Date"
-            autoCapitalize="none"
-            onChangeText={setDate}
-            keyboardType="numbers-and-punctuation"
-            className="text-black text-base font-semibold px-2 lowercase w-full outline-green-700 indent-3 border-2 border-green-700 rounded-[10px] p-1.5"
-            placeholderTextColor={"#7d7d7d"}
-          />
+          <View className="w-full">
+            <TouchableOpacity
+              onPress={() => setShowDatePicker(true)}
+              style={{ alignSelf: "stretch", width: "100%" }}
+            >
+              <TextInput
+                placeholder="Select Date"
+                value={date}
+                editable={false}
+                style={{
+                  width: "100%",
+                  borderColor: "green",
+                  borderWidth: 2,
+                  borderRadius: 10,
+                  paddingVertical: 6,
+                  paddingHorizontal: 8,
+                  fontSize: 16,
+                  fontWeight: "bold",
+                  color: "black",
+                }}
+                placeholderTextColor="#7d7d7d"
+              />
+            </TouchableOpacity>
+            {showDatePicker && (
+              <DateTimePicker
+                value={new Date()}
+                mode="date"
+                display="default"
+                onChange={handleDateChange}
+              />
+            )}
+          </View>
           <TextInput
             placeholder="Amount"
             autoCapitalize="none"
@@ -369,9 +406,7 @@ const expense = () => {
         >
           <View className="flex justify-center items-center mt-2 bg-green-600 w-full py-2 rounded-[10px]">
             {loading ? (
-              <Text className="text-white text-lg font-semibold">
-                Adding...
-              </Text>
+              <ActivityIndicator size={"small"} color={"white"} />
             ) : (
               <Text className="text-white text-lg font-semibold">
                 Add Expense

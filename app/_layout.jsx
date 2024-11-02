@@ -106,6 +106,10 @@ export default function RootLayout() {
             name="(addTourDetails)/luggage/[id]"
             options={getOpt("Luggage Items")}
           />
+          <Stack.Screen
+            name="(addTourDetails)/exportDetails/[id]"
+            options={getOpt("Export Details")}
+          />
         </Stack>
       </GestureHandlerRootView>
     </Provider>
