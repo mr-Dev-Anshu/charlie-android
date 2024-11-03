@@ -1,15 +1,23 @@
-import { View, Text, Pressable } from "react-native";
-import React, { useState } from "react";
+import { View, Text, Pressable, Alert } from "react-native";
+import React, { useEffect, useState } from "react";
 import Animated, {
   useSharedValue,
   withSpring,
   useAnimatedStyle,
 } from "react-native-reanimated";
 import { TouchableOpacity } from "react-native-gesture-handler";
+import { useLocalSearchParams } from "expo-router";
 
 const GuestsEnrolled = () => {
+  const { id } = useLocalSearchParams();
+
   const [activeTab, setActiveTab] = useState("interested");
   const translateX = useSharedValue(-200);
+
+  const [interestedMembers, setInterestedMembers] = useState(null);
+  const [loading, setLoading] = useState(false);
+
+  console.log("interestedMembers", interestedMembers);
 
   const handleTabPress = (tab) => {
     setActiveTab(tab);
@@ -28,6 +36,32 @@ const GuestsEnrolled = () => {
   const animatedStyles = useAnimatedStyle(() => ({
     transform: [{ translateX: withSpring(translateX.value, springConfig) }],
   }));
+
+  const handleGetInterestedMembers = async () => {
+    setLoading(true);
+    try {
+      const response = await fetch(
+        `https://trakies-backend.onrender.com/api/interested/get?tourId=${id}`
+      );
+
+      if (response.status !== 200) {
+        throw new Error("Failed to get interested members.");
+      }
+
+      const data = await response.json();
+
+      setInterestedMembers(data);
+    } catch (error) {
+      console.log("Error:", error);
+      Alert.alert("Something went wrong.", "Please try again");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    handleGetInterestedMembers();
+  }, []);
 
   return (
     <View className={`px-3 h-full flex items-center`}>
@@ -57,13 +91,14 @@ const GuestsEnrolled = () => {
       <View className={`w-full mt-2`}>
         {activeTab === "interested" ? (
           <View className={`p-2`}>
-            <ReqCard name="Rahul" age={24} gender={"Male"} />
-            <ReqCard name="Rahul" age={24} gender={"Male"} />
-            <ReqCard name="Rahul" age={24} gender={"Male"} />
-            <ReqCard name="Rahul" age={24} gender={"Male"} />
-            <ReqCard name="Rahul" age={24} gender={"Male"} />
-            <ReqCard name="Rahul" age={24} gender={"Male"} />
-            <ReqCard name="Rahul" age={24} gender={"Male"} />
+            {interestedMembers?.map((i) => (
+              <ReqCard
+                key={i._id}
+                name={i?.profileData?.gender}
+                age={24}
+                gender={"Male"}
+              />
+            ))}
           </View>
         ) : (
           <View className={`p-2`}>

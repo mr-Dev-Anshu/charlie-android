@@ -6,17 +6,17 @@ import {
   TouchableOpacity,
   Dimensions,
   Modal,
+  Linking,
 } from "react-native";
 import React, { useState, useEffect } from "react";
 import { Ionicons } from "@expo/vector-icons";
-import { Camera, CameraType, useCameraPermissions } from "expo-camera";
+import { Camera, CameraView, useCameraPermissions } from "expo-camera";
 
 const { height, width } = Dimensions.get("window");
 
 const CheckPointElement = ({ points, index }) => {
   const [permission, requestPermission] = useCameraPermissions();
   const [showCameraModal, setShowCameraModal] = useState(false);
-  const [scanned, setScanned] = useState(false);
 
   useEffect(() => {
     const checkAndRequestPermission = async () => {
@@ -49,14 +49,6 @@ const CheckPointElement = ({ points, index }) => {
     setShowCameraModal(true);
   };
 
-  const handleBarCodeScanned = ({ data }) => {
-    if (!scanned) {
-      setScanned(true);
-      setShowCameraModal(false);
-      Alert.alert("QR Code Scanned", `Data: ${data}`);
-    }
-  };
-
   return (
     <>
       <View style={styles.container}>
@@ -84,12 +76,13 @@ const CheckPointElement = ({ points, index }) => {
         onRequestClose={() => setShowCameraModal(false)}
       >
         <View style={styles.modalOverlay}>
-          <Camera
+          <CameraView
+            facing="back"
             style={styles.camera}
-            type={CameraType.back}
-            onBarCodeScanned={scanned ? undefined : handleBarCodeScanned}
-            barCodeScannerSettings={{
-              barCodeTypes: ["qr"],
+            onBarcodeScanned={({ data }) => {
+              if (data) {
+                Alert.alert("Scanned", `Data: ${data}`);
+              }
             }}
           />
           <TouchableOpacity
@@ -111,12 +104,9 @@ const styles = StyleSheet.create({
     justifyContent: "flex-start",
     alignItems: "center",
     marginTop: 8,
-    borderRadius: 16,
-    borderWidth: 1,
+    borderRadius: 8,
     backgroundColor: "white",
-    shadowColor: "black",
-    shadowOpacity: 0.5,
-    shadowRadius: 8,
+    elevation: 8,
   },
   header: {
     flexDirection: "row",

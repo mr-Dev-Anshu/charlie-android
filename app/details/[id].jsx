@@ -8,7 +8,7 @@ import { ScrollView, TouchableOpacity } from "react-native-gesture-handler";
 // import ListComponent from "../../components/UI/ListComponent.jsx";
 import { Modalize } from "react-native-modalize";
 import approve from "../../assets/approve.png";
-import { Checkbox } from "react-native-paper";
+import { ActivityIndicator, Checkbox } from "react-native-paper";
 import Carousel from "react-native-reanimated-carousel";
 import CarouselImageRender from "../../components/UI/CarouselImageRender.jsx";
 import { formatDate } from "../../utils/helpers.js";
@@ -21,12 +21,17 @@ import {
 
 const width = Dimensions.get("window").width;
 
-const DetailsScreen = ({ params }) => {
+const DetailsScreen = () => {
   const { id } = useLocalSearchParams();
   const { tour } = useSelector((state) => state.tour);
   const { user, profile, members } = useSelector((state) => state.user);
 
+  console.log(id)
+
+  const [loading, setLoading] = useState(false);
+
   const [tourData, setTourData] = useState(null);
+
   const [curatedMembers, setCuratedMembers] = useState([]);
 
   const reserveRef = useRef(null);
@@ -40,6 +45,37 @@ const DetailsScreen = ({ params }) => {
         member.id === id ? { ...member, [field]: !member[field] } : member
       )
     );
+  };
+
+  const handleInterested = async () => {
+    const body = {
+      tourId: id,
+      email: user?.email,
+    };
+    setLoading(true);
+    try {
+      const response = await fetch(
+        "https://trakies-backend.onrender.com/api/interested/create",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(body),
+        }
+      );
+
+      if (response.status !== 201) {
+        throw new Error("Failed to post interest");
+      }
+
+      interestedRef.current?.open();
+    } catch (error) {
+      console.log("Error:", error);
+      Alert.alert("Something went wrong.", "Please try again.");
+    } finally {
+      setLoading(false);
+    }
   };
 
   useEffect(() => {
@@ -280,18 +316,19 @@ const DetailsScreen = ({ params }) => {
         </View>
       </ScrollView>
       <View className="h-fit mb-5 flex flex-row justify-center items-center w-full px-6 space-x-6">
-        <TouchableOpacity
-          onPress={() => interestedRef.current?.open()}
-          activeOpacity={0.8}
-        >
-          <View className=" bg-slate-500 w-[160px] rounded-xl py-3 ">
-            <Text className="text-white text-center text-md font-semibold">
-              Interested
-            </Text>
+        <TouchableOpacity onPress={handleInterested} activeOpacity={0.8}>
+          <View className=" bg-slate-500 w-[160px] rounded-xl h-12 flex justify-center items-center ">
+            {loading ? (
+              <ActivityIndicator color="white" size={"small"} />
+            ) : (
+              <Text className="text-white text-center text-md font-semibold">
+                Interested
+              </Text>
+            )}
           </View>
         </TouchableOpacity>
         <TouchableOpacity onPress={handleReserveButton} activeOpacity={0.8}>
-          <View className="py-3 bg-green-700 w-[160px] rounded-xl">
+          <View className="py-3 bg-green-700 w-[160px] rounded-xl h-12 flex justify-center items-center">
             <Text className="text-center text-white font-semibold">
               Reserve Seat
             </Text>
@@ -302,13 +339,13 @@ const DetailsScreen = ({ params }) => {
         ref={interestedRef}
         handleStyle={{ backgroundColor: "green" }}
         handlePosition="inside"
-        modalHeight={350}
+        adjustToContentHeight
       >
         <View
           className={`flex justify-center items-center h-[350px] rounded-t-lg `}
         >
-          <Text className={`text-xl font-semibold mt-6 `}>
-            Thanks for showing interest for the tourData.
+          <Text className={`text-xl font-semibold mt-6 px-5 text-center`}>
+            Thanks for showing interest for the tour.
           </Text>
           <Image source={approve} className=" h-40 w-40 mt-2" />
           <Text className={`mt-2 text-lg `}>

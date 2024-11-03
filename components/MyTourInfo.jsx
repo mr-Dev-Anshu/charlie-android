@@ -11,9 +11,14 @@ import { router } from "expo-router";
 import { formatDate } from "../utils/helpers.js";
 
 const MyTourInfo = ({ tour }) => {
-  
-  const tourDetails = tour.tourDetails;
-  console.log("tour-->", tourDetails);
+  const {
+    tourDetails,
+    backpacks,
+    notincludeds,
+    includeds,
+    checkinbagages,
+    allocatedAccommodation,
+  } = tour;
 
   return (
     <View className={`pb-14 `}>
@@ -46,26 +51,15 @@ const MyTourInfo = ({ tour }) => {
             <Text className={`text-md font-semibold`}>What is included ?</Text>
           </View>
           <View className="px-1 mt-3 space-y-2">
-            <ListComponent
-              icon="checkmark-circle"
-              text="Food"
-              color={"#0e9c02"}
-            />
-            <ListComponent
-              icon="checkmark-circle"
-              text="Accomodation"
-              color={"#0e9c02"}
-            />
-            <ListComponent
-              icon="checkmark-circle"
-              text="Guide"
-              color={"#0e9c02"}
-            />
-            <ListComponent
-              icon="checkmark-circle"
-              text="Transportation"
-              color={"#0e9c02"}
-            />
+            {includeds &&
+              includeds.map((i) => (
+                <ListComponent
+                  key={i._id}
+                  icon="checkmark-circle"
+                  text={i.item}
+                  color={"#0e9c02"}
+                />
+              ))}
           </View>
         </View>
         <View className="px-2 mt-6">
@@ -76,26 +70,15 @@ const MyTourInfo = ({ tour }) => {
             </Text>
           </View>
           <View className="px-1 mt-3 space-y-2">
-            <ListComponent
-              icon="close-circle-outline"
-              text="Food"
-              color={"red"}
-            />
-            <ListComponent
-              icon="close-circle-outline"
-              text="Accomodation"
-              color={"red"}
-            />
-            <ListComponent
-              icon="close-circle-outline"
-              text="Guide"
-              color={"red"}
-            />
-            <ListComponent
-              icon="close-circle-outline"
-              text="Transportation"
-              color={"red"}
-            />
+            {notincludeds &&
+              notincludeds.map((i) => (
+                <ListComponent
+                  key={i._id}
+                  icon="close-circle-outline"
+                  text={i.item}
+                  color={"red"}
+                />
+              ))}
           </View>
         </View>
         <View className="px-2 mt-6">
@@ -104,26 +87,15 @@ const MyTourInfo = ({ tour }) => {
             <Text className={`text-md font-semibold`}>Bag Pack</Text>
           </View>
           <View className="px-1 mt-3 space-y-2">
-            <ListComponent
-              icon="checkmark-circle-outline"
-              text="Food"
-              color={"gray"}
-            />
-            <ListComponent
-              icon="checkmark-circle-outline"
-              text="Accomodation"
-              color={"gray"}
-            />
-            <ListComponent
-              icon="checkmark-circle-outline"
-              text="Guide"
-              color={"gray"}
-            />
-            <ListComponent
-              icon="checkmark-circle-outline"
-              text="Transportation"
-              color={"gray"}
-            />
+            {backpacks &&
+              backpacks.map((i) => (
+                <ListComponent
+                  key={i._id}
+                  icon="checkmark-circle-outline"
+                  text={i.item}
+                  color={"gray"}
+                />
+              ))}
           </View>
         </View>
         <View className="px-2 mt-6">
@@ -136,26 +108,15 @@ const MyTourInfo = ({ tour }) => {
             <Text className={`text-md font-semibold`}>Check In Baggage</Text>
           </View>
           <View className="px-1 mt-3 space-y-2">
-            <ListComponent
-              icon="checkmark-circle-outline"
-              text="Water Bottle"
-              color={"gray"}
-            />
-            <ListComponent
-              icon="checkmark-circle-outline"
-              text="Trekking Boots"
-              color={"gray"}
-            />
-            <ListComponent
-              icon="checkmark-circle-outline"
-              text="Rain Coat"
-              color={"gray"}
-            />
-            <ListComponent
-              icon="checkmark-circle-outline"
-              text="Warm Clothes"
-              color={"gray"}
-            />
+            {checkinbagages &&
+              checkinbagages.map((i) => (
+                <ListComponent
+                  key={i._id}
+                  icon="checkmark-circle-outline"
+                  text={i.item}
+                  color={"gray"}
+                />
+              ))}
           </View>
         </View>
         <View className="mt-6 px-2">
