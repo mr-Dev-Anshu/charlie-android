@@ -9,11 +9,11 @@ import { formatDate } from "../../../utils/helpers";
 const TourCard = ({ tour }) => {
   return (
     <TouchableOpacity
-      activeOpacity={0.8}
-      className="w-full flex flex-1 justify-center items-center mt-2"
+      activeOpacity={0.9}
+      className="w-full flex flex-1 justify-center items-center mt-4 bg-white rounded-lg overflow-hidden shadow-xl shadow-black"
       onPress={() => router.push(`/tour/${tour?._id}`)}
     >
-      <View className="flex flex-row justify-between h-[150px] w-[360px] bg-white shadow-xl shadow-black rounded-lg mt-3 p-2 ">
+      <View className="flex flex-row justify-between h-[150px] w-[360px]  p-2 ">
         <View>
           <Text className="text-xl font-medium text-gray-700">
             {shorten(tour?.name, 15)}

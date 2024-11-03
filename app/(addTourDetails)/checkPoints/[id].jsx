@@ -1,7 +1,11 @@
 import { View, Text } from "react-native";
-import React, { useEffect, useMemo, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Ionicons } from "@expo/vector-icons";
-import { TextInput, TouchableOpacity } from "react-native-gesture-handler";
+import {
+  ScrollView,
+  TextInput,
+  TouchableOpacity,
+} from "react-native-gesture-handler";
 import { Image, ImageBackground } from "expo-image";
 import marker from "../../../assets/marker-pin.svg";
 import edit from "../../../assets/edit.svg";
@@ -15,6 +19,8 @@ import { ActivityIndicator } from "react-native-paper";
 import * as FileSystem from "expo-file-system";
 import { Alert } from "react-native";
 import * as MediaLibrary from "expo-media-library";
+import { useDispatch } from "react-redux";
+import { setCheckPoints } from "../../../redux/slices/tourSlice";
 
 const Checkpoints = () => {
   const { id } = useLocalSearchParams();
@@ -33,6 +39,8 @@ const Checkpoints = () => {
   const addCheckPoint = useRef(null);
   const viewMapRef = useRef(null);
   const downloadQRref = useRef(null);
+
+  const dispatch = useDispatch();
 
   const handleQr = async () => {
     try {
@@ -101,6 +109,7 @@ const Checkpoints = () => {
       const data = await res.json();
 
       setAllCheckPoints(data);
+      dispatch(setCheckPoints(data));
     } catch (error) {
       console.log("Error:", error);
     } finally {
@@ -170,7 +179,10 @@ const Checkpoints = () => {
             </Text>
           </View>
         ) : (
-          <>
+          <ScrollView
+            showsVerticalScrollIndicator={false}
+            contentContainerStyle={{ paddingBottom: 120 }}
+          >
             {allCheckPoints?.map((point, index) => (
               <CheckPointCard
                 point={point}
@@ -182,9 +194,8 @@ const Checkpoints = () => {
                 activationLoading={activationLoading}
               />
             ))}
-          </>
+          </ScrollView>
         )}
-
         <View className="w-full absolute bottom-0 flex flex-row justify-center items-center space-x-5 h-16 bg-transparent">
           <TouchableOpacity
             activeOpacity={0.8}
@@ -456,7 +467,5 @@ const CheckPointCard = ({
     </View>
   );
 };
-
-
 
 export default Checkpoints;

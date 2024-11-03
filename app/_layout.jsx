@@ -114,6 +114,14 @@ export default function RootLayout() {
             name="(addTourDetails)/viewCheckIns/[id]"
             options={getOpt("Checked In")}
           />
+          <Stack.Screen
+            name="(addTourDetails)/addAccomodationForm/[id]"
+            options={getOpt("Add Accomodation Details")}
+          />
+          <Stack.Screen
+            name="(addTourDetails)/showAccomodationDetails/[id]"
+            options={getOpt("Accomodation Details")}
+          />
         </Stack>
       </GestureHandlerRootView>
     </Provider>

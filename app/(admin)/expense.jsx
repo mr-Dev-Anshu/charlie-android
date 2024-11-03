@@ -42,16 +42,16 @@ const expense = () => {
   const [image, setImage] = useState(null);
   const [date, setDate] = useState("");
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
+
   const [currentTour, setCurrentTour] = useState(
     toursDataForDropdown[0]?.value
   );
 
+  console.log("Expense--->", currentTour);
+
   const [showDatePicker, setShowDatePicker] = useState(false);
 
   const [tours, setTours] = useState(toursDataForDropdown);
-
-  const [currentTourData, setCurrentTourData] = useState(null);
 
   const pickImage = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
@@ -125,10 +125,6 @@ const expense = () => {
     if (currentTour) {
       fetchExpense();
     }
-    const data = tour.find((t) => t._id === currentTour);
-    if (data) {
-      setCurrentTourData(data);
-    }
   }, [currentTour]);
 
   const fetchExpense = async () => {
@@ -137,6 +133,11 @@ const expense = () => {
 
     try {
       const res = await fetch(url);
+
+      if (res.status !== 200) {
+        throw new Error("Failed to get expenses");
+      }
+
       const data = await res.json();
 
       setExpenseData({
@@ -147,7 +148,7 @@ const expense = () => {
       });
     } catch (error) {
       console.error("Failed to load expenses --->", error.message);
-      setError(error.message);
+      Alert.alert("Something went wrong", "Please try again.");
     } finally {
       setLoading(false);
     }
