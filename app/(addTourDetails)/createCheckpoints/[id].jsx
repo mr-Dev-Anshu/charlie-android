@@ -170,7 +170,7 @@ const Page = () => {
               </View>
             </View>
             <View className="w-full flex justify-start items-center mt-2">
-              <View className="w-full border border-gray-500/40 rounded-xl">
+              <View className="w-full">
                 <GooglePlacesAutocomplete
                   ref={googlePlacesRef}
                   placeholder="Search for a location"

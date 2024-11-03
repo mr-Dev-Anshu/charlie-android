@@ -93,7 +93,7 @@ const styles = StyleSheet.create({
     width: "100%",
     height: height * 0.45,
     contentFit: "cover",
-    position:"absolute"
+    position: "absolute",
   },
   centeredContainer: {
     flex: 1,

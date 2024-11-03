@@ -17,6 +17,8 @@ const GuestsEnrolled = () => {
   const [interestedMembers, setInterestedMembers] = useState(null);
   const [loading, setLoading] = useState(false);
 
+  console.log("interested", interestedMembers);
+
   console.log("interestedMembers", interestedMembers);
 
   const handleTabPress = (tab) => {
@@ -59,6 +61,8 @@ const GuestsEnrolled = () => {
     }
   };
 
+  const handleReserveMembers = () => {};
+
   useEffect(() => {
     handleGetInterestedMembers();
   }, []);
@@ -94,7 +98,7 @@ const GuestsEnrolled = () => {
             {interestedMembers?.map((i) => (
               <ReqCard
                 key={i._id}
-                name={i?.profileData?.gender}
+                name={i?.profileData?.name}
                 age={24}
                 gender={"Male"}
               />

@@ -8,7 +8,6 @@ import { ActivityIndicator } from "react-native-paper";
 
 const AllocatedCoordinators = () => {
   const { id } = useLocalSearchParams();
-  console.log(id);
 
   const [name, setName] = useState("");
   const [gender, setGender] = useState("");
@@ -33,7 +32,6 @@ const AllocatedCoordinators = () => {
     }
     try {
       const body = { name, gender, age, email, phone, track_id: id };
-      console.log(body);
       const response = await fetch(
         `https://trakies-backend.onrender.com/api/lead/create-lead`,
         {
@@ -42,7 +40,6 @@ const AllocatedCoordinators = () => {
           body: JSON.stringify(body),
         }
       );
-      console.log(response.status);
       if (response.status !== 201) {
         throw new Error("Failed to add coordinator");
       }

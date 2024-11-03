@@ -22,8 +22,6 @@ const TourDetails = () => {
   const { id } = useLocalSearchParams();
   const { user } = useSelector((state) => state.user);
 
-  console.log(id);
-
   const [includedItems, setIncludedItems] = useState([]);
   const [notIncludedItems, setNotIncludedItems] = useState([]);
   const [newItem, setNewItem] = useState("");
@@ -48,8 +46,6 @@ const TourDetails = () => {
 
       const result1 = await response1.json();
       const result2 = await response2.json();
-
-      console.log("results---->", result1, result2);
 
       setIncludedItems(Array.isArray(result1) ? result1 : []);
       setNotIncludedItems(Array.isArray(result2) ? result2 : []);

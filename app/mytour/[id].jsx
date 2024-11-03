@@ -15,6 +15,7 @@ import { useSelector } from "react-redux";
 
 const MyTourDetails = () => {
   const { id } = useLocalSearchParams();
+  const { user } = useSelector((state) => state.user);
 
   const { bookedTour } = useSelector((state) => state.tour);
 
@@ -35,13 +36,11 @@ const MyTourDetails = () => {
     translateX.value = tabIndex === "tourInfo" ? -200 : 0;
   };
 
-  const handleGetLuggage = () => {};
-
   const handleGetCheckPoints = async () => {
     setLoading(true);
     try {
       const response = await fetch(
-        `https://trakies-backend.onrender.com/api/get-points?id=${id}`
+        `https://trakies-backend.onrender.com/api/checked/get?email=${user?.email}&tourId=${id}`
       );
       if (response.status !== 200) {
         throw new Error("Failed to get checkpoints.");
@@ -99,7 +98,7 @@ const MyTourDetails = () => {
         {activeTab === "tourInfo" ? (
           <MyTourInfo tour={tour} />
         ) : listView ? (
-          <MyTourCheckPointsListView checkPoints={checkPoints} tourId={id} />
+        <MyTourCheckPointsListView checkPoints={checkPoints} tourId={id} handleGetCheckPoints={handleGetCheckPoints} />
         ) : (
           <MyTourCheckPoints />
         )}

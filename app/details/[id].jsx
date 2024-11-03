@@ -1,11 +1,11 @@
 import { View, Text, Dimensions, Alert } from "react-native";
 import { useEffect, useMemo, useRef, useState } from "react";
-import { router, useLocalSearchParams, useNavigation } from "expo-router";
+import { router, useLocalSearchParams } from "expo-router";
 import { Image } from "expo-image";
 import LinearGradient from "react-native-linear-gradient";
 import { Ionicons } from "@expo/vector-icons";
 import { ScrollView, TouchableOpacity } from "react-native-gesture-handler";
-// import ListComponent from "../../components/UI/ListComponent.jsx";
+import ListComponent from "../../components/UI/ListComponent.jsx";
 import { Modalize } from "react-native-modalize";
 import approve from "../../assets/approve.png";
 import { ActivityIndicator, Checkbox } from "react-native-paper";
@@ -26,11 +26,11 @@ const DetailsScreen = () => {
   const { tour } = useSelector((state) => state.tour);
   const { user, profile, members } = useSelector((state) => state.user);
 
-  console.log(id)
-
   const [loading, setLoading] = useState(false);
 
-  const [tourData, setTourData] = useState(null);
+  const tourData = tour.find((tourData) => tourData._id === id);
+
+  const { backpacks, checkinbagages, includeds, notincludeds } = tourData;
 
   const [curatedMembers, setCuratedMembers] = useState([]);
 
@@ -104,11 +104,6 @@ const DetailsScreen = () => {
       setCuratedMembers([loggedInUser, ...initialData]);
     }
   }, [members, profile, user, id]);
-
-  useEffect(() => {
-    const selectedTour = tour.find((tourData) => tourData._id === id);
-    if (selectedTour) setTourData(selectedTour);
-  }, [tour, id]);
 
   const handlePayNow = async () => {
     if (!tourData) return;
@@ -238,18 +233,18 @@ const DetailsScreen = () => {
                 What is included ?
               </Text>
             </View>
-            {/* <View className="px-1 mt-3 space-y-2">
-              {tourData?.include.split(",").map((i, idx) => {
+            <View className="px-1 mt-3 space-y-2">
+              {includeds?.map((i, idx) => {
                 return (
                   <ListComponent
                     icon="checkmark-circle"
-                    text={i.trim()}
+                    text={i.item}
                     key={idx}
                     color={"#0e9c02"}
                   />
                 );
               })}
-            </View> */}
+            </View>
           </View>
           <View className="px-4 mt-6">
             <View className="flex flex-row justify-left items-center space-x-3">
@@ -259,16 +254,16 @@ const DetailsScreen = () => {
               </Text>
             </View>
             <View className="px-1 mt-3 space-y-2">
-              {/* {tourData?.include.split(",").map((i, idx) => {
+              {notincludeds?.map((i, idx) => {
                 return (
                   <ListComponent
                     icon="close-circle-outline"
-                    text={i.trim()}
+                    text={i.item}
                     key={idx}
                     color={"#f00"}
                   />
                 );
-              })} */}
+              })}
             </View>
           </View>
           <View className="px-4 mt-6">
@@ -277,16 +272,16 @@ const DetailsScreen = () => {
               <Text className={`text-base  font-semibold`}>Bag Pack</Text>
             </View>
             <View className="px-1 mt-3 space-y-2">
-              {/* {tourData?.back_pack?.split(",").map((i, idx) => {
+              {backpacks?.map((i, idx) => {
                 return (
                   <ListComponent
                     icon="checkmark-circle-outline"
-                    text={i.trim()}
+                    text={i.item}
                     color={"gray"}
                     key={idx}
                   />
                 );
-              })} */}
+              })}
             </View>
           </View>
           <View className="px-4 mt-6">
@@ -301,16 +296,16 @@ const DetailsScreen = () => {
               </Text>
             </View>
             <View className="px-1 mt-3 space-y-2">
-              {/* {tourData?.check_in_baggage?.split(",").map((i, idx) => {
+              {checkinbagages?.map((i, idx) => {
                 return (
                   <ListComponent
                     icon="checkmark-circle-outline"
-                    text={i.trim()}
+                    text={i.item}
                     color={"gray"}
                     key={idx}
                   />
                 );
-              })} */}
+              })}
             </View>
           </View>
         </View>

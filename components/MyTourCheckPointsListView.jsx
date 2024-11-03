@@ -4,7 +4,7 @@ import CheckPointElement from "./UI/CheckPointElement";
 import { ScrollView } from "react-native-gesture-handler";
 import { Ionicons } from "@expo/vector-icons";
 
-const MyTourCheckPointsListView = ({ checkPoints }) => {
+const MyTourCheckPointsListView = ({ checkPoints, handleGetCheckPoints }) => {
   return (
     <ScrollView
       showsVerticalScrollIndicator={false}
@@ -20,13 +20,25 @@ const MyTourCheckPointsListView = ({ checkPoints }) => {
               key={index}
               points={points}
               index={index}
-              tourId
+              handleGetCheckPoints={handleGetCheckPoints}
             />
           ))
         ) : (
-          <View style={{ height: '100%', width: '100%', justifyContent: 'center', alignItems: 'center', marginTop: 40 }}>
-            <Ionicons name="navigate-circle-outline" size={48} color={"green"} />
-            <Text style={{ fontSize: 18, fontWeight: 'bold', marginTop: 4 }}>
+          <View
+            style={{
+              height: "100%",
+              width: "100%",
+              justifyContent: "center",
+              alignItems: "center",
+              marginTop: 40,
+            }}
+          >
+            <Ionicons
+              name="navigate-circle-outline"
+              size={48}
+              color={"green"}
+            />
+            <Text style={{ fontSize: 18, fontWeight: "bold", marginTop: 4 }}>
               No checkpoints added yet
             </Text>
           </View>

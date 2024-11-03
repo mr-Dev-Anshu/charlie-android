@@ -10,13 +10,20 @@ import {
 } from "react-native";
 import React, { useState, useEffect } from "react";
 import { Ionicons } from "@expo/vector-icons";
-import { Camera, CameraView, useCameraPermissions } from "expo-camera";
+import { CameraView, useCameraPermissions } from "expo-camera";
+import { useSelector } from "react-redux";
+import { ActivityIndicator } from "react-native-paper";
 
 const { height, width } = Dimensions.get("window");
 
-const CheckPointElement = ({ points, index }) => {
+const CheckPointElement = ({ points, index, handleGetCheckPoints }) => {
   const [permission, requestPermission] = useCameraPermissions();
   const [showCameraModal, setShowCameraModal] = useState(false);
+  const [scanned, setScanned] = useState(false);
+
+  const [checkInLoading, setCheckInLoading] = useState(false);
+
+  const { user } = useSelector((state) => state.user);
 
   useEffect(() => {
     const checkAndRequestPermission = async () => {
@@ -27,6 +34,42 @@ const CheckPointElement = ({ points, index }) => {
     checkAndRequestPermission();
   }, [permission]);
 
+  const handleQRCodePress = () => {
+    if (!points.activated) {
+      Alert.alert("Inactive", "Checkpoint is not active.");
+      return;
+    }
+    setScanned(false);
+    setShowCameraModal(true);
+  };
+
+  const handleCheckIn = async (body) => {
+    setCheckInLoading(true);
+    try {
+      const response = await fetch(
+        `https://trakies-backend.onrender.com/api/checked/add`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(body),
+        }
+      );
+
+      if (response.status !== 200) {
+        throw new Error("Failed to check in");
+      }
+      Alert.alert("Successful", "You are checked in.");
+      handleGetCheckPoints();
+    } catch (error) {
+      console.log("Error:", error);
+      Alert.alert("Failed to check-in", "Please try again.");
+    } finally {
+      setCheckInLoading(false);
+    }
+  };
+
   if (!permission) {
     return <View />;
   }
@@ -35,19 +78,32 @@ const CheckPointElement = ({ points, index }) => {
     return (
       <View style={styles.container}>
         <Text style={styles.message}>
-          We need your permission to show the camera
+          We need your permission to show the camera.
         </Text>
-        <TouchableOpacity style={styles.button} onPress={requestPermission}>
+        <TouchableOpacity
+          style={styles.button}
+          onPress={async () => {
+            const { granted } = await requestPermission();
+            if (!granted) {
+              Alert.alert(
+                "Permission Needed",
+                "Please enable camera permissions from settings.",
+                [
+                  {
+                    text: "Go to Settings",
+                    onPress: () => Linking.openSettings(),
+                  },
+                  { text: "Cancel", style: "cancel" },
+                ]
+              );
+            }
+          }}
+        >
           <Text style={styles.text}>Grant Permission</Text>
         </TouchableOpacity>
       </View>
     );
   }
-
-  const handleQRCodePress = () => {
-    setScanned(false);
-    setShowCameraModal(true);
-  };
 
   return (
     <>
@@ -60,9 +116,30 @@ const CheckPointElement = ({ points, index }) => {
             <Text style={styles.pointName}>{points?.name}</Text>
           </View>
           <View style={styles.qrIconContainer}>
-            <TouchableOpacity activeOpacity={0.6} onPress={handleQRCodePress}>
-              <Ionicons name="qr-code-outline" size={32} color={"green"} />
-            </TouchableOpacity>
+            {checkInLoading ? (
+              <ActivityIndicator color="green" size={"small"} />
+            ) : (
+              <>
+                {points.checked ? (
+                  <Ionicons
+                    name="checkmark-circle-outline"
+                    size={32}
+                    color={"green"}
+                  />
+                ) : (
+                  <TouchableOpacity
+                    activeOpacity={0.6}
+                    onPress={handleQRCodePress}
+                  >
+                    <Ionicons
+                      name="qr-code-outline"
+                      size={32}
+                      color={"green"}
+                    />
+                  </TouchableOpacity>
+                )}
+              </>
+            )}
           </View>
         </View>
         <View style={styles.descriptionContainer}>
@@ -77,11 +154,22 @@ const CheckPointElement = ({ points, index }) => {
       >
         <View style={styles.modalOverlay}>
           <CameraView
-            facing="back"
             style={styles.camera}
             onBarcodeScanned={({ data }) => {
-              if (data) {
-                Alert.alert("Scanned", `Data: ${data}`);
+              if (data && !scanned) {
+                setScanned(true);
+                setShowCameraModal(false);
+                const body = {
+                  email: user?.email,
+                  tourId: points.tourId,
+                  checkPointId: points._id,
+                };
+                console.log(body, data);
+                if (points.tourId === data) {
+                  handleCheckIn(body);
+                } else {
+                  Alert.alert("Invalid tour id", "Please scan right Qr.");
+                }
               }
             }}
           />
@@ -106,6 +194,10 @@ const styles = StyleSheet.create({
     marginTop: 8,
     borderRadius: 8,
     backgroundColor: "white",
+    shadowColor: "black",
+    shadowOpacity: 0.3,
+    shadowOffset: { width: 0, height: 2 },
+    shadowRadius: 8,
     elevation: 8,
   },
   header: {
@@ -163,6 +255,12 @@ const styles = StyleSheet.create({
   message: {
     textAlign: "center",
     paddingBottom: 10,
+  },
+  button: {
+    marginTop: 10,
+    padding: 10,
+    borderRadius: 5,
+    backgroundColor: "green",
   },
 });
 

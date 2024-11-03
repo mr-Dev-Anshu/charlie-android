@@ -98,7 +98,6 @@ const expense = () => {
       }
 
       const data = await response.json();
-      console.log(data);
       setExpenseCategory("");
       setAmount("");
       setNote("");
@@ -175,7 +174,6 @@ const expense = () => {
   const handleShowExpenseDetails = (id) => {
     try {
       const dataToShow = expenseData.expanses.find((i) => i._id === id);
-      console.log(id, dataToShow);
       setShowExpenseDetails(dataToShow);
       showExpenseDetailRef.current?.open();
     } catch (error) {

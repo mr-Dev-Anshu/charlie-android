@@ -117,8 +117,6 @@ const Mynotes = () => {
       }
       const result = await response.json();
 
-      console.log(result);
-
       setNotes(result);
     } catch (error) {
       Alert.alert("Oops!", "Something went wrong\n\n Please try again...");

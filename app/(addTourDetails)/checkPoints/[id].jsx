@@ -18,14 +18,20 @@ import * as MediaLibrary from "expo-media-library";
 
 const Checkpoints = () => {
   const { id } = useLocalSearchParams();
+
   const [qrUrl, setQrUrl] = useState();
   const [allCheckPoints, setAllCheckPoints] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [activationLoading, setActivationLoading] = useState(false);
+
+  const [title, setTitle] = useState("");
+  const [description, setDescription] = useState("");
+  const [location, setLocation] = useState("");
+  const [locationType, setLocationType] = useState("");
 
   const editCheckPointRef = useRef(null);
   const addCheckPoint = useRef(null);
   const viewMapRef = useRef(null);
-  const viewCheckInRef = useRef(null);
   const downloadQRref = useRef(null);
 
   const handleQr = async () => {
@@ -102,17 +108,40 @@ const Checkpoints = () => {
     }
   };
 
-  const [title, setTitle] = useState("");
-  const [description, setDescription] = useState("");
-  const [location, setLocation] = useState("");
-  const [locationType, setLocationType] = useState("");
-
   const [region, setRegion] = useState({
     latitude: 12.9716,
     longitude: 77.5946,
     latitudeDelta: 0.0922,
     longitudeDelta: 0.0421,
   });
+
+  const handleCheckpointActive = async (id) => {
+    setActivationLoading(true);
+
+    try {
+      const response = await fetch(
+        `https://trakies-backend.onrender.com/api/update-point?id=${id}`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ activated: true }),
+        }
+      );
+
+      if (response.status !== 200) {
+        throw new Error("Failed to update checkpoint");
+      }
+
+      Alert.alert("Acivated", "Checkpoint Activated.");
+    } catch (error) {
+      console.log("Error:", error);
+      Alert.alert("Failed to activate", "Please try again.");
+    } finally {
+      setActivationLoading(false);
+    }
+  };
 
   useEffect(() => {
     handleGetAllCheckPoints();
@@ -131,7 +160,11 @@ const Checkpoints = () => {
       <View className="px-4 relative h-full w-full flex justify-start items-center">
         {allCheckPoints.length === 0 ? (
           <View className="h-full w-full flex justify-center items-center -mt-10">
-            <Ionicons name="navigate-circle-outline" size={48} color={"green"} />
+            <Ionicons
+              name="navigate-circle-outline"
+              size={48}
+              color={"green"}
+            />
             <Text className="text-xl font-semibold mt-4">
               No checkpoints added yet
             </Text>
@@ -145,8 +178,8 @@ const Checkpoints = () => {
                 idx={index}
                 editRef={editCheckPointRef}
                 mapRef={viewMapRef}
-                checkInsRef={viewCheckInRef}
-                handleQr={handleQr}
+                handleCheckpointActive={handleCheckpointActive}
+                activationLoading={activationLoading}
               />
             ))}
           </>
@@ -297,9 +330,6 @@ const Checkpoints = () => {
           </View>
         </View>
       </Modalize>
-      <Modalize ref={viewCheckInRef} adjustToContentHeight snapPoint={500}>
-        <View className="px-3 py-4 flex justify-between items-center">\</View>
-      </Modalize>
       <Modalize
         ref={viewMapRef}
         adjustToContentHeight
@@ -360,13 +390,13 @@ const Checkpoints = () => {
 const CheckPointCard = ({
   editRef,
   mapRef,
-  checkInsRef,
-  handleQr,
   idx,
   point,
+  handleCheckpointActive,
+  activationLoading,
 }) => {
   return (
-    <View className="p-1 border border-gray-500/50 rounded-lg py-2 px-2 mt-3">
+    <View className="border border-gray-500/50 rounded-lg py-2 px-2 mt-3 w-full">
       <View className="flex flex-row justify-between ">
         <View>
           <Text className="text-xs">{`Check Point ${idx + 1}`}</Text>
@@ -385,8 +415,18 @@ const CheckPointCard = ({
           </Text>
         </View>
         <View className="w-[20%] flex justify-center items-center">
-          <Ionicons name="qr-code-outline" color={"green"} size={36} />
-          <Text className="text-xs text-green-700 mt-1">Activate</Text>
+          {activationLoading ? (
+            <ActivityIndicator color="green" size={"small"} />
+          ) : (
+            <TouchableOpacity
+              onPress={() => handleCheckpointActive(point._id)}
+              activeOpacity={0.6}
+              className=" flex justify-center items-center"
+            >
+              <Ionicons name="qr-code-outline" color={"green"} size={24} />
+              <Text className="text-xs text-green-700 mt-1">Activate</Text>
+            </TouchableOpacity>
+          )}
         </View>
       </View>
       <View className="flex flex-row justify-between items-center mt-2 px-4">
@@ -402,7 +442,11 @@ const CheckPointCard = ({
             <Text className="text-xs text-green-700">Edit</Text>
           </View>
         </TouchableOpacity>
-        <TouchableOpacity onPress={() => checkInsRef.current?.open()}>
+        <TouchableOpacity
+          onPress={() =>
+            router.push(`(addTourDetails)/viewCheckIns/${point._id}`)
+          }
+        >
           <View className="flex flex-row space-x-1">
             <Image source={user} className="h-4 w-4" />
             <Text className="text-xs text-green-700">View Check-Ins</Text>
@@ -412,5 +456,7 @@ const CheckPointCard = ({
     </View>
   );
 };
+
+
 
 export default Checkpoints;

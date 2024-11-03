@@ -68,7 +68,6 @@ const Luggage = () => {
   };
 
   const handleDelete = async (itemId) => {
-    console.log(itemId);
     try {
       const url = isBackpack
         ? `https://trakies-backend.onrender.com/api/backpack/delete?id=${itemId}`
