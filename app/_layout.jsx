@@ -122,6 +122,10 @@ export default function RootLayout() {
             name="(addTourDetails)/showAccomodationDetails/[id]"
             options={getOpt("Accomodation Details")}
           />
+          <Stack.Screen
+            name="(addTourDetails)/RoomAllocation/[id]"
+            options={getOpt("Room Allocation")}
+          />
         </Stack>
       </GestureHandlerRootView>
     </Provider>
