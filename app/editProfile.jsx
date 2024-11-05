@@ -1,10 +1,13 @@
-import { View, Text, ActivityIndicator, Alert } from "react-native";
-import React, { useState } from "react";
 import {
+  View,
+  Text,
+  ActivityIndicator,
+  Alert,
   ScrollView,
   TextInput,
   TouchableOpacity,
-} from "react-native-gesture-handler";
+} from "react-native";
+import React, { useState } from "react";
 import { Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import { useDispatch, useSelector } from "react-redux";
@@ -183,9 +186,7 @@ const EditProfile = () => {
           {loading ? (
             <ActivityIndicator size={24} color="#00ff00" />
           ) : (
-            <Text className="text-center text-lg">
-              Create Profile
-            </Text>
+            <Text className="text-center text-lg">Create Profile</Text>
           )}
         </TouchableOpacity>
         <TouchableOpacity

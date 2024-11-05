@@ -1,6 +1,5 @@
-import { View, Text } from "react-native";
+import { View, Text, TouchableOpacity } from "react-native";
 import React from "react";
-import { TouchableOpacity } from "react-native-gesture-handler";
 import { useSelector } from "react-redux";
 import { Image } from "expo-image";
 import { router } from "expo-router";
@@ -14,13 +13,6 @@ const Header = () => {
     user?.picture ||
     "https://www.pngitem.com/pimgs/m/146-1468479_my-profile-icon-blank-profile-picture-circle-hd.png";
 
-  const handleProfilePress = () => {
-    if (user === null) {
-      router.push("/login");
-      return;
-    }
-    router.push("/profile");
-  };
 
   return (
     <View className="absolute mt-[45px] w-full h-[60px] bg-white">
@@ -37,7 +29,10 @@ const Header = () => {
             Trekies
           </Text>
         </TouchableOpacity>
-        <TouchableOpacity onPress={handleProfilePress} activeOpacity={0.7}>
+        <TouchableOpacity
+          onPress={() => router.push("/profile")}
+          activeOpacity={0.7}
+        >
           <View className="h-12 w-12 rounded-full border-2 border-green-700 p-0.5 ">
             <Image
               source={{ uri: picture }}

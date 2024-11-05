@@ -1,6 +1,5 @@
-import { View, Text, Alert } from "react-native";
+import { View, Text, ScrollView, TouchableOpacity } from "react-native";
 import React, { useState } from "react";
-import { ScrollView, TouchableOpacity } from "react-native-gesture-handler";
 import { Ionicons } from "@expo/vector-icons";
 import { deviceWidth } from "../utils/dimensions";
 import * as ImagePicker from "expo-image-picker";

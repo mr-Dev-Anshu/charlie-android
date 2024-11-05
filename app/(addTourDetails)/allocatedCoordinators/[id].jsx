@@ -1,6 +1,5 @@
-import { View, Text, Alert } from "react-native";
 import React, { useEffect, useRef, useState } from "react";
-import { TouchableOpacity } from "react-native-gesture-handler";
+import { View, Text, Alert,TouchableOpacity } from "react-native";
 import { Modalize } from "react-native-modalize";
 import { TextInput } from "react-native";
 import { router, useLocalSearchParams } from "expo-router";

@@ -2,13 +2,23 @@ import v1 from "@/assets/welcomeTile.svg";
 import { Image } from "expo-image";
 import { SafeAreaView } from "react-native-safe-area-context";
 import CarouselComponent from "@/components/CarouselComponent";
-import { View, Text, Dimensions, StyleSheet } from "react-native";
+import {
+  View,
+  Text,
+  Dimensions,
+  StyleSheet,
+  Modal,
+  TouchableOpacity,
+} from "react-native";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { setTour } from "@/redux/slices/tourSlice";
 import { StatusBar } from "expo-status-bar";
 import * as Network from "expo-network";
 import { useRouter } from "expo-router";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { setUser } from "../../redux/slices/userSlice";
+import { MaterialIcons } from "@expo/vector-icons";
 
 const { width, height } = Dimensions.get("window");
 
@@ -18,6 +28,7 @@ export default function HomeScreen() {
   const { user } = useSelector((state) => state.user);
   const router = useRouter();
   const [isMounted, setIsMounted] = useState(false);
+  const [isModalVisible, setIsModalVisible] = useState(false);
 
   const getAllTours = async () => {
     try {
@@ -43,9 +54,6 @@ export default function HomeScreen() {
     setIsMounted(true);
 
     checkNetworkConnection();
-    if (isMounted && !user) {
-      router.push("/login");
-    }
 
     if (isConnected && user) {
       getAllTours();
@@ -65,6 +73,30 @@ export default function HomeScreen() {
       />
       <View style={styles.container}>
         <Image source={v1} style={styles.image} />
+
+        <Modal
+          animationType="slide"
+          transparent={true}
+          visible={isModalVisible}
+          onRequestClose={() => setIsModalVisible(false)}
+        >
+          <View style={styles.modalOverlay}>
+            <View style={styles.modalContent}>
+              <MaterialIcons name="wifi-off" size={60} color="red" />
+              <Text style={styles.modalText}>You are offline</Text>
+              <Text style={styles.modalSubText}>
+                Please check your network connection
+              </Text>
+              <TouchableOpacity
+                style={styles.retryButton}
+                onPress={checkNetworkConnection}
+              >
+                <Text style={styles.retryButtonText}>Retry</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </Modal>
+
         {isConnected === false ? (
           <View style={styles.centeredContainer}>
             <Text style={styles.offlineText}>Mobile data off</Text>
@@ -108,5 +140,47 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
+  },
+  modalOverlay: {
+    flex: 1,
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  modalContent: {
+    width: "80%",
+    backgroundColor: "white",
+    padding: 20,
+    borderRadius: 10,
+    alignItems: "center",
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5,
+  },
+  modalText: {
+    fontSize: 24,
+    fontWeight: "bold",
+    color: "red",
+    marginTop: 10,
+  },
+  modalSubText: {
+    fontSize: 16,
+    color: "gray",
+    textAlign: "center",
+    marginTop: 10,
+  },
+  retryButton: {
+    backgroundColor: "blue",
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    borderRadius: 5,
+    marginTop: 20,
+  },
+  retryButtonText: {
+    color: "white",
+    fontSize: 16,
+    fontWeight: "bold",
   },
 });

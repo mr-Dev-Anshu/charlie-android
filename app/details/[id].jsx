@@ -1,10 +1,9 @@
-import { View, Text, Dimensions, Alert } from "react-native";
+import { View, Text, Dimensions, Alert, ScrollView, TouchableOpacity } from "react-native";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { router, useLocalSearchParams } from "expo-router";
 import { Image } from "expo-image";
 import LinearGradient from "react-native-linear-gradient";
 import { Ionicons } from "@expo/vector-icons";
-import { ScrollView, TouchableOpacity } from "react-native-gesture-handler";
 import ListComponent from "../../components/UI/ListComponent.jsx";
 import { Modalize } from "react-native-modalize";
 import approve from "../../assets/approve.png";

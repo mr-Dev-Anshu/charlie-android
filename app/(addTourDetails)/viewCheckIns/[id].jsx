@@ -1,8 +1,6 @@
-import { View, Text, StyleSheet } from "react-native";
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity  } from "react-native";
 import React, { useEffect, useRef, useState } from "react";
 import { useLocalSearchParams } from "expo-router";
-import { ActivityIndicator } from "react-native-paper";
-import { ScrollView, TouchableOpacity } from "react-native-gesture-handler";
 import { useSelector } from "react-redux";
 import LinearGradient from "react-native-linear-gradient";
 import { Modalize } from "react-native-modalize";

@@ -1,8 +1,7 @@
-import { View, Text, useColorScheme } from "react-native";
+import { View, Text, TouchableOpacity } from "react-native";
 import { FontAwesome6 } from "@expo/vector-icons";
-import React, { useEffect } from "react";
+import React from "react";
 import { shorten } from "./PostComponent";
-import { TouchableOpacity } from "react-native-gesture-handler";
 import { apiRequest } from "../../utils/helpers";
 import { useSelector } from "react-redux";
 

@@ -1,11 +1,10 @@
-import { View, Text, Pressable, Alert } from "react-native";
+import { View, Text, Pressable, Alert,TouchableOpacity } from "react-native";
 import React, { useEffect, useState } from "react";
 import Animated, {
   useSharedValue,
   withSpring,
   useAnimatedStyle,
 } from "react-native-reanimated";
-import { TouchableOpacity } from "react-native-gesture-handler";
 import { useLocalSearchParams } from "expo-router";
 
 const GuestsEnrolled = () => {
@@ -16,10 +15,6 @@ const GuestsEnrolled = () => {
 
   const [interestedMembers, setInterestedMembers] = useState(null);
   const [loading, setLoading] = useState(false);
-
-  console.log("interested", interestedMembers);
-
-  console.log("interestedMembers", interestedMembers);
 
   const handleTabPress = (tab) => {
     setActiveTab(tab);

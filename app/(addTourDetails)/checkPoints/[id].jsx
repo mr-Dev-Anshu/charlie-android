@@ -1,11 +1,12 @@
-import { View, Text } from "react-native";
-import React, { useEffect, useRef, useState } from "react";
-import { Ionicons } from "@expo/vector-icons";
 import {
+  View,
+  Text,
   ScrollView,
   TextInput,
   TouchableOpacity,
-} from "react-native-gesture-handler";
+} from "react-native";
+import React, { useEffect, useRef, useState } from "react";
+import { Ionicons } from "@expo/vector-icons";
 import { Image, ImageBackground } from "expo-image";
 import marker from "../../../assets/marker-pin.svg";
 import edit from "../../../assets/edit.svg";
@@ -30,13 +31,7 @@ const Checkpoints = () => {
   const [loading, setLoading] = useState(false);
   const [activationLoading, setActivationLoading] = useState(false);
 
-  const [title, setTitle] = useState("");
-  const [description, setDescription] = useState("");
-  const [location, setLocation] = useState("");
-  const [locationType, setLocationType] = useState("");
-
   const editCheckPointRef = useRef(null);
-  const addCheckPoint = useRef(null);
   const viewMapRef = useRef(null);
   const downloadQRref = useRef(null);
 
@@ -247,80 +242,6 @@ const Checkpoints = () => {
                 placeholder="Enter description"
                 className="text-black text-base mt-1"
               />
-            </View>
-          </View>
-          <View className="w-full flex justify-center items-center mt-4">
-            <TouchableOpacity
-              activeOpacity={0.8}
-              onPress={() => addNotesRef.current?.open()}
-              style={{
-                width: 350,
-                backgroundColor: "green",
-                paddingVertical: 12,
-                borderRadius: 8,
-              }}
-            >
-              <Text style={{ textAlign: "center", color: "#fff" }}>
-                Add Notes
-              </Text>
-            </TouchableOpacity>
-          </View>
-        </View>
-      </Modalize>
-      <Modalize ref={addCheckPoint} adjustToContentHeight snapPoint={500}>
-        <View className="px-3 py-4 flex justify-between items-center">
-          <View className="w-full flex justify-start items-center">
-            <Text className="mt-3 text-xl font-semibold">
-              Create Check Point
-            </Text>
-            <View className="border mt-3 border-gray-500/50 p-1 px-2 rounded-lg w-full">
-              <Text className="text-xs text-gray-500/70">Title</Text>
-              <TextInput
-                placeholder="Enter Title"
-                className="text-black text-base mt-1"
-                value={title}
-                onChangeText={(text) => setTitle(text)}
-              />
-            </View>
-            <View className="border mt-3 border-gray-500/50 p-1 px-2 rounded-lg w-full">
-              <Text className="text-xs text-gray-500/70">Description</Text>
-              <TextInput
-                multiline={true}
-                numberOfLines={5}
-                textAlignVertical="top"
-                onChangeText={(text) => setDescription(text)}
-                value={description}
-                placeholder="Enter description"
-                className="text-black text-base mt-1"
-              />
-            </View>
-            <View className=" justify-center w-full mt-3">
-              <View className="border border-gray-500/50 rounded-lg w-full">
-                <Picker
-                  selectedValue={locationType}
-                  onValueChange={(itemValue) => setLocationType(itemValue)}
-                  className="px-3"
-                >
-                  <Picker.Item label="Geo Tagging" value="geoTagging" />
-                  <Picker.Item label="QR Code" value="qrCode" />
-                </Picker>
-              </View>
-            </View>
-            <View className="border mt-3 border-gray-500/50 p-1 px-2 rounded-lg w-full relative">
-              <Text className="text-xs text-gray-500/70">Location</Text>
-              <TextInput
-                editable={false}
-                placeholder="Pin a location"
-                className="text-black text-base mt-1"
-                value={location}
-              />
-              <TouchableOpacity
-                activeOpacity={0.6}
-                onPress={() => viewMapRef.current.open()}
-                style={{ position: "absolute", top: -36, right: 10 }}
-              >
-                <Image source={marker} className="h-8 w-8" />
-              </TouchableOpacity>
             </View>
           </View>
           <View className="w-full flex justify-center items-center mt-4">

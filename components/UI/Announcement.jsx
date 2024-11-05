@@ -1,6 +1,5 @@
-import { View, Text, useColorScheme } from "react-native";
+import { View, Text, TouchableOpacity } from "react-native";
 import React from "react";
-import { TouchableOpacity } from "react-native-gesture-handler";
 import { shorten } from "./PostComponent";
 import { FontAwesome6 } from "@expo/vector-icons";
 

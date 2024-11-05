@@ -1,7 +1,12 @@
-import { View, Text, Alert, ActivityIndicator } from "react-native";
+import {
+  View,
+  Text,
+  Alert,
+  ActivityIndicator,
+  TouchableOpacity,
+} from "react-native";
 import React, { useState } from "react";
 import { Image } from "expo-image";
-import { TouchableOpacity } from "react-native-gesture-handler";
 import { Checkbox } from "react-native-paper";
 import * as ImagePicker from "expo-image-picker";
 import qr from "../assets/qr.png";
@@ -118,7 +123,8 @@ const payment = () => {
             <TouchableOpacity
               activeOpacity={0.6}
               onPress={pickImage}
-              containerStyle={{ flexGrow: 1, width: "100%" }}
+              containerStyle={{ flexGrow: 1 }}
+              style={{ width: "100%" }}
             >
               <View className="border h-32 w-full rounded-xl mt-1 border-green-600 flex justify-center items-center">
                 <Text className="text-green-800">

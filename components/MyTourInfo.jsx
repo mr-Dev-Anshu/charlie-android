@@ -1,12 +1,10 @@
 import React, { useState } from "react";
-import { Text, View } from "react-native";
-import { ScrollView } from "react-native-gesture-handler";
+import { Text, View , TouchableOpacity, ScrollView} from "react-native";
 import LinearGradient from "react-native-linear-gradient";
 import ListComponent from "./UI/ListComponent";
 import { FontAwesome6, Ionicons } from "@expo/vector-icons";
 import { accomodationDetails, transportDetails } from "../constants/tours.js";
 import AccomodationDetailsElement from "./UI/AccomodationDetailsElement.jsx";
-import { TouchableOpacity } from "react-native-gesture-handler";
 import { router } from "expo-router";
 import { formatDate } from "../utils/helpers.js";
 

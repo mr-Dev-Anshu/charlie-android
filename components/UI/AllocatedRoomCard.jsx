@@ -1,8 +1,11 @@
 import { View, Text } from "react-native";
 import React from "react";
 import { Ionicons } from "@expo/vector-icons";
+import { TouchableOpacity } from "react-native";
+import edit from "../../assets/edit.svg";
+import { Image } from "expo-image";
 
-const AllocatedRoomCard = () => {
+const AllocatedRoomCard = ({ allocation }) => {
   return (
     <View
       style={{
@@ -10,6 +13,7 @@ const AllocatedRoomCard = () => {
         borderColor: "gray",
         padding: 8,
         borderRadius: 8,
+        marginTop: 16,
       }}
     >
       <View
@@ -20,7 +24,14 @@ const AllocatedRoomCard = () => {
         }}
       >
         <Text>Room 1</Text>
-        <Ionicons name="trash-outline" color={"red"} size={16} />
+        <View className="flex flex-row justify-center items-center space-x-5 pr-2">
+          <TouchableOpacity activeOpacity={0.5}>
+            <Image source={edit} className="w-4 h-4" />
+          </TouchableOpacity>
+          <TouchableOpacity activeOpacity={0.5}>
+            <Ionicons name="trash-outline" color={"red"} size={16} />
+          </TouchableOpacity>
+        </View>
       </View>
       <View
         style={{
@@ -43,7 +54,7 @@ const AllocatedRoomCard = () => {
         >
           <Text style={{ fontSize: 12, color: "gray" }}>Room no</Text>
           <Text style={{ marginTop: 4, fontSize: 14, color: "black" }}>
-            101
+            {allocation?.roomNo}
           </Text>
         </View>
         <View
@@ -60,7 +71,7 @@ const AllocatedRoomCard = () => {
         >
           <Text style={{ fontSize: 12, color: "gray" }}>Occupancy</Text>
           <Text style={{ marginTop: 4, fontSize: 14, color: "black" }}>
-            Double
+            {allocation?.occupancy}
           </Text>
         </View>
       </View>
@@ -85,7 +96,9 @@ const AllocatedRoomCard = () => {
         >
           <Text style={{ fontSize: 12, color: "gray" }}>Guest</Text>
           <Text style={{ marginTop: 4, fontSize: 14, color: "black" }}>
-            Executive
+            {allocation?.guestNames
+              .map((guest) => guest.split(" ")[0])
+              .join(",  ")}
           </Text>
         </View>
         <View
@@ -102,7 +115,7 @@ const AllocatedRoomCard = () => {
         >
           <Text style={{ fontSize: 12, color: "gray" }}>Room Type</Text>
           <Text style={{ marginTop: 4, fontSize: 14, color: "black" }}>
-            Non-AC
+            {allocation?.roomType}
           </Text>
         </View>
       </View>

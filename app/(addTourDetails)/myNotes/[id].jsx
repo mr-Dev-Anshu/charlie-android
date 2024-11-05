@@ -1,13 +1,10 @@
-import { View, Text, Alert } from "react-native";
+import { View, Text, Alert, ScrollView,
+  TextInput,
+  TouchableOpacity, } from "react-native";
 import React, { useEffect, useRef, useState } from "react";
 import { useLocalSearchParams } from "expo-router";
 import { Image } from "expo-image";
 import trash from "../../../assets/trash-04.svg";
-import {
-  ScrollView,
-  TextInput,
-  TouchableOpacity,
-} from "react-native-gesture-handler";
 import { ActivityIndicator, Checkbox } from "react-native-paper";
 import { Modalize } from "react-native-modalize";
 import { Ionicons } from "@expo/vector-icons";

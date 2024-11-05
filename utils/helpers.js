@@ -42,3 +42,34 @@ export const apiRequest = async (
     throw error;
   }
 };
+
+export const transformAllocationData = (data) => {
+  const roomMap = {};
+
+  data.forEach((entry) => {
+    const roomNo = entry.roomNumber;
+
+    // Initialize room data if it doesn't exist
+    if (!roomMap[roomNo]) {
+      roomMap[roomNo] = {
+        roomNo,
+        occupancy: entry.occupancy,
+        guestNames: [],
+        roomType: entry.roomType,
+        accommodationIds: [],
+        allocationIds: [],
+        bookingIds: [],
+        tourId: entry.tourId,
+      };
+    }
+
+    // Add guest name to the room's guestNames array
+    roomMap[roomNo].guestNames.push(entry.bookingData.name);
+    roomMap[roomNo].allocationIds.push(entry._id);
+    roomMap[roomNo].bookingIds.push(entry.bookingId);
+    roomMap[roomNo].accommodationIds.push(entry.accommodationId);
+  });
+
+  // Convert the map values to an array
+  return Object.values(roomMap);
+};

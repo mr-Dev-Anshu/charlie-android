@@ -1,15 +1,78 @@
-import { View, Text } from "react-native";
-import React from "react";
-import { TouchableOpacity } from "react-native-gesture-handler";
-import { router } from "expo-router";
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  Dimensions,
+  Alert,
+  ActivityIndicator,
+} from "react-native";
+import React, { useEffect, useState } from "react";
+import { router, useLocalSearchParams } from "expo-router";
+
+const { width } = Dimensions.get("window");
 
 const Accomodation = () => {
+  const { id } = useLocalSearchParams();
+
+  const [guestHouses, setGuestHouses] = useState([]);
+  const [loading, setLoading] = useState(false);
+
+  const getAllGuestHouses = async () => {
+    setLoading(true);
+    try {
+      const response = await fetch(
+        `https://trakies-backend.onrender.com/api/accommodation/get?tourId=${id}`
+      );
+
+      if (response.status !== 200) {
+        throw new Error("Failed to fetch guest houses");
+      }
+      const data = await response.json();
+      setGuestHouses(data);
+    } catch (error) {
+      console.log(error);
+      Alert.alert("Error", "Failed to fetch guest houses");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    getAllGuestHouses();
+  }, []);
+
+  if (loading) {
+    return (
+      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+        <ActivityIndicator size="large" color="green" />
+      </View>
+    );
+  }
+
   return (
-    <View className="px-3 relative h-full w-full flex justify-start items-center">
-      <View>
-        {hotels.map((i) => {
-          return <AccomodationButton key={i.id} {...i} />;
-        })}
+    <View
+      style={{
+        paddingHorizontal: 12,
+        flex: 1,
+        alignItems: "center",
+        width: "100%",
+        display: "flex",
+        justifyContent: "start",
+        alignItems: "center",
+      }}
+    >
+      <View
+        style={{
+          width: "100%",
+          marginTop: 10,
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+      >
+        {guestHouses.map((i) => (
+          <AccomodationButton key={i._id} tourId={id} {...i} />
+        ))}
       </View>
       <View
         style={{
@@ -19,6 +82,7 @@ const Accomodation = () => {
           justifyContent: "space-between",
           position: "absolute",
           bottom: 16,
+          paddingHorizontal: 12,
         }}
       >
         <TouchableOpacity
@@ -26,8 +90,7 @@ const Accomodation = () => {
           style={{
             flex: 1,
             backgroundColor: "#ccc",
-            padding: 12,
-            width: 170,
+            paddingVertical: 12,
             borderRadius: 5,
             alignItems: "center",
             marginRight: 5,
@@ -40,13 +103,12 @@ const Accomodation = () => {
         <TouchableOpacity
           activeOpacity={0.7}
           onPress={() =>
-            router.push("(addTourDetails)/addAccomodationForm/123")
+            router.push(`(addTourDetails)/addAccomodationForm/${id}`)
           }
           style={{
             flex: 1,
             backgroundColor: "green",
-            padding: 12,
-            width: 170,
+            paddingVertical: 12,
             borderRadius: 5,
             alignItems: "center",
             marginLeft: 5,
@@ -62,40 +124,49 @@ const Accomodation = () => {
 };
 
 const hotels = [
-  {
-    id: 1,
-    name: "Sai Krupa Hotel",
-    occupancy: 40,
-    filled: 23,
-  },
-  {
-    id: 2,
-    name: "Sai Dwarka Hotel",
-    occupancy: 40,
-    filled: 23,
-  },
-  {
-    id: 3,
-    name: "Sai Nath Hotel",
-    occupancy: 40,
-    filled: 23,
-  },
+  { id: 1, name: "Sai Krupa Hotel", occupancy: 40, filled: 23 },
+  { id: 2, name: "Sai Dwarka Hotel", occupancy: 40, filled: 23 },
+  { id: 3, name: "Sai Nath Hotel", occupancy: 40, filled: 23 },
 ];
 
-const AccomodationButton = ({ name, occupancy, filled, id }) => {
+const AccomodationButton = ({
+  guestHouseName,
+  totalOccupancy,
+  filled,
+  _id,
+  tourId,
+}) => {
   return (
     <TouchableOpacity
       activeOpacity={0.8}
       onPress={() =>
-        router.push(`(addTourDetails)/showAccomodationDetails/${id}`)
+        router.push(
+          `(addTourDetails)/showAccomodationDetails/${_id}?tourId=${tourId}`
+        )
       }
-      className="bg-white shadow-xl shadow-black/50 rounded-lg mt-2"
+      style={{
+        backgroundColor: "white",
+        elevation: 5,
+        borderRadius: 8,
+        marginTop: 10,
+        width: width * 0.9,
+      }}
     >
-      <View className="flex flex-row w-full justify-between items-center px-4 py-3">
-        <Text>{name}</Text>
-        <View className="flex flex-row justify-center items-end">
-          <Text className="text-green-700 text-base font-medium">{filled}</Text>
-          <Text className="text-xs">/{occupancy}</Text>
+      <View
+        style={{
+          flexDirection: "row",
+          justifyContent: "space-between",
+          alignItems: "center",
+          paddingHorizontal: 16,
+          paddingVertical: 12,
+        }}
+      >
+        <Text>{guestHouseName}</Text>
+        <View style={{ flexDirection: "row", alignItems: "flex-end" }}>
+          <Text style={{ color: "green", fontSize: 16, fontWeight: "500" }}>
+            {"23"}
+          </Text>
+          <Text style={{ fontSize: 12 }}>/{totalOccupancy}</Text>
         </View>
       </View>
     </TouchableOpacity>

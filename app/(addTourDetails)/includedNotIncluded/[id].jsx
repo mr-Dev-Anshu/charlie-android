@@ -57,8 +57,6 @@ const TourDetails = () => {
     }
   };
 
-  console.log(includedItems, notIncludedItems);
-
   const handleAddItem = async () => {
     if (!newItem.trim()) return;
     setLoading(true);

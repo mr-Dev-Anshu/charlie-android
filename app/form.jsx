@@ -1,7 +1,6 @@
-import { View, Text, ActivityIndicator } from "react-native";
+import { View, Text, ActivityIndicator,TextInput, TouchableOpacity } from "react-native";
 import React, { useState } from "react";
 import { Image } from "expo-image";
-import { TextInput, TouchableOpacity } from "react-native-gesture-handler";
 import { Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import DropDownPicker from "react-native-dropdown-picker";

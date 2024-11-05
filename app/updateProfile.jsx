@@ -1,10 +1,13 @@
-import { View, Text, ActivityIndicator, Alert } from "react-native";
-import React, { useState } from "react";
 import {
+  View,
+  Text,
+  ActivityIndicator,
   ScrollView,
   TextInput,
   TouchableOpacity,
-} from "react-native-gesture-handler";
+} from "react-native";
+import React, { useState } from "react";
+
 import { Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import { useDispatch, useSelector } from "react-redux";
@@ -76,8 +79,6 @@ const UpdateProfile = () => {
         }
       );
       const profileData = await res.json();
-
-      console.log("updated profile---->", profileData);
 
       if (profileData && !profileData.error) {
         dispatch(setProfile(profileData));
@@ -207,9 +208,7 @@ const UpdateProfile = () => {
           {loading ? (
             <ActivityIndicator size="small" color="#fff" />
           ) : (
-            <Text style={{ color: "#fff", fontSize: 16 }}>
-              Update Profile
-            </Text>
+            <Text style={{ color: "#fff", fontSize: 16 }}>Update Profile</Text>
           )}
         </TouchableOpacity>
         <TouchableOpacity

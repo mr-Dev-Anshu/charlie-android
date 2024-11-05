@@ -1,8 +1,7 @@
-import { View, Text } from "react-native";
+import { View, Text, TouchableOpacity } from "react-native";
 import React from "react";
 import { Image } from "expo-image";
 import trash from "../../assets/trash-04.svg";
-import { TouchableOpacity } from "react-native-gesture-handler";
 
 const MemberCard = ({ data }) => {
   const id = data._id;

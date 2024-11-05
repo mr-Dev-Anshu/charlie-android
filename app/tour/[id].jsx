@@ -1,8 +1,7 @@
-import { View, Text, Pressable, Alert } from "react-native";
+import { View, Text, Alert, ScrollView, TouchableOpacity } from "react-native";
 import React, { useState } from "react";
 import { router, useLocalSearchParams } from "expo-router";
 import LinearGradient from "react-native-linear-gradient";
-import { ScrollView, TouchableOpacity } from "react-native-gesture-handler";
 import { Ionicons } from "@expo/vector-icons";
 import { StatusBar } from "expo-status-bar";
 import { useSelector } from "react-redux";

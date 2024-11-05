@@ -1,13 +1,17 @@
-import { Text, View, ActivityIndicator, Alert } from "react-native";
+import {
+  Text,
+  View,
+  ActivityIndicator,
+  Alert,
+  ScrollView,
+  TextInput,
+  TouchableOpacity,
+} from "react-native";
 import React, { useEffect, useRef, useState } from "react";
 import { Modalize } from "react-native-modalize";
 import { Ionicons } from "@expo/vector-icons";
 import { shorten } from "../../components/UI/PostComponent";
-import {
-  ScrollView,
-  TextInput,
-  TouchableOpacity,
-} from "react-native-gesture-handler";
+
 import DropDownPicker from "react-native-dropdown-picker";
 import { useSelector } from "react-redux";
 import * as ImagePicker from "expo-image-picker";
@@ -46,8 +50,6 @@ const expense = () => {
   const [currentTour, setCurrentTour] = useState(
     toursDataForDropdown[0]?.value
   );
-
-  console.log("Expense--->", currentTour);
 
   const [showDatePicker, setShowDatePicker] = useState(false);
 

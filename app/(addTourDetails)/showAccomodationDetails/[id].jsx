@@ -1,22 +1,113 @@
-import { View, Text, TextInput, Modal, Dimensions } from "react-native";
-import React, { useState } from "react";
+import {
+  View,
+  Text,
+  Modal,
+  Dimensions,
+  TouchableOpacity,
+  ScrollView,
+  Alert,
+  ActivityIndicator,
+} from "react-native";
+import React, { useEffect, useState } from "react";
 import { useLocalSearchParams } from "expo-router";
-import { TouchableOpacity } from "react-native-gesture-handler";
 import AllocatedRoomCard from "../../../components/UI/AllocatedRoomCard";
 import ModalBody from "../../../components/UI/ModalBody";
+import { transformAllocationData } from "../../../utils/helpers";
+import { all } from "axios";
 
 const { width, height } = Dimensions.get("window");
 
 const showAccomodationDetails = () => {
-  const { id } = useLocalSearchParams();
+  const { id, tourId } = useLocalSearchParams();
   const [modalVisible, setModalVisible] = useState(false);
 
-  console.log(id);
+  const [guests, setGuests] = useState([]);
+
+  const [loading, setLoading] = useState(false);
+  const [allocations, setAllocations] = useState([]);
+
+  const getBookedUsers = async () => {
+    try {
+      const response = await fetch(
+        `https://trakies-backend.onrender.com/api/booking/get?id=${tourId}`
+      );
+
+      if (response.status !== 200) {
+        throw new Error("Failed to fetch booked users");
+      }
+
+      const result = await response.json();
+      setGuests(result.data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const getAllocations = async () => {
+    setLoading(true);
+    try {
+      const response = await fetch(
+        `https://trakies-backend.onrender.com/api/allocated/get?tourId=${tourId}`
+      );
+
+      if (response.status !== 200) {
+        throw new Error("Failed to fetch allocations");
+      }
+
+      const result = await response.json();
+      const data = transformAllocationData(result);
+      setAllocations(data);
+    } catch (error) {
+      console.log(error);
+      Alert.alert("Something Went Wrong.", "Failed to fetch allocations.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    getBookedUsers();
+    getAllocations();
+  }, []);
+
+  if (loading) {
+    return (
+      <View
+        style={{
+          flex: 1,
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+      >
+        <ActivityIndicator size="large" color="green" />
+      </View>
+    );
+  }
 
   return (
     <View className="h-full w-full justify-start items-center relative">
-      <AllocatedRoomCard />
-      <View className="w-full absolute bottom-8 h-12 flex justify-center items-center bg-red-600">
+      <ScrollView
+        contentContainerStyle={{ paddingBottom: 120 }}
+        style={{ width: "100%", paddingHorizontal: 12 }}
+        showsVerticalScrollIndicator={false}
+      >
+        {allocations.length === 0 ? (
+          <View className="w-full flex justify-center items-center mt-4">
+            <Text className="text-gray-500">No allocations yet.</Text>
+          </View>
+        ) : (
+          <>
+            {allocations.map((allocation) => (
+              <AllocatedRoomCard
+                key={`${allocation.roomNo}-${allocation.roomType}`}
+                allocation={allocation}
+                getAllocations={getAllocations}
+              />
+            ))}
+          </>
+        )}
+      </ScrollView>
+      <View className="w-full absolute bottom-2 h-12 flex justify-center items-center">
         <TouchableOpacity
           activeOpacity={0.7}
           onPress={() => setModalVisible(true)}
@@ -24,7 +115,7 @@ const showAccomodationDetails = () => {
             width: 270,
             backgroundColor: "green",
             borderRadius: 6,
-            paddingVertical: 10,
+            paddingVertical: 12,
             display: "flex",
             justifyContentL: "center",
             alignItems: "center",
@@ -53,53 +144,16 @@ const showAccomodationDetails = () => {
               padding: 16,
               backgroundColor: "white",
               borderRadius: 10,
-              shadowColor: "black",
-              shadowOpacity: 0.2,
-              shadowRadius: 4,
               elevation: 8,
             }}
           >
-            <ModalBody setModalVisible={setModalVisible} />
-            <View
-              style={{
-                flexDirection: "row",
-                justifyContent: "center",
-                marginTop: 16,
-                zIndex: openDropdown === "" ? 1000 : 1,
-              }}
-            >
-              <TouchableOpacity
-                onPress={() => setModalVisible(false)}
-                style={{
-                  backgroundColor: "gray",
-                  paddingVertical: 10,
-                  borderRadius: 8,
-                  width: 120,
-                  marginHorizontal: 5,
-                  display: "flex",
-                  justifyContent: "center",
-                  alignItems: "center",
-                }}
-              >
-                <Text style={{ color: "white", fontWeight: "bold" }}>
-                  Cancel
-                </Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                style={{
-                  backgroundColor: "green",
-                  paddingVertical: 10,
-                  borderRadius: 8,
-                  width: 120,
-                  marginHorizontal: 5,
-                  display: "flex",
-                  justifyContent: "center",
-                  alignItems: "center",
-                }}
-              >
-                <Text style={{ color: "white", fontWeight: "bold" }}>Save</Text>
-              </TouchableOpacity>
-            </View>
+            <ModalBody
+              guests={guests}
+              setModalVisible={setModalVisible}
+              tourId={tourId}
+              accommodationId={id}
+              getAllocations={getAllocations}
+            />
           </View>
         </View>
       </Modal>

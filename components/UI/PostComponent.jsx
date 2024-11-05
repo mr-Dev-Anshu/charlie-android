@@ -1,6 +1,5 @@
-import { View, Text, useColorScheme } from "react-native";
+import { View, Text, TouchableOpacity } from "react-native";
 import React from "react";
-import { TouchableOpacity } from "react-native";
 import { Image } from "expo-image";
 import { router } from "expo-router";
 import { ScrollView } from "react-native-gesture-handler";

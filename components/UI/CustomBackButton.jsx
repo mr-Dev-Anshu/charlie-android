@@ -1,7 +1,7 @@
 import React from "react";
-import { TouchableOpacity } from "react-native-gesture-handler";
 import { router } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
+import { TouchableOpacity } from "react-native";
 
 const CustomBackButton = ({ icon }) => {
   return (
