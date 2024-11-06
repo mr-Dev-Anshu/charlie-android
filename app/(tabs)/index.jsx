@@ -15,9 +15,6 @@ import { useDispatch, useSelector } from "react-redux";
 import { setTour } from "@/redux/slices/tourSlice";
 import { StatusBar } from "expo-status-bar";
 import * as Network from "expo-network";
-import { useRouter } from "expo-router";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import { setUser } from "../../redux/slices/userSlice";
 import { MaterialIcons } from "@expo/vector-icons";
 
 const { width, height } = Dimensions.get("window");
@@ -26,7 +23,6 @@ export default function HomeScreen() {
   const dispatch = useDispatch();
   const [isConnected, setIsConnected] = useState(null);
   const { user } = useSelector((state) => state.user);
-  const router = useRouter();
   const [isMounted, setIsMounted] = useState(false);
   const [isModalVisible, setIsModalVisible] = useState(false);
 

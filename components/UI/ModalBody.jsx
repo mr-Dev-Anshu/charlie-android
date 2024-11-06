@@ -8,12 +8,18 @@ const ModalBody = ({
   setModalVisible,
   accommodationId,
   tourId,
-  getAllocations,
+  guestsToDisable,
+  getAllocationsByGuestHouseId
 }) => {
+  const allocatedGuestIds = guestsToDisable.map(
+    (allocated) => allocated.bookingId
+  );
+
   const guestsDataArray = guests.map((guest, index) => {
     return {
       label: guest.name,
       value: guest._id,
+      disabled: allocatedGuestIds.includes(guest._id),
     };
   });
 
@@ -75,7 +81,7 @@ const ModalBody = ({
       }
       setModalVisible(false);
       Alert.alert("Success", "Room allocated successfully.");
-      getAllocations();
+      getAllocationsByGuestHouseId();
     } catch (error) {
       console.log("error", error);
       Alert.alert("Error", "Failed to allocate room.Please try again.");
@@ -187,6 +193,18 @@ const ModalBody = ({
               dropDownContainerStyle={{
                 borderWidth: 0,
                 zIndex: 1000,
+                maxHeight: 200,
+              }}
+              listMode="SCROLLVIEW"
+              scrollViewProps={{
+                nestedScrollEnabled: true,
+                showsVerticalScrollIndicator: false,
+              }}
+              disabledItemLabelStyle={{
+                color: "green",
+              }}
+              listItemLabelStyle={{
+                color: "black",
               }}
             />
           </View>

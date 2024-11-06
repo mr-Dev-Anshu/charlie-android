@@ -17,6 +17,8 @@ const Accomodation = () => {
   const [guestHouses, setGuestHouses] = useState([]);
   const [loading, setLoading] = useState(false);
 
+  console.log("guestHouses", guestHouses);
+
   const getAllGuestHouses = async () => {
     setLoading(true);
     try {
@@ -132,9 +134,9 @@ const hotels = [
 const AccomodationButton = ({
   guestHouseName,
   totalOccupancy,
-  filled,
   _id,
   tourId,
+  allocatedCount
 }) => {
   return (
     <TouchableOpacity
@@ -164,7 +166,7 @@ const AccomodationButton = ({
         <Text>{guestHouseName}</Text>
         <View style={{ flexDirection: "row", alignItems: "flex-end" }}>
           <Text style={{ color: "green", fontSize: 16, fontWeight: "500" }}>
-            {"23"}
+            {allocatedCount}
           </Text>
           <Text style={{ fontSize: 12 }}>/{totalOccupancy}</Text>
         </View>

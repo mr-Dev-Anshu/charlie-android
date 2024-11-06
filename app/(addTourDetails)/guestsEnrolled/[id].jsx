@@ -1,4 +1,4 @@
-import { View, Text, Pressable, Alert,TouchableOpacity } from "react-native";
+import { View, Text, Pressable, Alert, TouchableOpacity } from "react-native";
 import React, { useEffect, useState } from "react";
 import Animated, {
   useSharedValue,
@@ -57,6 +57,8 @@ const GuestsEnrolled = () => {
   };
 
   const handleReserveMembers = () => {};
+  const handleEnrollMembers = () => {};
+  const handleRejectMembers = () => {};
 
   useEffect(() => {
     handleGetInterestedMembers();
@@ -96,18 +98,20 @@ const GuestsEnrolled = () => {
                 name={i?.profileData?.name}
                 age={24}
                 gender={"Male"}
+                interest={true}
+                reserve={false}
               />
             ))}
           </View>
         ) : (
           <View className={`p-2`}>
-            <ReqCard name="Rahul" age={24} gender={"Male"} />
-            <ReqCard name="Rahul" age={24} gender={"Male"} />
-            <ReqCard name="Rahul" age={24} gender={"Male"} />
-            <ReqCard name="Rahul" age={24} gender={"Male"} />
-            <ReqCard name="Rahul" age={24} gender={"Male"} />
-            <ReqCard name="Rahul" age={24} gender={"Male"} />
-            <ReqCard name="Rahul" age={24} gender={"Male"} />
+            <ReqCard
+              name="Rahul"
+              age={24}
+              gender={"Male"}
+              interest={false}
+              reserve={true}
+            />
           </View>
         )}
       </View>
@@ -115,21 +119,30 @@ const GuestsEnrolled = () => {
   );
 };
 
-const ReqCard = ({ name, age, gender }) => {
+const ReqCard = ({ name, age, gender, interest, reserve }) => {
   return (
     <View className="flex flex-row justify-between items-center bg-white p-1 rounded-lg px-3 shadow-xl shadow-black/50 mt-2 py-2">
       <Text>{name}</Text>
       <Text>
         {age} Yrs, {gender}
       </Text>
-      <View className="flex flex-row space-x-5">
-        <TouchableOpacity activeOpacity={0.5}>
-          <Text className="text-green-700">Accept</Text>
-        </TouchableOpacity>
-        <TouchableOpacity activeOpacity={0.5}>
-          <Text className="text-red-700">Reject</Text>
-        </TouchableOpacity>
-      </View>
+      <>
+        {reserve && (
+          <View className="flex flex-row items-center justify-center space-x-5">
+            <TouchableOpacity activeOpacity={0.5}>
+              <Text className="text-green-700">Accept</Text>
+            </TouchableOpacity>
+            <TouchableOpacity activeOpacity={0.5}>
+              <Text className="text-red-700">Reject</Text>
+            </TouchableOpacity>
+          </View>
+        )}
+        {interest && (
+          <TouchableOpacity activeOpacity={0.5} style={{ marginRight: 10 }}>
+            <Text className="text-green-700">Enrol</Text>
+          </TouchableOpacity>
+        )}
+      </>
     </View>
   );
 };

@@ -13,7 +13,6 @@ import { useLocalSearchParams } from "expo-router";
 import AllocatedRoomCard from "../../../components/UI/AllocatedRoomCard";
 import ModalBody from "../../../components/UI/ModalBody";
 import { transformAllocationData } from "../../../utils/helpers";
-import { all } from "axios";
 
 const { width, height } = Dimensions.get("window");
 
@@ -25,6 +24,7 @@ const showAccomodationDetails = () => {
 
   const [loading, setLoading] = useState(false);
   const [allocations, setAllocations] = useState([]);
+  const [guestsToDisable, setGuestsToDisable] = useState([]);
 
   const getBookedUsers = async () => {
     try {
@@ -43,11 +43,10 @@ const showAccomodationDetails = () => {
     }
   };
 
-  const getAllocations = async () => {
-    setLoading(true);
+  const getAllocationsByGuestHouseId = async () => {
     try {
       const response = await fetch(
-        `https://trakies-backend.onrender.com/api/allocated/get?tourId=${tourId}`
+        `https://trakies-backend.onrender.com/api/allocated/getByAcco?accoId=${id}`
       );
 
       if (response.status !== 200) {
@@ -60,6 +59,25 @@ const showAccomodationDetails = () => {
     } catch (error) {
       console.log(error);
       Alert.alert("Something Went Wrong.", "Failed to fetch allocations.");
+    }
+  };
+
+  const getAllAllocations = async () => {
+    setLoading(true);
+    try {
+      const response = await fetch(
+        `https://trakies-backend.onrender.com/api/allocated/get?tourId=${tourId}`
+      );
+
+      if (response.status !== 200) {
+        throw new Error("Failed to fetch allocations");
+      }
+
+      const result = await response.json();
+      setGuestsToDisable(result);
+    } catch (error) {
+      console.log(error);
+      Alert.alert("Something Went Wrong.", "Failed to fetch allocations.");
     } finally {
       setLoading(false);
     }
@@ -67,7 +85,8 @@ const showAccomodationDetails = () => {
 
   useEffect(() => {
     getBookedUsers();
-    getAllocations();
+    getAllAllocations();
+    getAllocationsByGuestHouseId();
   }, []);
 
   if (loading) {
@@ -101,7 +120,6 @@ const showAccomodationDetails = () => {
               <AllocatedRoomCard
                 key={`${allocation.roomNo}-${allocation.roomType}`}
                 allocation={allocation}
-                getAllocations={getAllocations}
               />
             ))}
           </>
@@ -152,7 +170,8 @@ const showAccomodationDetails = () => {
               setModalVisible={setModalVisible}
               tourId={tourId}
               accommodationId={id}
-              getAllocations={getAllocations}
+              getAllocationsByGuestHouseId={getAllocationsByGuestHouseId}
+              guestsToDisable={guestsToDisable}
             />
           </View>
         </View>

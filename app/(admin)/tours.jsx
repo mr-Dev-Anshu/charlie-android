@@ -16,6 +16,8 @@ const { width, height } = Dimensions.get("window");
 const Tours = () => {
   const { tour } = useSelector((state) => state.tour);
 
+  console.log(tour);
+
   return (
     <View style={styles.container}>
       <ScrollView
@@ -48,7 +50,7 @@ const Tours = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingTop: height * 0.13,
+    paddingTop: height * 0.11,
     justifyContent: "center",
     alignItems: "center",
   },
