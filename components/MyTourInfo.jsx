@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Text, View , TouchableOpacity, ScrollView} from "react-native";
+import { Text, View, TouchableOpacity, ScrollView } from "react-native";
 import LinearGradient from "react-native-linear-gradient";
 import ListComponent from "./UI/ListComponent";
 import { FontAwesome6, Ionicons } from "@expo/vector-icons";
@@ -16,8 +16,10 @@ const MyTourInfo = ({ tour }) => {
     includeds,
     checkinbagages,
     allocatedAccommodation,
+    accommodation,
   } = tour;
 
+  console.log("tour--->", tour);
   return (
     <View className={`pb-14 `}>
       <ScrollView
@@ -202,32 +204,28 @@ const MyTourInfo = ({ tour }) => {
             <Text className={`font-bold`}>Accomodation Details</Text>
           </View>
           <View className="">
-            {accomodationDetails.map((details, index) => (
-              <AccomodationDetailsElement key={index} details={details} />
+            {allocatedAccommodation.map((details, index) => (
+              <AccomodationDetailsElement
+                key={index}
+                details={details}
+                accommodation={accommodation}
+              />
             ))}
           </View>
         </View>
         <TouchableOpacity
           onPress={() => router.push("/tourmates")}
           activeOpacity={0.7}
-          className="mt-4 px-2"
+          className="mt-4 px-2 mx-2 flex flex-row justify-between items-center py-1 rounded-lg bg-white shadow-xl shadow-black/50"
         >
-          <LinearGradient
-            start={{ x: 0, y: 0 }}
-            end={{ x: 1, y: 0 }}
-            colors={["rgba(17, 117, 8, 1)", "rgba(17, 117, 8, 1)"]}
-            className="rounded-md w-full flex flex-row justify-between items-center py-2 px-4"
-          >
-            <View className="flex flex-row  space-x-4 justify-center items-center">
-              <FontAwesome6 name="person-hiking" size={20} color="white" />
-              <Text className="font-semibold text-white">
-                Know Your Tour-Mates
-              </Text>
-            </View>
-            <Ionicons name="chevron-forward" size={16} color="white" />
-          </LinearGradient>
+          <View className="flex flex-row  space-x-4 justify-between items-center">
+            <Text className="font-semibold text-green-700">
+              Know Your Tour-Mates
+            </Text>
+          </View>
+          <Ionicons name="chevron-forward" size={16} color="green" />
         </TouchableOpacity>
-        <TouchableOpacity
+        {/* <TouchableOpacity
           onPress={() => {}}
           activeOpacity={0.7}
           className=" mt-4 px-2"
@@ -244,7 +242,7 @@ const MyTourInfo = ({ tour }) => {
             </View>
             <Ionicons name="chevron-forward" size={16} color="white" />
           </LinearGradient>
-        </TouchableOpacity>
+        </TouchableOpacity> */}
       </ScrollView>
     </View>
   );

@@ -1,3 +1,7 @@
+import { useDispatch } from "react-redux";
+import { setTour } from "../redux/slices/tourSlice";
+import { Alert } from "react-native";
+
 export const formatDate = (dateValue) => {
   const date = new Date(dateValue);
   const options = { day: "numeric", month: "short", year: "numeric" };
@@ -72,4 +76,21 @@ export const transformAllocationData = (data) => {
 
   // Convert the map values to an array
   return Object.values(roomMap);
+};
+
+export const getAllTours = async () => {
+  const dispatch = useDispatch();
+  try {
+    const response = await fetch(
+      "https://trakies-backend.onrender.com/api/tour/get-alltours"
+    );
+    if (!response.ok) {
+      throw new Error("Failed to fetch tours");
+    }
+    const tour = await response.json();
+    dispatch(setTour(tour));
+  } catch (error) {
+    Alert.alert("Oops", "Something went wrong.");
+    console.error("Error fetching tours:", error);
+  }
 };

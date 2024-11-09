@@ -5,6 +5,7 @@ const initialState = {
   role: null,
   profile: null,
   members: null,
+  isAdminAccessEnabled: false,
 };
 
 const userSlice = createSlice({
@@ -26,10 +27,19 @@ const userSlice = createSlice({
     setMembers: (state, action) => {
       state.members = action.payload;
     },
+    setAdminAccessEnabled: (state, action) => {
+      state.isAdminAccessEnabled = action.payload;
+    },
   },
 });
 
-export const { setUser, clearUser, setRole, setProfile, setMembers } =
-  userSlice.actions;
+export const {
+  setUser,
+  clearUser,
+  setRole,
+  setProfile,
+  setMembers,
+  setAdminAccessEnabled,
+} = userSlice.actions;
 
 export default userSlice.reducer;

@@ -4,9 +4,10 @@ import { router, useLocalSearchParams } from "expo-router";
 import LinearGradient from "react-native-linear-gradient";
 import { Ionicons } from "@expo/vector-icons";
 import { StatusBar } from "expo-status-bar";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { formatDate } from "../../utils/helpers";
 import { ActivityIndicator } from "react-native-paper";
+import { setTour } from "../../redux/slices/tourSlice";
 
 const tourDetails = () => {
   const { id } = useLocalSearchParams();
@@ -14,8 +15,11 @@ const tourDetails = () => {
   const { user } = useSelector((state) => state.user);
 
   const [loading, setLoading] = useState(false);
+  const [unPublishLoading, setUnPublishLoading] = useState(false);
 
   const tourDetail = tour.find((item) => item._id === id);
+
+  const dispatch = useDispatch();
 
   const handleDeleteTour = async () => {
     setLoading(true);
@@ -40,6 +44,53 @@ const tourDetails = () => {
       console.log("error:", error);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleTourStatus = async () => {
+    setUnPublishLoading(true);
+    try {
+      const body = {
+        id: id,
+        status: tourDetail.status ? false : true,
+      };
+
+      const response = await fetch(
+        `https://trakies-backend.onrender.com/api/tour/update-tour`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(body),
+        }
+      );
+
+      if (response.status !== 200) {
+        throw new Error("Failed to unpublish");
+      }
+
+      const refreshTour = await fetch(
+        "https://trakies-backend.onrender.com/api/tour/get-alltours"
+      );
+
+      if (!refreshTour.ok) {
+        throw new Error("Failed to fetch tours");
+      }
+
+      const tour = await refreshTour.json();
+      dispatch(setTour(tour));
+
+      Alert.alert(
+        "Success",
+        `The tour has been ${tourDetail.status ? "unpublished" : "published"}`
+      );
+      router.push("/(admin)/tours");
+    } catch (error) {
+      Alert.alert("Oops!", "Something went wrong...\n\nPlease try again.");
+      console.log("error:", error);
+    } finally {
+      setUnPublishLoading(false);
     }
   };
 
@@ -107,21 +158,36 @@ const tourDetails = () => {
       <View className="w-full flex flex-row justify-between items-center h-16 bg-transparent px-6">
         <TouchableOpacity
           activeOpacity={0.8}
+          disabled={unPublishLoading}
+          onPress={handleTourStatus}
           style={{
             width: 165,
-            backgroundColor: "#414141",
-            paddingVertical: 12,
+            backgroundColor: tourDetail.status === false ? "green" : "#414141",
+            height: 44,
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
             borderRadius: 8,
           }}
         >
-          <Text style={{ textAlign: "center", color: "#fff" }}>Unpublish</Text>
+          {unPublishLoading ? (
+            <ActivityIndicator size={"small"} color="white" />
+          ) : (
+            <Text style={{ textAlign: "center", color: "white" }}>
+              {tourDetail.status === false ? "Publish" : "Unpublish"} Tour
+            </Text>
+          )}
         </TouchableOpacity>
         <TouchableOpacity
           activeOpacity={0.8}
+          disabled={loading}
           onPress={handleDeleteTour}
           style={{
             width: 165,
-            paddingVertical: 12,
+            height: 44,
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
             borderRadius: 8,
             borderWidth: 1,
             borderColor: "red",

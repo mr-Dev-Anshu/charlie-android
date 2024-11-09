@@ -24,6 +24,7 @@ export const uploadFilesToS3 = async (files, id = 12, type) => {
       }
 
       const result = await response.json();
+      console.log("upload respons---->",result)
       const presignedUrl = result;
 
       const fileData = await FileSystem.readAsStringAsync(file.uri, {

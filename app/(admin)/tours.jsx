@@ -6,7 +6,7 @@ import {
   Dimensions,
   StyleSheet,
 } from "react-native";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import TourCard from "../../components/admin/UI/TourCard";
 import { router } from "expo-router";
 import { useSelector } from "react-redux";
@@ -15,8 +15,6 @@ const { width, height } = Dimensions.get("window");
 
 const Tours = () => {
   const { tour } = useSelector((state) => state.tour);
-
-  console.log(tour);
 
   return (
     <View style={styles.container}>

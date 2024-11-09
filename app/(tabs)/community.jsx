@@ -252,7 +252,7 @@ const styles = StyleSheet.create({
     bottom: 0,
     left: width * 0.05,
     right: width * 0.05,
-    marginBottom:10
+    marginBottom: 10,
   },
   shareButton: {
     backgroundColor: "green",

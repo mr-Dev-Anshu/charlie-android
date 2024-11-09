@@ -168,7 +168,7 @@ const styles = StyleSheet.create({
   proceedButton: {
     backgroundColor: "#228B22",
     width: "100%",
-    paddingVertical: height * 0.02,
+    paddingVertical: height * 0.01,
     borderRadius: 10,
     alignItems: "center",
     marginBottom: height * 0.02,
@@ -180,7 +180,7 @@ const styles = StyleSheet.create({
   },
   cancelButton: {
     width: "100%",
-    paddingVertical: height * 0.015,
+    paddingVertical: height * 0.01,
     borderRadius: 10,
     borderWidth: 2,
     borderColor: "#228B22",

@@ -60,15 +60,15 @@ const addBusImg = () => {
           >
             {image.map((img, idx) => (
               <Image
-                key={idx}
-                source={{ uri: img.uri }}
-                style={{
-                  width: "100%",
-                  height: 200,
-                  borderRadius: 10,
-                  marginBottom: 14,
-                }}
-              />
+              key={idx}
+              source={{ uri: img.uri }}
+              style={{
+                width: "100%",
+                height: 200,
+                borderRadius: 10,
+                marginBottom: 14,
+              }}
+            />
             ))}
           </ScrollView>
         ) : (

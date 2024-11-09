@@ -13,18 +13,23 @@ import {
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { setTour } from "@/redux/slices/tourSlice";
+import { setAdminAccessEnabled } from "@/redux/slices/userSlice";
 import { StatusBar } from "expo-status-bar";
 import * as Network from "expo-network";
 import { MaterialIcons } from "@expo/vector-icons";
+import { router } from "expo-router";
+import { useIsFocused } from "@react-navigation/native";
 
 const { width, height } = Dimensions.get("window");
 
 export default function HomeScreen() {
   const dispatch = useDispatch();
   const [isConnected, setIsConnected] = useState(null);
-  const { user } = useSelector((state) => state.user);
+  const { user, isAdminAccessEnabled } = useSelector((state) => state.user);
   const [isMounted, setIsMounted] = useState(false);
   const [isModalVisible, setIsModalVisible] = useState(false);
+
+  const isFocused = useIsFocused();
 
   const getAllTours = async () => {
     try {
@@ -48,9 +53,7 @@ export default function HomeScreen() {
 
   useEffect(() => {
     setIsMounted(true);
-
     checkNetworkConnection();
-
     if (isConnected && user) {
       getAllTours();
     }
@@ -58,6 +61,12 @@ export default function HomeScreen() {
       setIsMounted(false);
     };
   }, [isConnected, user, isMounted]);
+
+  useEffect(() => {
+    if (isFocused) {
+      dispatch(setAdminAccessEnabled(false));
+    }
+  }, [isFocused]);
 
   return (
     <SafeAreaView style={styles.safeAreaView}>

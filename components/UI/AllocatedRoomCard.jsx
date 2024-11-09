@@ -1,11 +1,48 @@
-import { View, Text } from "react-native";
+import { View, Text, Alert } from "react-native";
 import React from "react";
 import { Ionicons } from "@expo/vector-icons";
 import { TouchableOpacity } from "react-native";
 import edit from "../../assets/edit.svg";
 import { Image } from "expo-image";
+import { ActivityIndicator } from "react-native-paper";
 
-const AllocatedRoomCard = ({ allocation }) => {
+const AllocatedRoomCard = ({
+  allocation,
+  getAllocationsByGuestHouseId,
+  getBookedUsers,
+  getAllAllocations,
+  setEditModalVisible,
+}) => {
+  const [deleting, setDeleting] = React.useState(false);
+
+  const handleDeleteAllocation = async () => {
+    setDeleting(true);
+    try {
+      const idsToDelete = allocation.bookingIds;
+      for (let id of idsToDelete) {
+        const response = await fetch(
+          `https://trakies-backend.onrender.com/api/allocated/delete?id=${id}`,
+          {
+            method: "DELETE",
+          }
+        );
+
+        if (response.status !== 200) {
+          throw new Error("Failed to delete allocation");
+        }
+      }
+      Alert.alert("Success", "Allocations deleted.");
+      getAllocationsByGuestHouseId();
+      getBookedUsers();
+      getAllAllocations();
+    } catch (error) {
+      console.log(error);
+      Alert.alert("Error", "Failed to delete allocation");
+    } finally {
+      setDeleting(false);
+    }
+  };
+
   return (
     <View
       style={{
@@ -25,11 +62,25 @@ const AllocatedRoomCard = ({ allocation }) => {
       >
         <Text>Room 1</Text>
         <View className="flex flex-row justify-center items-center space-x-5 pr-2">
-          <TouchableOpacity activeOpacity={0.5}>
+          <TouchableOpacity
+            onPress={() => setEditModalVisible(true)}
+            activeOpacity={0.5}
+          >
             <Image source={edit} className="w-4 h-4" />
           </TouchableOpacity>
-          <TouchableOpacity activeOpacity={0.5}>
-            <Ionicons name="trash-outline" color={"red"} size={16} />
+          <TouchableOpacity
+            onPress={handleDeleteAllocation}
+            activeOpacity={0.5}
+          >
+            {deleting ? (
+              <ActivityIndicator
+                size={"small"}
+                color="green"
+                style={{ transform: [{ scale: 0.5 }] }}
+              />
+            ) : (
+              <Ionicons name="trash-outline" color={"red"} size={16} />
+            )}
           </TouchableOpacity>
         </View>
       </View>

@@ -13,12 +13,15 @@ import { useLocalSearchParams } from "expo-router";
 import AllocatedRoomCard from "../../../components/UI/AllocatedRoomCard";
 import ModalBody from "../../../components/UI/ModalBody";
 import { transformAllocationData } from "../../../utils/helpers";
+import EditModal from "../../../components/UI/EditModal";
 
 const { width, height } = Dimensions.get("window");
 
 const showAccomodationDetails = () => {
   const { id, tourId } = useLocalSearchParams();
   const [modalVisible, setModalVisible] = useState(false);
+
+  const [editModalVisible, setEditModalVisible] = useState(false);
 
   const [guests, setGuests] = useState([]);
 
@@ -120,6 +123,10 @@ const showAccomodationDetails = () => {
               <AllocatedRoomCard
                 key={`${allocation.roomNo}-${allocation.roomType}`}
                 allocation={allocation}
+                getAllocationsByGuestHouseId={getAllocationsByGuestHouseId}
+                getBookedUsers={getBookedUsers}
+                getAllAllocations={getAllAllocations}
+                setEditModalVisible={setEditModalVisible}
               />
             ))}
           </>
@@ -171,7 +178,46 @@ const showAccomodationDetails = () => {
               tourId={tourId}
               accommodationId={id}
               getAllocationsByGuestHouseId={getAllocationsByGuestHouseId}
+              getBookedUsers={getBookedUsers}
+              getAllAllocations={getAllAllocations}
               guestsToDisable={guestsToDisable}
+            />
+          </View>
+        </View>
+      </Modal>
+      <Modal
+        transparent={true}
+        animationType="fade"
+        visible={editModalVisible}
+        onRequestClose={() => setEditModalVisible(false)}
+      >
+        <View
+          style={{
+            flex: 1,
+            justifyContent: "center",
+            alignItems: "center",
+            backgroundColor: "rgba(0, 0, 0, 0.5)",
+          }}
+        >
+          <View
+            style={{
+              width: width * 0.9,
+              padding: 16,
+              backgroundColor: "white",
+              borderRadius: 10,
+              elevation: 8,
+            }}
+          >
+            <EditModal
+              guests={guests}
+              tourId={tourId}
+              allocations={allocations}
+              accommodationId={id}
+              getAllocationsByGuestHouseId={getAllocationsByGuestHouseId}
+              getBookedUsers={getBookedUsers}
+              getAllAllocations={getAllAllocations}
+              guestsToDisable={guestsToDisable}
+              setEditModalVisible={setEditModalVisible}
             />
           </View>
         </View>

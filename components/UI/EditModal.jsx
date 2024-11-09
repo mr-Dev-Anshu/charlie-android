@@ -1,40 +1,38 @@
 import { View, Text, TextInput, TouchableOpacity, Alert } from "react-native";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import DropDownPicker from "react-native-dropdown-picker";
 import { ActivityIndicator } from "react-native-paper";
 
-const ModalBody = ({
+const EditModal = ({
   guests,
-  setModalVisible,
   accommodationId,
   tourId,
-  guestsToDisable,
+  allocations,
   getAllocationsByGuestHouseId,
   getAllAllocations,
   getBookedUsers,
+  setEditModalVisible,
 }) => {
-  const allocatedGuestIds = guestsToDisable.map(
-    (allocated) => allocated.bookingId
-  );
-
   const guestsDataArray = guests.map((guest, index) => {
     return {
       label: guest.name,
       value: guest._id,
-      disabled: allocatedGuestIds.includes(guest._id),
     };
   });
 
-  const [roomNumber, setRoomNumber] = useState("");
+  const [roomNumber, setRoomNumber] = useState(allocations[0].roomNo);
 
-  const [occupancyValue, setOccupancyValue] = useState("");
+  const [occupancyValue, setOccupancyValue] = useState(
+    allocations[0].occupancy
+  );
+
   const [occupancyOptions, setOccupancyOptions] = useState([
     { label: "Single", value: "Single" },
     { label: "Double", value: "Double" },
     { label: "Triple", value: "Triple" },
   ]);
 
-  const [roomTypeValue, setRoomTypeValue] = useState("");
+  const [roomTypeValue, setRoomTypeValue] = useState(allocations[0].roomType);
   const [roomTypeOptions, setRoomTypeOptions] = useState([
     { label: "AC", value: "AC" },
     { label: "Non-AC", value: "Non-AC" },
@@ -42,7 +40,7 @@ const ModalBody = ({
     { label: "Dormitory", value: "Dormitory" },
   ]);
 
-  const [guestsValue, setGuestsValue] = useState([]);
+  const [guestsValue, setGuestsValue] = useState(allocations[0].bookingIds);
   const [guestsOptions, setGuestsOptions] = useState(guestsDataArray);
 
   const [openDropdown, setOpenDropdown] = useState(null);
@@ -53,10 +51,31 @@ const ModalBody = ({
     setOpenDropdown((prev) => (prev === key ? null : key));
   };
 
-  const handleAllocateRoom = async () => {
+  const handleUpdateAllocation = async () => {
     setLoading(true);
     try {
-      for (let item of guestsValue) {
+      const idsToDelete = allocations[0].bookingIds.filter(
+        (value) => !guestsValue.includes(value)
+      );
+
+      const idsToUpdate = guestsValue.filter(
+        (value) => !allocations[0].bookingIds.includes(value)
+      );
+
+      for (let id of idsToDelete) {
+        const response = await fetch(
+          `https://trakies-backend.onrender.com/api/allocated/delete?id=${id}`,
+          {
+            method: "DELETE",
+          }
+        );
+
+        if (response.status !== 200) {
+          throw new Error("Failed to delete allocation");
+        }
+      }
+
+      for (let item of idsToUpdate) {
         const body = {
           bookingId: item,
           accommodationId: accommodationId,
@@ -81,8 +100,9 @@ const ModalBody = ({
           throw new Error("Failed to allocate room");
         }
       }
-      setModalVisible(false);
-      Alert.alert("Success", "Room allocated successfully.");
+
+      setEditModalVisible(false);
+      Alert.alert("Success", "Room allocation updated successfully.");
       getAllocationsByGuestHouseId();
       getAllAllocations();
       getBookedUsers();
@@ -131,12 +151,7 @@ const ModalBody = ({
             }}
           >
             <Text style={{ fontSize: 12, color: "gray" }}>Room no</Text>
-            <TextInput
-              keyboardType="number-pad"
-              placeholder="Number"
-              onChangeText={(text) => setRoomNumber(text)}
-              style={{ marginTop: 4 }}
-            />
+            <Text className="py-2 text-base font-medium">{roomNumber}</Text>
           </View>
           <View
             style={{
@@ -153,8 +168,9 @@ const ModalBody = ({
               setOpen={() => toggleOpen("occupancy")}
               value={occupancyValue}
               items={occupancyOptions}
+              disabled={true}
               setItems={setOccupancyOptions}
-              setValue={setOccupancyValue}
+              setValue={(value) => setOccupancyValue(value)}
               style={{ borderWidth: 0, marginTop: 5 }}
               dropDownContainerStyle={{
                 borderWidth: 0,
@@ -227,8 +243,9 @@ const ModalBody = ({
               setOpen={() => toggleOpen("roomType")}
               value={roomTypeValue}
               items={roomTypeOptions}
+              disabled={true}
               setItems={setRoomTypeOptions}
-              setValue={setRoomTypeValue}
+              setValue={(value) => setRoomTypeValue(value)}
               style={{ borderWidth: 0, marginTop: 5 }}
               dropDownContainerStyle={{
                 borderWidth: 0,
@@ -249,7 +266,7 @@ const ModalBody = ({
       >
         <TouchableOpacity
           activeOpacity={0.7}
-          onPress={() => setModalVisible(false)}
+          onPress={() => setEditModalVisible(false)}
           style={{
             backgroundColor: "gray",
             height: 40,
@@ -264,7 +281,7 @@ const ModalBody = ({
           <Text style={{ color: "white", fontWeight: "bold" }}>Cancel</Text>
         </TouchableOpacity>
         <TouchableOpacity
-          onPress={handleAllocateRoom}
+          onPress={handleUpdateAllocation}
           activeOpacity={0.7}
           style={{
             backgroundColor: "green",
@@ -280,7 +297,7 @@ const ModalBody = ({
           {loading ? (
             <ActivityIndicator size="small" color="white" />
           ) : (
-            <Text style={{ color: "white", fontWeight: "bold" }}>Save</Text>
+            <Text style={{ color: "white", fontWeight: "bold" }}>Update</Text>
           )}
         </TouchableOpacity>
       </View>
@@ -288,4 +305,4 @@ const ModalBody = ({
   );
 };
 
-export default ModalBody;
+export default EditModal;

@@ -5,6 +5,8 @@ import {
   Dimensions,
   Alert,
   ActivityIndicator,
+  ScrollView,
+  RefreshControl,
 } from "react-native";
 import React, { useEffect, useState } from "react";
 import { router, useLocalSearchParams } from "expo-router";
@@ -13,14 +15,11 @@ const { width } = Dimensions.get("window");
 
 const Accomodation = () => {
   const { id } = useLocalSearchParams();
+  const [refreshing, setRefreshing] = useState(false);
 
   const [guestHouses, setGuestHouses] = useState([]);
-  const [loading, setLoading] = useState(false);
-
-  console.log("guestHouses", guestHouses);
 
   const getAllGuestHouses = async () => {
-    setLoading(true);
     try {
       const response = await fetch(
         `https://trakies-backend.onrender.com/api/accommodation/get?tourId=${id}`
@@ -34,22 +33,21 @@ const Accomodation = () => {
     } catch (error) {
       console.log(error);
       Alert.alert("Error", "Failed to fetch guest houses");
+    }
+  };
+
+  const onRefresh = async () => {
+    setRefreshing(true);
+    try {
+      await getAllGuestHouses();
     } finally {
-      setLoading(false);
+      setRefreshing(false);
     }
   };
 
   useEffect(() => {
-    getAllGuestHouses();
+    onRefresh();
   }, []);
-
-  if (loading) {
-    return (
-      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-        <ActivityIndicator size="large" color="green" />
-      </View>
-    );
-  }
 
   return (
     <View
@@ -63,19 +61,31 @@ const Accomodation = () => {
         alignItems: "center",
       }}
     >
-      <View
-        style={{
-          width: "100%",
-          marginTop: 10,
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
+      <ScrollView
+        style={{ flex: 1, width: "100%" }}
+        contentContainerStyle={{
+          paddingHorizontal: 6,
+          paddingBottom: 120,
         }}
+        showsVerticalScrollIndicator={false}
+        refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+        }
       >
-        {guestHouses.map((i) => (
-          <AccomodationButton key={i._id} tourId={id} {...i} />
-        ))}
-      </View>
+        <View
+          style={{
+            width: "100%",
+            marginTop: 10,
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        >
+          {guestHouses.map((i) => (
+            <AccomodationButton key={i._id} tourId={id} {...i} />
+          ))}
+        </View>
+      </ScrollView>
       <View
         style={{
           flexDirection: "row",
@@ -136,7 +146,7 @@ const AccomodationButton = ({
   totalOccupancy,
   _id,
   tourId,
-  allocatedCount
+  allocatedCount,
 }) => {
   return (
     <TouchableOpacity

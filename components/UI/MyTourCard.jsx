@@ -9,6 +9,8 @@ import { calculateDuration, formatDate } from "../../utils/helpers";
 const MyTourCard = ({ tour, status }) => {
   const images = tour.images.filter((i) => !i.type).map((i) => i.url);
 
+  console.log(status);
+
   return (
     <TouchableOpacity
       activeOpacity={0.8}
@@ -38,19 +40,19 @@ const MyTourCard = ({ tour, status }) => {
           <View
             className={`w-28 ${
               status === 1
-                ? "checkmark-circle-outline"
+                ? "bg-green-700"
                 : status === 2
-                ? "bg-orange-500"
-                : "bg-red-500"
+                  ? "bg-orange-500"
+                  : "bg-red-500"
             } flex flex-row justify-center items-center space-x-2 mt-2 rounded-lg h-6`}
           >
             <Ionicons
               name={`${
                 status === 1
-                  ? "bg-green-700"
+                  ? "checkmark-outline"
                   : status === 2
-                  ? "time-outline"
-                  : "close-circle-outline"
+                    ? "time-outline"
+                    : "close-circle-outline"
               }`}
               size={16}
               color={"white"}

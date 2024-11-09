@@ -1,4 +1,12 @@
-import { View, Text, Dimensions, Alert, ScrollView, TouchableOpacity } from "react-native";
+import {
+  View,
+  Text,
+  Dimensions,
+  Alert,
+  ScrollView,
+  TouchableOpacity,
+  ActivityIndicator,
+} from "react-native";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { router, useLocalSearchParams } from "expo-router";
 import { Image } from "expo-image";
@@ -7,7 +15,7 @@ import { Ionicons } from "@expo/vector-icons";
 import ListComponent from "../../components/UI/ListComponent.jsx";
 import { Modalize } from "react-native-modalize";
 import approve from "../../assets/approve.png";
-import { ActivityIndicator, Checkbox } from "react-native-paper";
+import { Checkbox } from "react-native-paper";
 import Carousel from "react-native-reanimated-carousel";
 import CarouselImageRender from "../../components/UI/CarouselImageRender.jsx";
 import { formatDate } from "../../utils/helpers.js";

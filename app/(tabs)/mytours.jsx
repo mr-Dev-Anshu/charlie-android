@@ -1,5 +1,11 @@
-import { View, Dimensions, StyleSheet, Text } from "react-native";
-import React, { useEffect } from "react";
+import {
+  View,
+  Dimensions,
+  StyleSheet,
+  Text,
+  RefreshControl,
+} from "react-native";
+import React, { useEffect, useState } from "react";
 import { ScrollView } from "react-native-gesture-handler";
 import { StatusBar } from "expo-status-bar";
 import { useDispatch, useSelector } from "react-redux";
@@ -12,6 +18,7 @@ const { width, height } = Dimensions.get("window");
 const MyTours = () => {
   const { user } = useSelector((state) => state.user);
   const { bookedTour } = useSelector((state) => state.tour);
+  const [refreshing, setRefreshing] = useState(false);
 
   const dispatch = useDispatch();
 
@@ -33,11 +40,20 @@ const MyTours = () => {
     }
   };
 
+  const onRefresh = async () => {
+    setRefreshing(true);
+    try {
+      await getAllBookedTours();
+    } finally {
+      setRefreshing(false);
+    }
+  };
+
   useEffect(() => {
-    getAllBookedTours();
+    onRefresh();
   }, []);
 
-  if (!bookedTour) {
+  if (!bookedTour || bookedTour.lenght <= 0) {
     return (
       <View style={styles.noBookedTourContainer}>
         <Text>No booked tours</Text>
@@ -58,6 +74,9 @@ const MyTours = () => {
           <ScrollView
             showsVerticalScrollIndicator={false}
             contentContainerStyle={styles.scrollContainer}
+            refreshControl={
+              <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+            }
           >
             <View style={styles.toursContainer}>
               {bookedTour.map((tour, idx) => (

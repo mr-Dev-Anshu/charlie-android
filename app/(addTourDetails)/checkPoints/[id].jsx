@@ -95,7 +95,7 @@ const Checkpoints = () => {
     setLoading(true);
     try {
       const res = await fetch(
-        `https://trakies-backend.onrender.com/api/get-points?id=${id}`
+        `https://trakies-backend.onrender.com/api/get-points?tourId=${id}`
       );
 
       if (res.status !== 200) {
@@ -343,21 +343,29 @@ const CheckPointCard = ({
       <View className="flex flex-row justify-between  mt-1 py-1">
         <View className="w-[80%]">
           <Text className="text-gray-500 tracking-wide text-justify">
-            {shorten(point.description, 80)}
+            {shorten(point.description, 100)}
           </Text>
         </View>
         <View className="w-[20%] flex justify-center items-center">
           {activationLoading ? (
             <ActivityIndicator color="green" size={"small"} />
           ) : (
-            <TouchableOpacity
-              onPress={() => handleCheckpointActive(point._id)}
-              activeOpacity={0.6}
-              className=" flex justify-center items-center"
-            >
-              <Ionicons name="qr-code-outline" color={"green"} size={24} />
-              <Text className="text-xs text-green-700 mt-1">Activate</Text>
-            </TouchableOpacity>
+            <>
+              {point.activated ? (
+                <Text className="text-xl font-semibold text-green-700">
+                  {point.allCheckedCount}
+                </Text>
+              ) : (
+                <TouchableOpacity
+                  onPress={() => handleCheckpointActive(point._id)}
+                  activeOpacity={0.6}
+                  className=" flex justify-center items-center"
+                >
+                  <Ionicons name="qr-code-outline" color={"green"} size={24} />
+                  <Text className="text-xs text-green-700 mt-1">Activate</Text>
+                </TouchableOpacity>
+              )}
+            </>
           )}
         </View>
       </View>

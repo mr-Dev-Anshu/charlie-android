@@ -10,13 +10,13 @@ const TourCard = ({ tour }) => {
   return (
     <TouchableOpacity
       activeOpacity={0.9}
-      className="w-full flex flex-1 justify-center items-center mt-4 bg-white rounded-lg overflow-hidden shadow-xl shadow-black"
+      className={`w-full flex flex-1 justify-center items-center mt-4 ${tour.status === false ? "bg-slate-300" : "bg-white"}  rounded-lg overflow-hidden shadow-xl shadow-black`}
       onPress={() => router.push(`/tour/${tour?._id}`)}
     >
       <View className="flex flex-row justify-between h-[150px] w-[360px]  p-2 ">
         <View>
           <Text className="text-xl font-medium text-gray-700">
-            {shorten(tour?.name, 15)}
+            {shorten(tour?.name, 20)}
           </Text>
           <View className="flex flex-row mt-4 space-x-2 justify-start items-center">
             <Ionicons name="calendar-outline" size={16} color="black" />
