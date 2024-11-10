@@ -6,11 +6,14 @@ import {
   TouchableOpacity,
   TextInput,
   ScrollView,
+  Alert,
 } from "react-native";
 import React, { useState } from "react";
 import { router, useLocalSearchParams } from "expo-router";
 import * as ImagePicker from "expo-image-picker";
 import { Image } from "expo-image";
+import { ActivityIndicator } from "react-native-paper";
+import { uploadFilesToS3 } from "../../../utils/uploadFileHelper";
 
 const { width, height } = Dimensions.get("window");
 
@@ -22,7 +25,8 @@ const TransportDetails = () => {
   const [seatingCapacity, setSeatingCapacity] = useState("");
   const [driverName, setDriver] = useState("");
   const [driverContact, setDriverContact] = useState("");
-  const [images, setImages] = useState("");
+  const [images, setImages] = useState([]);
+  const [loading, setLoading] = useState("");
   const [error, setError] = useState("");
 
   const pickImage = async () => {
@@ -37,6 +41,62 @@ const TransportDetails = () => {
       setImages(result.assets);
     } else {
       setError("Image not selected! Try again");
+    }
+  };
+
+  const handleAddBusDetails = async () => {
+    if (
+      !busName ||
+      !busNumber ||
+      !seatingCapacity ||
+      !driverName ||
+      !driverContact ||
+      images.length === 0
+    ) {
+      Alert.alert("Empty fields!", "Please fill all fields.");
+      return;
+    }
+    setLoading(true);
+    try {
+      const response = await fetch(
+        `https://trakies-backend.onrender.com/api/transport/create`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            tourId: id,
+            busName: busName,
+            busNumber: busNumber,
+            capacity: seatingCapacity,
+            driverName: driverName,
+            driverNumber: driverContact,
+          }),
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error("Failed to add bus details");
+      }
+
+      const result = await response.json();
+
+      try {
+        await uploadFilesToS3(images, result._id, "bus");
+      } catch (error) {
+        await fetch(
+          `https://trakies-backend.onrender.com/api/transport/delete?id=${result._id}`
+        );
+        throw new Error("Failed to upload images.");
+      }
+      Alert.alert("Added", "Bus details added successfully.");
+      router.back();
+    } catch (error) {
+      console.log("Error:", error);
+      Alert.alert("Oops", "Something went wrong.");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -56,15 +116,21 @@ const TransportDetails = () => {
       >
         <View style={styles.formFieldContainer}>
           <Text style={styles.formFieldText}>Bus Name</Text>
-          <TextInput style={styles.formFieldInputText} />
+          <TextInput onChangeText={setBusName} style={styles.formFieldInputText} />
         </View>
         <View style={styles.formFieldContainer}>
           <Text style={styles.formFieldText}>Bus Number</Text>
-          <TextInput style={styles.formFieldInputText} />
+          <TextInput
+            onChangeText={setBusNumber}
+            style={styles.formFieldInputText}
+          />
         </View>
         <View style={styles.formFieldContainer}>
           <Text style={styles.formFieldText}>Seating Capacity</Text>
-          <TextInput style={styles.formFieldInputText} />
+          <TextInput
+            onChangeText={setSeatingCapacity}
+            style={styles.formFieldInputText}
+          />
         </View>
         <Text
           style={{
@@ -79,11 +145,14 @@ const TransportDetails = () => {
         </Text>
         <View style={styles.formFieldContainer}>
           <Text style={styles.formFieldText}>Driver Name</Text>
-          <TextInput style={styles.formFieldInputText} />
+          <TextInput onChangeText={setDriver} style={styles.formFieldInputText} />
         </View>
         <View style={styles.formFieldContainer}>
           <Text style={styles.formFieldText}>Driver Contact Number</Text>
-          <TextInput style={styles.formFieldInputText} />
+          <TextInput
+            onChangeText={setDriverContact}
+            style={styles.formFieldInputText}
+          />
         </View>
         <Text
           style={{
@@ -121,59 +190,29 @@ const TransportDetails = () => {
             )}
           </View>
         </View>
-        <View style={styles.buttonsContainer}>
-          <TouchableOpacity
-            style={[
-              styles.buttons,
-              { backgroundColor: "white", borderWidth: 1 },
-            ]}
-            activeOpacity={0.6}
-            onPress={() => {
-              router.back();
-            }}
-          >
-            <Text style={styles.buttonText}>Cancel</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={[styles.buttons, { backgroundColor: "green" }]}
-            activeOpacity={0.6}
-            onPress={() =>
-              router.push(`/(addTourDetails)/addTransportDetails/${id}`)
-            }
-          >
-            <Text style={[styles.buttonText, { color: "white" }]}>Add</Text>
-          </TouchableOpacity>
-        </View>
-        <Text
-          style={{
-            paddingVertical: 10,
-            fontSize: 16,
-            fontWeight: 500,
-            textAlign: "left",
-            width: "100%",
+      </ScrollView>
+      <View style={styles.buttonsContainer}>
+        <TouchableOpacity
+          style={[styles.buttons, { backgroundColor: "white", borderWidth: 1 }]}
+          activeOpacity={0.6}
+          onPress={() => {
+            router.back();
           }}
         >
-          Boarding Point
-        </Text>
-        <View style={styles.boardingPointFormContainer}>
-          <View style={styles.formFieldContainer}>
-            <Text style={styles.formFieldText}>Boarding Point Name</Text>
-            <TextInput style={styles.formFieldInputText} />
-          </View>
-          <View style={styles.formFieldContainer}>
-            <Text style={styles.formFieldText}>Location</Text>
-            <TextInput style={styles.formFieldInputText} />
-          </View>
-          <View style={styles.formFieldContainer}>
-            <Text style={styles.formFieldText}>Date</Text>
-            <TextInput style={styles.formFieldInputText} />
-          </View>
-          <View style={styles.formFieldContainer}>
-            <Text style={styles.formFieldText}>Time</Text>
-            <TextInput style={styles.formFieldInputText} />
-          </View>
-        </View>
-      </ScrollView>
+          <Text style={styles.buttonText}>Cancel</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={[styles.buttons, { backgroundColor: "green" }]}
+          activeOpacity={0.6}
+          onPress={handleAddBusDetails}
+        >
+          {loading ? (
+            <ActivityIndicator color="white" size={"small"} />
+          ) : (
+            <Text style={[styles.buttonText, { color: "white" }]}>Add</Text>
+          )}
+        </TouchableOpacity>
+      </View>
     </View>
   );
 };
@@ -187,6 +226,8 @@ const styles = StyleSheet.create({
     paddingTop: 16,
   },
   buttonsContainer: {
+    position: "absolute",
+    bottom: 0,
     width: width,
     display: "flex",
     flexDirection: "row",

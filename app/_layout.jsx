@@ -128,7 +128,15 @@ export default function RootLayout() {
           />
           <Stack.Screen
             name="(addTourDetails)/addTransportDetails/[id]"
+            options={getOpt("AddTransport Details")}
+          />
+          <Stack.Screen
+            name="(addTourDetails)/transportDetails/[id]"
             options={getOpt("Transport Details")}
+          />
+          <Stack.Screen
+            name="(addTourDetails)/addBoardingPoint/[id]"
+            options={getOpt("Boarding Point Details")}
           />
         </Stack>
       </GestureHandlerRootView>

@@ -6,29 +6,43 @@ import {
   ScrollView,
   TextInput,
   TouchableOpacity,
+  Dimensions,
 } from "react-native";
 import React, { useRef, useState } from "react";
-import { Picker } from "@react-native-picker/picker";
 import MapView, { Marker } from "react-native-maps";
 import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplete";
 import { router, useLocalSearchParams } from "expo-router";
-import { apiRequest } from "../../../utils/helpers";
+import DateTimePicker from "@react-native-community/datetimepicker";
+import { format } from "date-fns";
+
+const { width } = Dimensions.get("window");
 
 const Page = () => {
   const { id } = useLocalSearchParams();
 
-  const viewMapRef = useRef(null);
   const googlePlacesRef = useRef();
 
-  const [title, setTitle] = useState("");
-  const [description, setDescription] = useState("");
-  const [locationType, setLocationType] = useState("");
+  const [name, setName] = useState("");
+  const [date, setDate] = useState(new Date());
+  const [time, setTime] = useState(new Date());
   const [latitude, setLatitude] = useState(null);
   const [longitude, setLogitude] = useState(null);
-
+  const [showDatePicker, setShowDatePicker] = useState(false);
+  const [showTimePicker, setShowTimePicker] = useState(false);
+  const [selectedAddress, setSelectedAddress] = useState("");
   const [loading, setLoading] = useState(false);
 
-  const [selectLocation, setSelectLocation] = useState(false);
+  const onChangeDate = (event, selectedDate) => {
+    const currentDate = selectedDate || startDate;
+    setShowDatePicker(false);
+    setDate(currentDate);
+  };
+
+  const onChangeTime = (event, selectedDate) => {
+    const currentDate = selectedDate || startDate;
+    setShowTimePicker(false);
+    setTime(currentDate);
+  };
 
   const [region, setRegion] = useState({
     latitude: 12.9716,
@@ -41,8 +55,6 @@ const Page = () => {
     latitude: 12.9716,
     longitude: 77.5946,
   });
-
-  const [selectedAddress, setSelectedAddress] = useState("");
 
   const reverseGeocode = async (latitude, longitude) => {
     const apiKey = "AIzaSyB_EhOLUePnuFPSOSSjRyAWZRUb2jWcQ8s";
@@ -89,40 +101,55 @@ const Page = () => {
     reverseGeocode(latitude, longitude);
   };
 
-  const handleAddCheckPoint = async () => {
+  const handleAddBoardingPoint = async () => {
     if (
       !id ||
-      !title ||
-      !description ||
-      !locationType ||
-      !longitude ||
-      !latitude
+      !name ||
+      !date ||
+      !time ||
+      !selectedAddress ||
+      !latitude ||
+      !longitude
     ) {
-      Alert.alert("Value not found", "All fields required!");
+      Alert.alert("Empty field!", "All fields required!");
       return;
     }
 
     setLoading(true);
-    
+
     const body = {
-      tourId: id,
-      name: title,
-      description,
-      type: locationType,
-      longitude,
-      latitude,
+      transportId: id,
+      longitude: longitude,
+      latitude: latitude,
+      location: selectedAddress,
+      boardingPointName: name,
+      boardingPointTime: time,
+      boardingPointDate: date,
     };
+
+    console.log("body", body);
+
     try {
-      const res = await apiRequest(
-        "https://trakies-backend.onrender.com/api/create-point",
-        "POST",
-        body
+      const res = await fetch(
+        "https://trakies-backend.onrender.com/api/board/create",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(body),
+        }
       );
-      if (res) {
-        router.push(`/(addTourDetails)/checkPoints/${id}`);
+
+      if (!res.ok || res.status !== 201) {
+        throw new Error("Failed to add boarding point");
       }
+
+      Alert.alert("Added!", "Boarding point added successfully");
+      router.back();
     } catch (error) {
       console.log("Failed to create checkpoint", error?.message);
+      Alert.alert("Oops", "Something went wrong.\n Please try again");
     } finally {
       setLoading(false);
     }
@@ -141,44 +168,72 @@ const Page = () => {
         <View className="px-3 h-full w-full flex justify-between items-center">
           <View className="w-full flex justify-start items-center">
             <View className="border mt-3 border-gray-500/50 p-2 rounded-lg w-full">
-              <Text className="text-xs text-gray-500/70">Title</Text>
+              <Text className="text-xs text-gray-500/70">
+                Boarding Point Name
+              </Text>
               <TextInput
-                placeholder="Enter Title"
+                placeholder="Enter Boarding Point Name"
                 className="text-black text-base mt-1"
-                value={title}
-                onChangeText={setTitle}
+                value={name}
+                onChangeText={setName}
               />
             </View>
-            <View className="border mt-2 border-gray-500/50 p-2 rounded-lg w-full">
-              <Text className="text-xs text-gray-500/70">Description</Text>
-              <TextInput
-                multiline={true}
-                numberOfLines={5}
-                textAlignVertical="top"
-                onChangeText={setDescription}
-                value={description}
-                placeholder="Enter description"
-                className="text-black text-base mt-1"
-              />
+            <View className="border mt-2 px-2 py-1 border-gray-500/50 rounded-lg w-full">
+              <Text className="text-xs text-gray-500/70">Boarding Date</Text>
+              <TouchableOpacity onPress={() => setShowDatePicker(true)}>
+                <TextInput
+                  editable={false}
+                  className={`py-2 w-full border-slate-500/50 rounded-lg text-black placeholder:text-base`}
+                  value={date ? format(date, "yyyy-MM-dd") : new Date()}
+                  placeholder="Select Date"
+                />
+              </TouchableOpacity>
+              {showDatePicker && (
+                <DateTimePicker
+                  value={date}
+                  mode="date"
+                  display="default"
+                  onChange={onChangeDate}
+                />
+              )}
             </View>
-            <View className="w-full mt-2">
-              <View className="border border-gray-500/50 rounded-lg w-full">
-                <Picker
-                  selectedValue={locationType}
-                  onValueChange={setLocationType}
-                  className="px-3"
-                >
-                  <Picker.Item label="Geo Tagging" value="Geo Tagging" />
-                  <Picker.Item label="QR Code" value="Qr Code" />
-                </Picker>
-              </View>
+            <View className="border mt-2 px-2 py-1 border-gray-500/50 rounded-lg w-full">
+              <Text className="text-xs text-gray-500/70">Boarding Time</Text>
+              <TouchableOpacity onPress={() => setShowTimePicker(true)}>
+                <TextInput
+                  editable={false}
+                  className={`py-2 w-full border-slate-500/50 rounded-lg text-black placeholder:text-base`}
+                  value={time ? format(time, "HH:mm") : new Date()}
+                  placeholder="Select Date"
+                />
+              </TouchableOpacity>
+              {showTimePicker && (
+                <DateTimePicker
+                  value={time}
+                  mode="time"
+                  display="default"
+                  onChange={onChangeTime}
+                />
+              )}
             </View>
             <View className="w-full flex justify-start items-center mt-2">
-              <View className="w-full">
+              <View
+                style={{
+                  width: "100%",
+                  borderWidth: 0.5,
+                  borderRadius: 6,
+                  border: "gray",
+                  paddingHorizontal: 5,
+                  paddingVertical: 2,
+                }}
+              >
+                <Text className="text-xs text-gray-500/70">
+                  Boarding Location
+                </Text>
                 <GooglePlacesAutocomplete
                   ref={googlePlacesRef}
                   placeholder="Search for a location"
-                  minLength={2}
+                  minLength={3}
                   fetchDetails={true}
                   onPress={(data, details = null) =>
                     handleLocationSelect(details)
@@ -193,8 +248,7 @@ const Page = () => {
                       zIndex: 1000,
                     },
                     textInput: {
-                      height: 44,
-                      paddingHorizontal: 10,
+                      height: 40,
                       backgroundColor: "#FFFFFF",
                       borderRadius: 5,
                       color: "black",
@@ -219,9 +273,9 @@ const Page = () => {
       <View className="w-full flex justify-center items-center absolute bottom-0 mb-2">
         <TouchableOpacity
           activeOpacity={0.8}
-          onPress={handleAddCheckPoint}
+          onPress={handleAddBoardingPoint}
           style={{
-            width: 350,
+            width: width * 0.7,
             backgroundColor: "green",
             paddingVertical: 12,
             borderRadius: 8,
@@ -231,7 +285,7 @@ const Page = () => {
             <ActivityIndicator size={"small"} color={"white"} />
           ) : (
             <Text style={{ textAlign: "center", color: "#fff" }}>
-              Add Check Point
+              Add Boarding Point
             </Text>
           )}
         </TouchableOpacity>
