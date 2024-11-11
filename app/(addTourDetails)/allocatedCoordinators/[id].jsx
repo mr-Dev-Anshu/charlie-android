@@ -103,7 +103,7 @@ const AllocatedCoordinators = () => {
 
   return (
     <>
-      <View className="h-full w-full flex justify-between px-3">
+      <View className="h-full w-full flex justify-between px-3 pt-4">
         <View>
           <TextInput
             placeholder="Search by name"

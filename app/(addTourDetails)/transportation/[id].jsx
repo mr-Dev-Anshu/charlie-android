@@ -140,7 +140,7 @@ const TransportDetailButton = ({ id, name, totalCapacity, filled, tourId }) => {
       onPress={() =>
         router.push(`(addTourDetails)/transportDetails/${id}?tourId=${tourId}`)
       }
-      style={{ width: "100%" }}
+      style={{ width: "100%", marginBottom:5 }}
     >
       <View style={styles.transportButtonContainer}>
         <Text style={{ fontWeight: "500" }}>{name}</Text>

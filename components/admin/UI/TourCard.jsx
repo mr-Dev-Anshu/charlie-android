@@ -2,7 +2,7 @@ import { View, Text, TouchableOpacity } from "react-native";
 import React from "react";
 import { Ionicons } from "@expo/vector-icons";
 import { Image } from "expo-image";
-import { Link, router } from "expo-router";
+import { router } from "expo-router";
 import { shorten } from "../../UI/PostComponent";
 import { formatDate } from "../../../utils/helpers";
 
@@ -39,7 +39,7 @@ const TourCard = ({ tour }) => {
           <View>
             <Text className="text-gray-600 font-medium">Seats Booked</Text>
             <View className="flex flex-row justify-end items-center mt-2">
-              <Text className="text-3xl font-medium text-green-700">32/</Text>
+              <Text className="text-3xl font-medium text-green-700">{tour?.bookedCount}/</Text>
               <Text className="-mb-1 text-lg font-medium">
                 {tour?.total_seats}
               </Text>

@@ -58,8 +58,8 @@ const styles = StyleSheet.create({
   },
   tourListContainer: {
     width: "100%",
-    paddingHorizontal: width * 0.04,
-    paddingTop: 10,
+    paddingHorizontal: width * 0.01,
+    paddingTop: 8,
   },
   noToursCard: {
     backgroundColor: "green",
@@ -81,7 +81,6 @@ const styles = StyleSheet.create({
     width: "100%",
     paddingHorizontal: width * 0.05,
     paddingVertical: height * 0.02,
-    backgroundColor: "white",
   },
   createButton: {
     backgroundColor: "green",

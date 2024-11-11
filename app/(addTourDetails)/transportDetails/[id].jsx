@@ -6,6 +6,7 @@ import {
   ScrollView,
   Alert,
   RefreshControl,
+  ActivityIndicator,
 } from "react-native";
 import React, { useEffect, useRef, useState } from "react";
 import { TouchableOpacity } from "react-native";
@@ -13,7 +14,7 @@ import { router, useLocalSearchParams } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
 import { format } from "date-fns";
 import { Modalize } from "react-native-modalize";
-import { Checkbox } from "react-native-paper";
+import {  Checkbox } from "react-native-paper";
 
 const { width, height } = Dimensions.get("window");
 
@@ -24,23 +25,33 @@ const TransportDetails = () => {
   const [loading, setLoading] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
 
-  const [allocatedGuests, setAllocatedGuests] = useState([]);
+  const [bookedGuests, setAllBookedGuests] = useState([]);
 
   const [selectedGuests, setSelectedGuests] = useState([]);
 
-  const toggleGuestSelection = (guestId) => {
+  const [addingGuests, setAddingGuests] = useState(false);
+
+  const [transportAllocatedGuests, setTransportAllocatedGuests] = useState([]);
+
+  const alreadyTransportAllocatedGuests = transportAllocatedGuests.map(
+    (item) => item.bookingId
+  );
+
+  const addGuestsRef = useRef();
+
+  const toggleGuestSelection = (bookingId) => {
+    if (alreadyTransportAllocatedGuests.includes(bookingId)) {
+      Alert.alert("Oops", "Guest already added to transport.");
+      return;
+    }
     setSelectedGuests((prevSelected) => {
-      if (prevSelected.includes(guestId)) {
-        return prevSelected.filter((id) => id !== guestId);
+      if (prevSelected.includes(bookingId)) {
+        return prevSelected.filter((id) => id !== bookingId);
       } else {
-        return [...prevSelected, guestId];
+        return [...prevSelected, bookingId];
       }
     });
   };
-
-  useEffect(() => {
-    console.log(selectedGuests);
-  }, [selectedGuests]);
 
   const handleGetBoardingPoints = async () => {
     setLoading(true);
@@ -61,34 +72,87 @@ const TransportDetails = () => {
     }
   };
 
-  const getAllAllocations = async () => {
-    setLoading(true);
+  const getBookedGuests = async () => {
     try {
       const response = await fetch(
-        `https://trakies-backend.onrender.com/api/allocated/get?tourId=${tourId}`
+        `https://trakies-backend.onrender.com/api/booking/get?id=${tourId}`
       );
 
       if (response.status !== 200) {
-        throw new Error("Failed to fetch allocations");
+        throw new Error("Failed to fetch booked users");
       }
 
       const result = await response.json();
-      setAllocatedGuests(result);
+      setAllBookedGuests(result.data);
     } catch (error) {
       console.log(error);
-      Alert.alert("Something Went Wrong.", "Failed to fetch allocations.");
+    }
+  };
+
+  const handleAddGuests = async () => {
+    if (selectedGuests.length === 0) {
+      Alert.alert("Oops", "Please select guests to add.");
+      return;
+    }
+
+    setAddingGuests(true);
+    try {
+      for (let bookingId of selectedGuests) {
+        const body = {
+          bookingId: bookingId,
+          transportId: id,
+          tourId: tourId,
+        };
+        const response = await fetch(
+          `https://trakies-backend.onrender.com/api/allocatedTransport/create`,
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(body),
+          }
+        );
+        if (response.status !== 201) {
+          throw new Error("Failed to add guests.");
+        }
+      }
+      Alert.alert("Success", "Guests added successfully.");
+      addGuestsRef.current?.close();
+      onRefresh();
+    } catch (error) {
+      console.log("Error:", error);
+      Alert.alert("Oops", "Something went wrong.\nPlease try again.");
+    } finally {
+      setAddingGuests(false);
+    }
+  };
+
+  const handleGetAllocatedGuests = async () => {
+    setLoading(true);
+    try {
+      const response = await fetch(
+        `https://trakies-backend.onrender.com/api/allocatedTransport/get?tourId=${tourId}`
+      );
+      if (response.status !== 200) {
+        throw new Error("Failed to get allocated guests.");
+      }
+      const result = await response.json();
+      setTransportAllocatedGuests(result);
+    } catch (error) {
+      console.log("Error:", error);
+      Alert.alert("Oops", "Something went wrong.");
     } finally {
       setLoading(false);
     }
   };
 
-  const addGuestsRef = useRef();
-
   const onRefresh = async () => {
     setRefreshing(true);
     try {
       await handleGetBoardingPoints();
-      await getAllAllocations();
+      await handleGetAllocatedGuests();
+      await getBookedGuests();
     } finally {
       setRefreshing(false);
     }
@@ -102,7 +166,7 @@ const TransportDetails = () => {
     <>
       <View style={styles.screenContainer}>
         <ScrollView
-          style={{ width: "100%", height: "100%", paddingBottom: 20 }}
+          style={{ width: "100%", height: "100%", paddingBottom: 120 }}
           refreshControl={
             <RefreshControl
               refreshing={refreshing}
@@ -111,7 +175,7 @@ const TransportDetails = () => {
             />
           }
         >
-          <View style={{ paddingHorizontal: 5 }}>
+          <View style={{ paddingHorizontal: 5, paddingBottom: 10 }}>
             {boardingPoints.length > 0 ? (
               <>
                 {boardingPoints.map(
@@ -123,6 +187,7 @@ const TransportDetails = () => {
                     _id,
                   }) => (
                     <BoardingPointCard
+                      key={_id}
                       name={boardingPointName}
                       date={boardingPointDate}
                       time={boardingPointTime}
@@ -135,9 +200,7 @@ const TransportDetails = () => {
                 )}
               </>
             ) : (
-              <View
-                style={styles.noBoardingContainer}
-              >
+              <View style={styles.noBoardingContainer}>
                 <Ionicons name="trash-bin-outline" color={"green"} size={28} />
                 <Text
                   style={{
@@ -152,6 +215,25 @@ const TransportDetails = () => {
               </View>
             )}
           </View>
+          {/* <View>
+            <Text
+              style={{
+                fontSize: 18,
+                color: "green",
+                fontWeight: "600",
+                paddingBottom: 10,
+                width: "100%",
+                textAlign: "center",
+              }}
+            >
+              Allocated Guests
+            </Text>
+          </View> */}
+          {/* <View style={{ paddingHorizontal: 6 }}>
+            {alreadyAllocatedGuestDetails.map((item) => (
+              <TransportAllocatedGuests item={item} key={item._id} />
+            ))}
+          </View> */}
         </ScrollView>
         <View style={styles.buttonsContainer}>
           <TouchableOpacity
@@ -181,6 +263,7 @@ const TransportDetails = () => {
         ref={addGuestsRef}
         adjustToContentHeight
         modalStyle={{ borderTopEndRadius: 10 }}
+        onClose={() => setSelectedGuests([])}
       >
         <View style={{ height: 300 }}>
           <Text
@@ -195,22 +278,28 @@ const TransportDetails = () => {
             Guests
           </Text>
           <ScrollView nestedScrollEnabled={false} contentContainerStyle={{}}>
-            {allocatedGuests.map((item) => (
-              <View
-                style={styles.guestCardContainer}
-                key={item._id}
-              >
+            {bookedGuests.map((item) => (
+              <View style={styles.guestCardContainer} key={item.bookingId}>
                 <Checkbox
                   status={
-                    selectedGuests.includes(item._id) ? "checked" : "unchecked"
+                    selectedGuests.includes(item._id) ||
+                    alreadyTransportAllocatedGuests.includes(item._id)
+                      ? "checked"
+                      : "unchecked"
                   }
                   onPress={() => toggleGuestSelection(item._id)}
-                  color="green"
+                  color={
+                    alreadyTransportAllocatedGuests.includes(item._id)
+                      ? "gray"
+                      : "green"
+                  }
                 />
                 <View
                   style={{
                     backgroundColor:
-                      item?.bookingData?.gender == "Male" || "male" ? "red" : "green",
+                      item?.ProfileData[0]?.gender.toLowerCase() == "male"
+                        ? "red"
+                        : "green",
                     height: 20,
                     width: 20,
                     borderRadius: 20,
@@ -220,25 +309,29 @@ const TransportDetails = () => {
                   }}
                 >
                   <Text style={{ color: "white", fontSize: 12 }}>
-                    {item?.bookingData?.gender?.charAt(0)}
+                    {item?.ProfileData[0]?.gender?.charAt(0)}
                   </Text>
                 </View>
-                <Text>{item?.bookingData?.name}</Text>
-                <Text>{item?.bookingData?.age} Yrs</Text>
-                <Text>Room No. {item?.roomNumber}</Text>
+                <Text style={{width:width*0.4}}>{item?.ProfileData[0]?.name}</Text>
+                <Text>{item?.ProfileData[0]?.age} Yrs</Text>
               </View>
             ))}
           </ScrollView>
-          <View
-            style={styles.modalizeButtonContainer}
-          >
+          <View style={styles.modalizeButtonContainer}>
             <TouchableOpacity
+              onPress={handleAddGuests}
               activeOpacity={0.7}
               style={styles.modalizeButton}
             >
-              <Text style={{ color: "white", fontSize: 16, fontWeight: "600" }}>
-                Add
-              </Text>
+              {addingGuests ? (
+                <ActivityIndicator color="white" size={"small"} />
+              ) : (
+                <Text
+                  style={{ color: "white", fontSize: 16, fontWeight: "600" }}
+                >
+                  Add
+                </Text>
+              )}
             </TouchableOpacity>
           </View>
         </View>
@@ -331,6 +424,46 @@ const BoardingPointCard = ({
   );
 };
 
+const TransportAllocatedGuests = ({ item }) => {
+  return (
+    <View
+      style={[
+        styles.guestCardContainer,
+        {
+          marginBottom: 8,
+          paddingVertical: 5,
+          borderRadius: 6,
+        },
+      ]}
+      key={item._id}
+    >
+      <View
+        style={{
+          backgroundColor:
+            item?.bookingData?.gender.toLowerCase() === "male"
+              ? "red"
+              : "green",
+          height: 20,
+          width: 20,
+          borderRadius: 20,
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+      >
+        <Text style={{ color: "white", fontSize: 12 }}>
+          {item?.bookingData?.gender?.charAt(0)}
+        </Text>
+      </View>
+      <Text>{item?.bookingData?.name}</Text>
+      <Text>{item?.bookingData?.age} Yrs</Text>
+      <TouchableOpacity onPress={() => {}} activeOpacity={0.5}>
+        <Ionicons name="trash-outline" color={"red"} size={18} />
+      </TouchableOpacity>
+    </View>
+  );
+};
+
 const styles = StyleSheet.create({
   screenContainer: {
     height: "100%",
@@ -390,7 +523,7 @@ const styles = StyleSheet.create({
     width: "50%",
     marginBottom: 14,
   },
-  modalizeButton:{
+  modalizeButton: {
     backgroundColor: "green",
     width: width * 0.5,
     height: height * 0.05,
@@ -399,14 +532,14 @@ const styles = StyleSheet.create({
     alignItems: "center",
     borderRadius: 10,
   },
-  modalizeButtonContainer:{
+  modalizeButtonContainer: {
     width: "100%",
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
     height: height * 0.08,
   },
-  guestCardContainer:{
+  guestCardContainer: {
     display: "flex",
     flexDirection: "row",
     justifyContent: "space-between",
@@ -414,8 +547,8 @@ const styles = StyleSheet.create({
     paddingHorizontal: 12,
     backgroundColor: "white",
     elevation: 8,
-  }, 
-  noBoardingContainer:{
+  },
+  noBoardingContainer: {
     width: "100%",
     height: "100%",
     display: "flex",
@@ -423,7 +556,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     paddingVertical: 50,
     backgroundColor: "white",
-  }
+  },
 });
 
 export default TransportDetails;

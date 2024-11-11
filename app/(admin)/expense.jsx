@@ -186,7 +186,7 @@ const expense = () => {
 
   return (
     <>
-      <View className="mt-16 h-full w-full relative px-3">
+      <View className="mt-16 h-full w-full relative">
         <View className="z-50 px-3">
           <DropDownPicker
             open={open}
@@ -241,7 +241,7 @@ const expense = () => {
                 </Text>
               </View>
             </View>
-            <View className=" h-[75%] px-3">
+            <View className=" h-[75%] px-4">
               <ScrollView
                 showsVerticalScrollIndicator={false}
                 contentContainerStyle={{ paddingTop: 10, paddingBottom: 56 }}

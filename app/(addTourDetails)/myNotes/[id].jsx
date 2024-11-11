@@ -167,7 +167,7 @@ const Mynotes = () => {
             </ScrollView>
           )}
         </View>
-        <View className="w-full absolute bottom-0 flex flex-row justify-center items-center h-16 bg-[#FFFFFFFF]">
+        <View className="w-full absolute bottom-0 flex flex-row justify-center items-center h-16">
           <TouchableOpacity
             activeOpacity={0.8}
             onPress={() => addNotesRef.current?.open()}

@@ -226,16 +226,15 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     width: "100%",
-    paddingHorizontal: width * 0.04,
     alignItems: "center",
     justifyContent: "center",
-    backgroundColor: "#fff",
   },
   scrollView: {
     width: "100%",
   },
   scrollContent: {
     paddingBottom: height * 0.03,
+    paddingHorizontal: width * 0.04,
   },
   titleText: {
     fontSize: width * 0.05,
@@ -286,6 +285,8 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     width: "100%",
     marginTop: height * 0.002,
+    backgroundColor:"transparent",
+    paddingHorizontal: width * 0.05,
   },
   actionButton: {
     display: "flex",

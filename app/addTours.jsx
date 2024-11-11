@@ -159,7 +159,7 @@ const addTours = () => {
         setError(result.message || "Please fill in all required fields.");
         return;
       }
-      router.push(`/(addTourDetails)/tourDetails/${result._id}`);
+      router.back();
     } catch (err) {
       console.error("Error submitting tour:", err);
       setError("Error submitting tour. Please try again.");

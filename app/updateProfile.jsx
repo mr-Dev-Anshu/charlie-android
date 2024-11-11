@@ -191,7 +191,6 @@ const UpdateProfile = () => {
         style={{
           paddingVertical: 10,
           paddingHorizontal: 24,
-          backgroundColor: "white",
         }}
       >
         <TouchableOpacity
