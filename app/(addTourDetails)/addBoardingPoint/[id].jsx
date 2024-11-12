@@ -127,8 +127,6 @@ const Page = () => {
       boardingPointDate: date,
     };
 
-    console.log("body", body);
-
     try {
       const res = await fetch(
         `${process.env.EXPO_PUBLIC_BASE_URL}/api/board/create`,

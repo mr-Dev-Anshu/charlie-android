@@ -164,7 +164,6 @@ const CheckPointElement = ({ points, index, handleGetCheckPoints }) => {
                   tourId: points.tourId,
                   checkPointId: points._id,
                 };
-                console.log(body, data);
                 if (points.tourId === data) {
                   handleCheckIn(body);
                 } else {

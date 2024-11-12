@@ -1,4 +1,4 @@
-import { View, Text, Pressable,TouchableOpacity } from "react-native";
+import { View, Text, Pressable,TouchableOpacity, Alert } from "react-native";
 import React, { useEffect, useState } from "react";
 import { useLocalSearchParams } from "expo-router";
 import Animated, {
@@ -19,9 +19,7 @@ const MyTourDetails = () => {
   const { bookedTour } = useSelector((state) => state.tour);
 
   const [loading, setLoading] = useState();
-  const [includeNotIncluded, setIncludedNotIncluded] = useState();
   const [checkPoints, setCheckPoints] = useState();
-  const [luggage, setLuggage] = useState();
 
   const tour = bookedTour?.find((t) => t.tourDetails._id === id);
 
@@ -48,6 +46,7 @@ const MyTourDetails = () => {
       setCheckPoints(result);
     } catch (error) {
       console.log("error:", error);
+      Alert.alert("Oops!", "Something went wrong. Please try again later.");
     } finally {
       setLoading(false);
     }

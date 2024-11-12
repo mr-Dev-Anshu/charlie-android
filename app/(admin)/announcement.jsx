@@ -2,7 +2,6 @@ import {
   View,
   Text,
   ScrollView,
-  Switch,
   TextInput,
   TouchableOpacity,
   Dimensions,
@@ -15,12 +14,13 @@ import { Modalize } from "react-native-modalize";
 import DropDownPicker from "react-native-dropdown-picker";
 import { useSelector } from "react-redux";
 import { Button } from "react-native";
+import { sendNotificaton } from "../../utils/pushNotification";
+import { ActivityIndicator } from "react-native-paper";
 
 const { width, height } = Dimensions.get("window");
 
 const AnnouncementScreen = () => {
   const { tour } = useSelector((state) => state.tour);
-  const { user } = useSelector((state) => state.user);
 
   const toursData = tour.map((t) => {
     return { label: t.name, value: t._id };
@@ -32,7 +32,27 @@ const AnnouncementScreen = () => {
   const [currentTour, setCurrentTour] = useState(toursData[0]?.value);
   const [tours, setTours] = useState(toursData);
   const [content, setContent] = useState("");
-  const [sendToAll, setSendToAll] = useState(false);
+  const [announcementTitle, setAnnouncementTitle] = useState("");
+
+  const [loading, setLoading] = useState(false);
+
+  const handleCreateAnnouncement = async () => {
+    setLoading(true);
+    const body = {
+      id: currentTour,
+      title: announcementTitle,
+      content: content,
+    };
+
+    try {
+      const response = await sendNotificaton(body);
+      console.log(response);
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <>
@@ -91,20 +111,52 @@ const AnnouncementScreen = () => {
         <View style={styles.modalContent}>
           <Text style={styles.modalTitle}>Announcement</Text>
           <TextInput
+            placeholder="Enter announcement title..."
+            style={styles.textInput}
+            onChangeText={setAnnouncementTitle}
+            value={announcementTitle}
+          />
+          <TextInput
             value={content}
             multiline
-            numberOfLines={10}
+            numberOfLines={6}
             textAlign="left"
             textAlignVertical="top"
             onChangeText={setContent}
             placeholder="Enter announcement content..."
             style={styles.textInput}
           />
-          <View style={styles.switchContainer}>
-            <Switch value={sendToAll} onValueChange={setSendToAll} />
-            <Text style={styles.switchText}>Send to all users</Text>
+          <View
+            style={{
+              width: "100%",
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+          >
+            <TouchableOpacity
+              activeOpacity={0.7}
+              onPress={handleCreateAnnouncement}
+              style={{
+                backgroundColor: "green",
+                width: width * 0.6,
+                height: height * 0.05,
+                borderRadius: 10,
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            >
+              {loading ? (
+                <ActivityIndicator size={"small"} color="white" />
+              ) : (
+                <Text
+                  style={{ color: "white", fontSize: 16, fontWeight: "600" }}
+                >
+                  Send
+                </Text>
+              )}
+            </TouchableOpacity>
           </View>
-          <Button title="Send" color={"green"} onPress={() => {}} />
         </View>
       </Modalize>
     </>
@@ -158,7 +210,7 @@ const styles = StyleSheet.create({
     padding: width * 0.05,
   },
   modalTitle: {
-    fontSize: width * 0.06,
+    fontSize: width * 0.05,
     fontWeight: "600",
     textAlign: "center",
     marginBottom: height * 0.02,
@@ -167,7 +219,7 @@ const styles = StyleSheet.create({
     borderWidth: 1.5,
     borderColor: "#ccc",
     borderRadius: 8,
-    padding: width * 0.04,
+    padding: width * 0.02,
     fontWeight: "600",
     marginBottom: height * 0.02,
     fontSize: width * 0.04,

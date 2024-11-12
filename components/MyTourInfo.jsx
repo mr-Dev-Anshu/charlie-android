@@ -16,10 +16,12 @@ const MyTourInfo = ({ tour }) => {
     includeds,
     checkinbagages,
     allocatedAccommodation,
+    allocatedTransport,
     accommodation,
+    transport
   } = tour;
 
-  console.log("tour--->", tour);
+  console.log("tour--->", transport);
   return (
     <View className={`pb-14 `}>
       <ScrollView
@@ -126,19 +128,18 @@ const MyTourInfo = ({ tour }) => {
           </View>
           <View className="ml-2 mt-2">
             <View className="mt-2">
-              <Text>{`From ${transportDetails?.up?.from} to ${transportDetails?.up?.to}`}</Text>
               <Text className={` mt-2 font-semibold`}>
-                {transportDetails?.up?.busName}
+                {transport[0].busName}
               </Text>
               <Text
                 className={`mt-1`}
-              >{`Bus No : ${transportDetails?.up?.busNumber}`}</Text>
+              >{`Bus No : ${transport[0].busNumber}`}</Text>
             </View>
             <View className="mt-2">
               <Text className={`font-semibold`}>Contact Details</Text>
               <Text
                 className={`mt-1`}
-              >{`Mob No: ${transportDetails?.up?.contact}`}</Text>
+              >{`Mob No: ${transport[0].driverNumber}`}</Text>
             </View>
             <View className="mt-2">
               <Text className={`font-semibold`}>Boarding Point</Text>
@@ -167,35 +168,6 @@ const MyTourInfo = ({ tour }) => {
               </View>
             </View>
             <View className="w-full h-[1px] mt-2" />
-          </View>
-          <View className="ml-2 mt-2">
-            <View className="mt-2">
-              <Text>{`From ${transportDetails?.down?.from} to ${transportDetails?.down?.to}`}</Text>
-              <Text className={`mt-2 font-semibold`}>
-                {transportDetails?.down?.busName}
-              </Text>
-              <Text
-                className={`mt-1`}
-              >{`Bus No : ${transportDetails?.down?.busNumber}`}</Text>
-            </View>
-            <View className="mt-2">
-              <Text className={`font-semibold`}>Contact Details</Text>
-              <Text
-                className={`mt-1`}
-              >{`Mob No: ${transportDetails?.down?.contact}`}</Text>
-            </View>
-            <View className="mt-2">
-              <Text className={`font-semibold`}>Boarding Point</Text>
-              <Text
-                className={`mt-1`}
-              >{`${transportDetails?.down?.boardingPoint}`}</Text>
-            </View>
-            <View className="mt-2">
-              <Text className={`font-semibold`}>Boarding Time</Text>
-              <Text
-                className={`mt-1`}
-              >{`${transportDetails?.down?.boardingTime}`}</Text>
-            </View>
           </View>
         </View>
         <View className="mt-6 px-2">

@@ -20,11 +20,10 @@ export const uploadFilesToS3 = async (files, id = 12, type) => {
       if (!response.ok) {
         throw new Error(
           "Failed to get the pre-signed URL for " + file.fileName
-        );
+        ); 
       }
 
       const result = await response.json();
-      console.log("upload respons---->",result)
       const presignedUrl = result;
 
       const fileData = await FileSystem.readAsStringAsync(file.uri, {

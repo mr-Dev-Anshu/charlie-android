@@ -1,6 +1,6 @@
 import { View, Text, TouchableOpacity } from "react-native";
 import React from "react";
-import { Link, router } from "expo-router";
+import { router } from "expo-router";
 import { FontAwesome6, Ionicons } from "@expo/vector-icons";
 import CarouselImageRender from "./CarouselImageRender";
 import Carousel from "react-native-reanimated-carousel";
@@ -8,8 +8,6 @@ import { calculateDuration, formatDate } from "../../utils/helpers";
 
 const MyTourCard = ({ tour, status }) => {
   const images = tour.images.filter((i) => !i.type).map((i) => i.url);
-
-  console.log(status);
 
   return (
     <TouchableOpacity

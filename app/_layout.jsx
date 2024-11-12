@@ -9,13 +9,10 @@ import { Provider } from "react-redux";
 import store from "@/redux/store.js";
 import CustomBackButton from "@/components/UI/CustomBackButton";
 import "react-native-get-random-values";
-import registerNNPushToken from 'native-notify';
 
 SplashScreen.preventAutoHideAsync();
 
 export default function RootLayout() {
-
-  registerNNPushToken(process.env.EXPO_PUBLIC_NN_APP_ID, process.env.EXPO_PUBLIC_NN_APP_TOKEN);
 
   const [loaded] = useFonts({
     SpaceMono: require("../assets/fonts/SpaceMono-Regular.ttf"),

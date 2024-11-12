@@ -103,6 +103,7 @@ const TransportDetails = () => {
           transportId: id,
           tourId: tourId,
         };
+
         const response = await fetch(
           `${process.env.EXPO_PUBLIC_BASE_URL}/api/allocatedTransport/create`,
           {

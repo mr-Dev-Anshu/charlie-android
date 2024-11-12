@@ -1,10 +1,10 @@
 import {
   View,
   ScrollView,
-  ActivityIndicator,
-  Text,
   Dimensions,
   StyleSheet,
+  RefreshControl,
+  Alert,
 } from "react-native";
 import React, { useEffect, useRef, useState } from "react";
 import Notifications from "../../components/UI/Notifications";
@@ -18,16 +18,10 @@ const { width, height } = Dimensions.get("window");
 const NotificationsScreen = () => {
   const { user } = useSelector((state) => state.user);
 
-  const [initialLoading, setInitialLoading] = useState(true);
   const [error, setError] = useState(false);
   const [data, setData] = useState([]);
 
-  const intervalRef = useRef(null);
-
-  const fetchData = async (isInitialFetch = false) => {
-    if (isInitialFetch) {
-      setInitialLoading(true);
-    }
+  const fetchData = async () => {
     try {
       const newData = await apiRequest(
         `${process.env.EXPO_PUBLIC_BASE_URL}/api/notification/get?email=${user.email}`
@@ -36,21 +30,26 @@ const NotificationsScreen = () => {
         const updatedData = [...newData];
         return updatedData;
       });
-      if (isInitialFetch) setInitialLoading(false);
     } catch (error) {
       console.log(error);
+      Alert.alert("Oops", "Something went wrong. Please try again later.");
       setError(error?.message);
+    }
+  };
+
+  const [refreshing, setRefreshing] = useState(false);
+
+  const onRefresh = async () => {
+    setRefreshing(true);
+    try {
+      await fetchData();
     } finally {
-      if (isInitialFetch) setInitialLoading(false);
+      setRefreshing(false);
     }
   };
 
   useEffect(() => {
-    fetchData(true);
-
-    intervalRef.current = setInterval(() => fetchData(false), 10000);
-
-    return () => clearInterval(intervalRef.current);
+    onRefresh();
   }, []);
 
   return (
@@ -63,29 +62,29 @@ const NotificationsScreen = () => {
             translucent={true}
             animated
           />
-          {initialLoading ? (
-            <View style={styles.loadingContainer}>
-              <ActivityIndicator size="large" color="green" />
-              <Text style={styles.loadingText}>Loading...</Text>
+          <ScrollView
+            showsVerticalScrollIndicator={false}
+            contentContainerStyle={styles.scrollContainer}
+            refreshControl={
+              <RefreshControl
+                refreshing={refreshing}
+                onRefresh={onRefresh}
+                colors={["green", "red", "blue"]}
+              />
+            }
+          >
+            <View style={styles.notificationsContainer}>
+              {data.map((i, idx) => (
+                <Notifications
+                  key={idx}
+                  id={i._id}
+                  title={i.title}
+                  content={i?.content}
+                  seen={i.seen}
+                />
+              ))}
             </View>
-          ) : (
-            <ScrollView
-              showsVerticalScrollIndicator={false}
-              contentContainerStyle={styles.scrollContainer}
-            >
-              <View style={styles.notificationsContainer}>
-                {data.map((i, idx) => (
-                  <Notifications
-                    key={idx}
-                    id={i._id}
-                    title={i.title}
-                    content={i?.content}
-                    seen={i.seen}
-                  />
-                ))}
-              </View>
-            </ScrollView>
-          )}
+          </ScrollView>
         </View>
       ) : (
         <LoginReqCard />

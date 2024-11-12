@@ -139,6 +139,7 @@ const addTours = () => {
 
       const notificationData = {
         title: `Buckle up! New tour: ${tourName}`,
+        content:description,
         id: result._id,
       };
 
@@ -159,6 +160,7 @@ const addTours = () => {
         setError(result.message || "Please fill in all required fields.");
         return;
       }
+
       router.back();
     } catch (err) {
       console.error("Error submitting tour:", err);

@@ -67,7 +67,7 @@ const ModalBody = ({
         };
 
         const response = await fetch(
-          `${process.env.EXPO_PUBLIC_BASE_URL}/api/allocated/create",
+          `${process.env.EXPO_PUBLIC_BASE_URL}/api/allocated/create`,
           {
             method: "POST",
             headers: {

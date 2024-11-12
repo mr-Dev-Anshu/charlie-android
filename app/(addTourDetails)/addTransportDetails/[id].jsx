@@ -83,7 +83,7 @@ const TransportDetails = () => {
       const result = await response.json();
 
       try {
-        await uploadFilesToS3(images, result._id, "bus");
+        await uploadFilesToS3(images, id, "bus");
       } catch (error) {
         await fetch(
           `${process.env.EXPO_PUBLIC_BASE_URL}/api/transport/delete?id=${result._id}`

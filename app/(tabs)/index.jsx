@@ -18,17 +18,19 @@ import { StatusBar } from "expo-status-bar";
 import * as Network from "expo-network";
 import { MaterialIcons } from "@expo/vector-icons";
 import { useIsFocused } from "@react-navigation/native";
+import registerNNPushToken from "native-notify";
 
 const { width, height } = Dimensions.get("window");
 
 export default function HomeScreen() {
+
+  registerNNPushToken(process.env.EXPO_PUBLIC_NN_APP_ID, process.env.EXPO_PUBLIC_NN_APP_TOKEN);
+
   const dispatch = useDispatch();
   const [isConnected, setIsConnected] = useState(null);
-  const { user, isAdminAccessEnabled } = useSelector((state) => state.user);
+  const { user } = useSelector((state) => state.user);
   const [isMounted, setIsMounted] = useState(false);
   const [isModalVisible, setIsModalVisible] = useState(false);
-
-  console.log("env", process.env.EXPO_PUBLIC_BASE_URL);
 
   const isFocused = useIsFocused();
 

@@ -183,8 +183,6 @@ const GuestsEnrolled = () => {
         receivedAmount: amount || 0,
       };
 
-      console.log("body", body);
-
       const updateEnrolled = await fetch(
         `${process.env.EXPO_PUBLIC_BASE_URL}/api/interested/update?id=${enrollingDetails._id}`,
         {
@@ -195,8 +193,6 @@ const GuestsEnrolled = () => {
           body: JSON.stringify({ enrolled: true }),
         }
       );
-
-      console.log("update enrolled status", updateEnrolled.status);
 
       if (updateEnrolled.status !== 200) {
         throw new Error("Failed to update enrolled status");
