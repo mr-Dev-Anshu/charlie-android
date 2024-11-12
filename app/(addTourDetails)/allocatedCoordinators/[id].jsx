@@ -32,7 +32,7 @@ const AllocatedCoordinators = () => {
     try {
       const body = { name, gender, age, email, phone, track_id: id };
       const response = await fetch(
-        `https://trakies-backend.onrender.com/api/lead/create-lead`,
+        `${process.env.EXPO_PUBLIC_BASE_URL}/api/lead/create-lead`,
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -62,7 +62,7 @@ const AllocatedCoordinators = () => {
     setCoordinatorLoading(true);
     try {
       const response = await fetch(
-        `https://trakies-backend.onrender.com/api/lead/get-leads?tourId=${id}`
+        `${process.env.EXPO_PUBLIC_BASE_URL}/api/lead/get-leads?tourId=${id}`
       );
       if (response.status !== 200) {
         throw new Error("Failed to fetch coordinators");

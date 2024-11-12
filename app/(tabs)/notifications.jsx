@@ -30,7 +30,7 @@ const NotificationsScreen = () => {
     }
     try {
       const newData = await apiRequest(
-        `https://trakies-backend.onrender.com/api/notification/get?email=${user.email}`
+        `${process.env.EXPO_PUBLIC_BASE_URL}/api/notification/get?email=${user.email}`
       );
       setData(() => {
         const updatedData = [...newData];

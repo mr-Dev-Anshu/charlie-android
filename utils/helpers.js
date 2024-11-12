@@ -82,7 +82,7 @@ export const getAllTours = async () => {
   const dispatch = useDispatch();
   try {
     const response = await fetch(
-      "https://trakies-backend.onrender.com/api/tour/get-alltours"
+      `${process.env.EXPO_PUBLIC_BASE_URL}/api/tour/get-alltours`
     );
     if (!response.ok) {
       throw new Error("Failed to fetch tours");

@@ -99,7 +99,7 @@ const Export = () => {
   // Functions to fetch and export different data
   const exportAccommodationDetails = async () => {
     const response = await fetch(
-      `https://trakies-backend.onrender.com/api/accommodation?email=${user.email}`
+      `${process.env.EXPO_PUBLIC_BASE_URL}/api/accommodation?email=${user.email}`
     );
     const data = await response.json();
     const formattedData = data.map((item) => ({
@@ -113,7 +113,7 @@ const Export = () => {
 
   const exportExpenseDetails = async () => {
     const response = await fetch(
-      `https://trakies-backend.onrender.com/api/expenses?email=${user.email}`
+      `${process.env.EXPO_PUBLIC_BASE_URL}/api/expenses?email=${user.email}`
     );
     const data = await response.json();
     const formattedData = data.map((item) => ({
@@ -126,7 +126,7 @@ const Export = () => {
 
   const exportGuestDetails = async () => {
     const response = await fetch(
-      `https://trakies-backend.onrender.com/api/member/get-member?email=${user.email}`
+      `${process.env.EXPO_PUBLIC_BASE_URL}/api/member/get-member?email=${user.email}`
     );
     const data = await response.json();
     const formattedData = data.map((item) => ({
@@ -142,7 +142,7 @@ const Export = () => {
 
   const exportTransportDetails = async () => {
     const response = await fetch(
-      `https://trakies-backend.onrender.com/api/transport?email=${user.email}`
+      `${process.env.EXPO_PUBLIC_BASE_URL}/api/transport?email=${user.email}`
     );
     const data = await response.json();
     const formattedData = data.map((item) => ({
@@ -156,7 +156,7 @@ const Export = () => {
 
   const exportCheckpointsDetails = async () => {
     const response = await fetch(
-      `https://trakies-backend.onrender.com/api/checkpoints?email=${user.email}`
+      `${process.env.EXPO_PUBLIC_BASE_URL}/api/checkpoints?email=${user.email}`
     );
     const data = await response.json();
     const formattedData = data.map((item) => ({

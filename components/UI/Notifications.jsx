@@ -12,7 +12,7 @@ const Notifications = ({ id, title, content, seen }) => {
     const userEmail = user.email;
     try {
       await apiRequest(
-        "https://trakies-backend.onrender.com/api/notification/update",
+        `${process.env.EXPO_PUBLIC_BASE_URL}/api/notification/update",
         "POST",
         { email: userEmail, notificationId: id }
       );

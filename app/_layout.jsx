@@ -9,10 +9,14 @@ import { Provider } from "react-redux";
 import store from "@/redux/store.js";
 import CustomBackButton from "@/components/UI/CustomBackButton";
 import "react-native-get-random-values";
+import registerNNPushToken from 'native-notify';
 
 SplashScreen.preventAutoHideAsync();
 
 export default function RootLayout() {
+
+  registerNNPushToken(process.env.EXPO_PUBLIC_NN_APP_ID, process.env.EXPO_PUBLIC_NN_APP_TOKEN);
+
   const [loaded] = useFonts({
     SpaceMono: require("../assets/fonts/SpaceMono-Regular.ttf"),
   });
@@ -68,31 +72,31 @@ export default function RootLayout() {
           {/* add tour details screens */}
           <Stack.Screen
             name="(addTourDetails)/accomodation/[id]"
-            options={getOpt("Accomodations")}
+            options={getOpt("Accomodations", "(addTourDetails)/tourDetails")}
           />
           <Stack.Screen
             name="(addTourDetails)/allocatedCoordinators/[id]"
-            options={getOpt("Allocated Coordinators")}
+            options={getOpt("Allocated Coordinators", "(addTourDetails)/allocatedCoordinators")}
           />
           <Stack.Screen
             name="(addTourDetails)/checkPoints/[id]"
-            options={getOpt("Check Points")}
+            options={getOpt("Check Points", "(addTourDetails)/checkPoints")}
           />
           <Stack.Screen
             name="(addTourDetails)/includedNotIncluded/[id]"
-            options={getOpt("Do's & Dont's")}
+            options={getOpt("Included/Not Included", "(addTourDetails)/includedNotIncluded")}
           />
           <Stack.Screen
             name="(addTourDetails)/myNotes/[id]"
-            options={getOpt("My Notes")}
+            options={getOpt("My Notes", "(addTourDetails)/myNotes")}
           />
           <Stack.Screen
             name="(addTourDetails)/tourDetails/[id]"
-            options={getOpt("Tour Details")}
+            options={getOpt("Tour Details", "(addTourDetails)/tourDetails")}
           />
           <Stack.Screen
             name="(addTourDetails)/transportation/[id]"
-            options={getOpt("Transportations")}
+            options={getOpt("Transportations", "(addTourDetails)/transportation")}
           />
           <Stack.Screen
             name="(addTourDetails)/guestsEnrolled/[id]"
@@ -144,11 +148,13 @@ export default function RootLayout() {
   );
 }
 
-function getOpt(title) {
+function getOpt(title, backRoute) {
   return {
     headerShown: true,
     title,
     headerBackTitleVisible: false,
-    headerLeft: () => <CustomBackButton icon={"chevron-back-outline"} />,
+    headerLeft: () => (
+      <CustomBackButton icon={"chevron-back-outline"} backRoute={backRoute} />
+    ),
   };
 }

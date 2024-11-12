@@ -14,24 +14,21 @@ import * as WebBrowser from "expo-web-browser";
 import * as Google from "expo-auth-session/providers/google";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useDispatch } from "react-redux";
-import { setProfile, setUser, setRole } from "../redux/slices/userSlice";
+import {setUser } from "../redux/slices/userSlice";
 
 const { width, height } = Dimensions.get("window");
 
-const androidClientId =
-  "589470403357-tucvnutjfgbrjimnbiddhuf8q47fn3dv.apps.googleusercontent.com";
-
 WebBrowser.maybeCompleteAuthSession();
 
-const config = {
-  androidClientId,
-};
+const androidClientId = process.env.EXPO_PUBLIC_ANDROID_CLIENT_ID;
 
 const Login = () => {
   const dispatch = useDispatch();
   const [loading, setLoading] = useState(false);
   const [sessionActive, setSessionActive] = useState(false);
-  const [request, response, promptAsync] = Google.useAuthRequest(config);
+  const [request, response, promptAsync] = Google.useAuthRequest({
+    androidClientId,
+  });
 
   const storeUserData = async (user) => {
     try {

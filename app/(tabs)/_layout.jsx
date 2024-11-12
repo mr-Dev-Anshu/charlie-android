@@ -22,7 +22,7 @@ export default function TabLayout() {
 
         if (userEmail) {
           const roleResponse = await fetch(
-            "https://trakies-backend.onrender.com/api/users/signin",
+            `${process.env.EXPO_PUBLIC_BASE_URL}/api/users/signin`,
             {
               method: "POST",
               headers: {
@@ -41,7 +41,7 @@ export default function TabLayout() {
           dispatch(setRole(roleData));
   
           const profileResponse = await fetch(
-            "https://trakies-backend.onrender.com/api/users/getProfile",
+            `${process.env.EXPO_PUBLIC_BASE_URL}/api/users/getProfile`,
             {
               method: "GET",
               headers: {

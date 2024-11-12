@@ -81,7 +81,7 @@ const GuestsEnrolled = () => {
     setLoading(true);
     try {
       const response = await fetch(
-        `https://trakies-backend.onrender.com/api/interested/get?tourId=${id}`
+        `${process.env.EXPO_PUBLIC_BASE_URL}/api/interested/get?tourId=${id}`
       );
 
       if (response.status !== 200) {
@@ -103,7 +103,7 @@ const GuestsEnrolled = () => {
     setGetPendingApprovalLoading(true);
     try {
       const response = await fetch(
-        `https://trakies-backend.onrender.com/api/booking/get?id=${id}`
+        `${process.env.EXPO_PUBLIC_BASE_URL}/api/booking/get?id=${id}`
       );
 
       if (response.status !== 200) {
@@ -128,7 +128,7 @@ const GuestsEnrolled = () => {
         status: type === "accept" ? 1 : 0,
       };
       const response = await fetch(
-        `https://trakies-backend.onrender.com/api/booking/update?id=${bookingId}`,
+        `${process.env.EXPO_PUBLIC_BASE_URL}/api/booking/update?id=${bookingId}`,
         {
           method: "POST",
           headers: {
@@ -186,7 +186,7 @@ const GuestsEnrolled = () => {
       console.log("body", body);
 
       const updateEnrolled = await fetch(
-        `https://trakies-backend.onrender.com/api/interested/update?id=${enrollingDetails._id}`,
+        `${process.env.EXPO_PUBLIC_BASE_URL}/api/interested/update?id=${enrollingDetails._id}`,
         {
           method: "POST",
           headers: {
@@ -203,7 +203,7 @@ const GuestsEnrolled = () => {
       }
 
       const response = await fetch(
-        "https://trakies-backend.onrender.com/api/booking/add",
+        `${process.env.EXPO_PUBLIC_BASE_URL}/api/booking/add`,
         {
           method: "POST",
           headers: {
@@ -217,7 +217,7 @@ const GuestsEnrolled = () => {
 
       if (response.status !== 201) {
         await fetch(
-          `https://trakies-backend.onrender.com/api/interested/update?id=${enrollingDetails._id}`,
+          `${process.env.EXPO_PUBLIC_BASE_URL}/api/interested/update?id=${enrollingDetails._id}`,
           {
             method: "POST",
             headers: {

@@ -62,7 +62,7 @@ const DetailsScreen = () => {
     setLoading(true);
     try {
       const response = await fetch(
-        "https://trakies-backend.onrender.com/api/interested/create",
+        `${process.env.EXPO_PUBLIC_BASE_URL}/api/interested/create`,
         {
           method: "POST",
           headers: {

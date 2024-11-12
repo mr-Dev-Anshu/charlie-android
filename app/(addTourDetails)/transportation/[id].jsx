@@ -24,7 +24,7 @@ const Transportation = () => {
     setLoading(true);
     try {
       const response = await fetch(
-        `https://trakies-backend.onrender.com/api/transport/get?tourId=${id}`
+        `${process.env.EXPO_PUBLIC_BASE_URL}/api/transport/get?tourId=${id}`
       );
 
       if (!response.ok) {

@@ -51,7 +51,7 @@ const ViewCheckIns = () => {
   const getBookedUsers = async () => {
     try {
       const response = await fetch(
-        `https://trakies-backend.onrender.com/api/booking/get?id=${tourId}`
+        `${process.env.EXPO_PUBLIC_BASE_URL}/api/booking/get?id=${tourId}`
       );
 
       if (response.status !== 200) {
@@ -69,7 +69,7 @@ const ViewCheckIns = () => {
     setCheckedInMembersLoading(true);
     try {
       const response = await fetch(
-        `https://trakies-backend.onrender.com/api/checked/getUserById?id=${id}`
+        `${process.env.EXPO_PUBLIC_BASE_URL}/api/checked/getUserById?id=${id}`
       );
 
       if (response.status !== 200) {
@@ -97,7 +97,7 @@ const ViewCheckIns = () => {
       console.log(body);
 
       const response = await fetch(
-        "https://trakies-backend.onrender.com/api/checked/add",
+        `${process.env.EXPO_PUBLIC_BASE_URL}/api/checked/add`,
         {
           method: "POST",
           headers: {
@@ -126,7 +126,7 @@ const ViewCheckIns = () => {
     setAbsenting(true);
     try {
       const response = await fetch(
-        `https://trakies-backend.onrender.com/api/checked/delete?id=${checkedInId}`,
+        `${process.env.EXPO_PUBLIC_BASE_URL}/api/checked/delete?id=${checkedInId}`,
         {
           method: "DELETE",
         }
@@ -149,7 +149,7 @@ const ViewCheckIns = () => {
     setReseting(true);
     try {
       const response = await fetch(
-        `https://trakies-backend.onrender.com/api/checked/reset?id=${id}`,
+        `${process.env.EXPO_PUBLIC_BASE_URL}/api/checked/reset?id=${id}`,
         {
           method: "DELETE",
         }

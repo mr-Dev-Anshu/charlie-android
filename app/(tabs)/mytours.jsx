@@ -25,7 +25,7 @@ const MyTours = () => {
   const getAllBookedTours = async () => {
     try {
       const res = await fetch(
-        `https://trakies-backend.onrender.com/api/booking/get-my-tour?email=${user.email}`
+        `${process.env.EXPO_PUBLIC_BASE_URL}/api/booking/get-my-tour?email=${user.email}`
       );
 
       if (res.status !== 200) {

@@ -131,7 +131,7 @@ const Page = () => {
 
     try {
       const res = await fetch(
-        "https://trakies-backend.onrender.com/api/board/create",
+        `${process.env.EXPO_PUBLIC_BASE_URL}/api/board/create`,
         {
           method: "POST",
           headers: {

@@ -28,8 +28,8 @@ const AddRoles = () => {
     }
     setLoading(true);
     try {
-      const data = await fetch(
-        "https://trakies-backend.onrender.com/api/users/signup",
+      await fetch(
+        `${process.env.EXPO_PUBLIC_BASE_URL}/api/users/signup`,
         { email, role: value }
       );
       setLoading(false);

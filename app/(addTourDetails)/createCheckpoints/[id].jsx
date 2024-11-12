@@ -114,7 +114,7 @@ const Page = () => {
     };
     try {
       const res = await apiRequest(
-        "https://trakies-backend.onrender.com/api/create-point",
+        `${process.env.EXPO_PUBLIC_BASE_URL}/api/create-point`,
         "POST",
         body
       );

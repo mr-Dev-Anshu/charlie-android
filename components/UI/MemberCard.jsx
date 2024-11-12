@@ -9,7 +9,7 @@ const MemberCard = ({ data }) => {
   const handleDeleteMember = async () => {
     try {
       const response = await fetch(
-        `https://trakies-backend.onrender.com/api/member/delete-member?id=${id}`,
+        `${process.env.EXPO_PUBLIC_BASE_URL}/api/member/delete-member?id=${id}`,
         {
           method: "DELETE",
         }

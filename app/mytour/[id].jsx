@@ -39,7 +39,7 @@ const MyTourDetails = () => {
     setLoading(true);
     try {
       const response = await fetch(
-        `https://trakies-backend.onrender.com/api/checked/get?email=${user?.email}&tourId=${id}`
+        `${process.env.EXPO_PUBLIC_BASE_URL}/api/checked/get?email=${user?.email}&tourId=${id}`
       );
       if (response.status !== 200) {
         throw new Error("Failed to get checkpoints.");

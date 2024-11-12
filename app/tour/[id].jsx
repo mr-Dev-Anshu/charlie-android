@@ -25,7 +25,7 @@ const tourDetails = () => {
     setLoading(true);
     try {
       const response = await fetch(
-        `https://trakies-backend.onrender.com/api/tour/delete-tour?id=${id}`,
+        `${process.env.EXPO_PUBLIC_BASE_URL}/api/tour/delete-tour?id=${id}`,
         {
           method: "DELETE",
           headers: {
@@ -56,7 +56,7 @@ const tourDetails = () => {
       };
 
       const response = await fetch(
-        `https://trakies-backend.onrender.com/api/tour/update-tour`,
+        `${process.env.EXPO_PUBLIC_BASE_URL}/api/tour/update-tour`,
         {
           method: "POST",
           headers: {
@@ -71,7 +71,7 @@ const tourDetails = () => {
       }
 
       const refreshTour = await fetch(
-        "https://trakies-backend.onrender.com/api/tour/get-alltours"
+        `${process.env.EXPO_PUBLIC_BASE_URL}/api/tour/get-alltours`
       );
 
       if (!refreshTour.ok) {

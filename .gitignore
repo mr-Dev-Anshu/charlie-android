@@ -11,3 +11,9 @@ npm-debug.*
 web-build/
 .DS_Store
 expo-env.d.ts
+
+# Expo
+.expo
+dist/
+web-build/
+.env

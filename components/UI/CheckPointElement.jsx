@@ -47,7 +47,7 @@ const CheckPointElement = ({ points, index, handleGetCheckPoints }) => {
     setCheckInLoading(true);
     try {
       const response = await fetch(
-        `https://trakies-backend.onrender.com/api/checked/add`,
+        `${process.env.EXPO_PUBLIC_BASE_URL}/api/checked/add`,
         {
           method: "POST",
           headers: {

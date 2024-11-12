@@ -12,7 +12,8 @@ import { Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import { useDispatch, useSelector } from "react-redux";
 import { setProfile } from "../redux/slices/userSlice";
-import { formatDate } from "../utils/helpers";
+import { format } from "date-fns";
+import DateTimePicker from "@react-native-community/datetimepicker";
 
 const UpdateProfile = () => {
   const router = useRouter();
@@ -26,18 +27,22 @@ const UpdateProfile = () => {
   const [dob, setDob] = useState(profile.dob);
   const [age, setAge] = useState(profile.age);
   const [contact, setContact] = useState(profile.contact);
-  const [emergencyContact, setEmergencyContact] = useState(
-    profile.emergency_contact
-  );
+  const [emergencyContact, setEmergencyContact] = useState(profile.emergency_contact);
   const [address, setAddress] = useState(profile.address);
-  const [identityProofNumber, setIdentityProofNumber] = useState(
-    profile.id_number
-  );
+  const [identityProofNumber, setIdentityProofNumber] = useState(profile.id_number);
   const [gender, setGender] = useState(profile.gender);
   const [idProofType, setIdProofType] = useState(profile.id_type);
 
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+
+  const [showDatePicker, setShowDatePicker] = useState(false);
+
+  const onChangeStart = (event, selectedDate) => {
+    const currentDate = selectedDate || startDate;
+    setShowDatePicker(false);
+    setDob(currentDate);
+  };
 
   const handleUpdate = async () => {
     setError("");
@@ -58,7 +63,7 @@ const UpdateProfile = () => {
     setLoading(true);
     try {
       const res = await fetch(
-        "https://trakies-backend.onrender.com/api/users/updateProfile",
+        `${process.env.EXPO_PUBLIC_BASE_URL}/api/users/updateProfile`,
         {
           method: "POST",
           headers: {
@@ -128,6 +133,7 @@ const UpdateProfile = () => {
               textAlign: "center",
               fontSize: 18,
               paddingVertical: 5,
+              fontWeight: "600",
             }}
           >
             Enter Updates
@@ -139,12 +145,24 @@ const UpdateProfile = () => {
             onChangeText={setName}
             style={styles.input}
           />
-          <TextInput
-            placeholder={formatDate(profile.dob)}
-            keyboardType="default"
-            onChangeText={setDob}
-            style={styles.input}
-          />
+          <View>
+            <TouchableOpacity onPress={() => setShowDatePicker(true)}>
+              <TextInput
+                editable={false}
+                className={`border py-3 mt-3 w-full border-slate-500/50 rounded-lg text-black placeholder:text-base  px-3 `}
+                value={dob && format(dob, "yyyy-MM-dd")}
+                placeholder={format(profile.dob, "yyyy-MM-dd")}
+              />
+            </TouchableOpacity>
+            {showDatePicker && (
+              <DateTimePicker
+                value={new Date()}
+                mode="date"
+                display="default"
+                onChange={onChangeStart}
+              />
+            )}
+          </View>
           <TextInput
             placeholder={profile.age}
             keyboardType="numeric"
@@ -211,7 +229,7 @@ const UpdateProfile = () => {
           )}
         </TouchableOpacity>
         <TouchableOpacity
-          onPress={() => router.back()}
+          onPress={() => router.push("/profile")}
           style={{
             marginTop: 10,
             padding: 8,

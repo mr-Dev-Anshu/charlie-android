@@ -87,7 +87,7 @@ const expense = () => {
       };
 
       const response = await fetch(
-        "https://trakies-backend.onrender.com/api/expanse/add-expanse",
+        `${process.env.EXPO_PUBLIC_BASE_URL}/api/expanse/add-expanse`,
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -130,7 +130,7 @@ const expense = () => {
   }, [currentTour]);
 
   const fetchExpense = async () => {
-    const url = `https://trakies-backend.onrender.com/api/expanse/get-expanses?id=${currentTour}`;
+    const url = `${process.env.EXPO_PUBLIC_BASE_URL}/api/expanse/get-expanses?id=${currentTour}`;
     setLoading(true);
 
     try {

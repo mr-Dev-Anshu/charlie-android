@@ -17,7 +17,6 @@ import { setAdminAccessEnabled } from "@/redux/slices/userSlice";
 import { StatusBar } from "expo-status-bar";
 import * as Network from "expo-network";
 import { MaterialIcons } from "@expo/vector-icons";
-import { router } from "expo-router";
 import { useIsFocused } from "@react-navigation/native";
 
 const { width, height } = Dimensions.get("window");
@@ -29,12 +28,14 @@ export default function HomeScreen() {
   const [isMounted, setIsMounted] = useState(false);
   const [isModalVisible, setIsModalVisible] = useState(false);
 
+  console.log("env", process.env.EXPO_PUBLIC_BASE_URL);
+
   const isFocused = useIsFocused();
 
   const getAllTours = async () => {
     try {
       const response = await fetch(
-        "https://trakies-backend.onrender.com/api/tour/get-alltours"
+        `${process.env.EXPO_PUBLIC_BASE_URL}/api/tour/get-alltours`
       );
       if (!response.ok) {
         throw new Error("Failed to fetch tours");

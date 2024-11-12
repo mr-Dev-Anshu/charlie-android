@@ -57,7 +57,7 @@ const TransportDetails = () => {
     setLoading(true);
     try {
       const response = await fetch(
-        `https://trakies-backend.onrender.com/api/board/get?transportId=${id}`
+        `${process.env.EXPO_PUBLIC_BASE_URL}/api/board/get?transportId=${id}`
       );
       if (response.status !== 200) {
         throw new Error("Failed to get boarding points");
@@ -75,7 +75,7 @@ const TransportDetails = () => {
   const getBookedGuests = async () => {
     try {
       const response = await fetch(
-        `https://trakies-backend.onrender.com/api/booking/get?id=${tourId}`
+        `${process.env.EXPO_PUBLIC_BASE_URL}/api/booking/get?id=${tourId}`
       );
 
       if (response.status !== 200) {
@@ -104,7 +104,7 @@ const TransportDetails = () => {
           tourId: tourId,
         };
         const response = await fetch(
-          `https://trakies-backend.onrender.com/api/allocatedTransport/create`,
+          `${process.env.EXPO_PUBLIC_BASE_URL}/api/allocatedTransport/create`,
           {
             method: "POST",
             headers: {
@@ -132,7 +132,7 @@ const TransportDetails = () => {
     setLoading(true);
     try {
       const response = await fetch(
-        `https://trakies-backend.onrender.com/api/allocatedTransport/get?tourId=${tourId}`
+        `${process.env.EXPO_PUBLIC_BASE_URL}/api/allocatedTransport/get?tourId=${tourId}`
       );
       if (response.status !== 200) {
         throw new Error("Failed to get allocated guests.");
@@ -353,7 +353,7 @@ const BoardingPointCard = ({
     setRefreshing(true);
     try {
       const response = await fetch(
-        `https://trakies-backend.onrender.com/api/board/delete?id=${id}`,
+        `${process.env.EXPO_PUBLIC_BASE_URL}/api/board/delete?id=${id}`,
         {
           method: "DELETE",
         }

@@ -124,7 +124,7 @@ const addTours = () => {
       };
 
       const response = await fetch(
-        "https://trakies-backend.onrender.com/api/tour/create-tour",
+        `${process.env.EXPO_PUBLIC_BASE_URL}/api/tour/create-tour`,
         {
           method: "POST",
           headers: {
@@ -145,7 +145,7 @@ const addTours = () => {
       if (response.status === 201) {
         await uploadFilesToS3(image, result._id);
         const notify = await fetch(
-          "https://trakies-backend.onrender.com/api/notification/create",
+          `${process.env.EXPO_PUBLIC_BASE_URL}/api/notification/create`,
           {
             method: "POST",
             headers: {

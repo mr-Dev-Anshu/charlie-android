@@ -32,7 +32,7 @@ const Mynotes = () => {
     };
     try {
       const response = await fetch(
-        `https://trakies-backend.onrender.com/api/notes/create`,
+        `${process.env.EXPO_PUBLIC_BASE_URL}/api/notes/create`,
         {
           method: "POST",
           headers: {
@@ -59,7 +59,7 @@ const Mynotes = () => {
   const handleDeleteNotes = async (noteId) => {
     try {
       const response = await fetch(
-        `https://trakies-backend.onrender.com/api/notes/delete?id=${noteId}`,
+        `${process.env.EXPO_PUBLIC_BASE_URL}/api/notes/delete?id=${noteId}`,
         {
           method: "DELETE",
         }
@@ -82,7 +82,7 @@ const Mynotes = () => {
         checked: !checked,
       };
       const response = await fetch(
-        `https://trakies-backend.onrender.com/api/notes/update?id=${noteId}`,
+        `${process.env.EXPO_PUBLIC_BASE_URL}/api/notes/update?id=${noteId}`,
         {
           method: "POST",
           headers: {
@@ -106,7 +106,7 @@ const Mynotes = () => {
     setNotesLoading(true);
     try {
       const response = await fetch(
-        `https://trakies-backend.onrender.com/api/notes/get?tourId=${id}`
+        `${process.env.EXPO_PUBLIC_BASE_URL}/api/notes/get?tourId=${id}`
       );
 
       if (response.status !== 200) {

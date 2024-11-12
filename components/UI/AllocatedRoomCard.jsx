@@ -21,7 +21,7 @@ const AllocatedRoomCard = ({
       const idsToDelete = allocation.bookingIds;
       for (let id of idsToDelete) {
         const response = await fetch(
-          `https://trakies-backend.onrender.com/api/allocated/delete?id=${id}`,
+          `${process.env.EXPO_PUBLIC_BASE_URL}/api/allocated/delete?id=${id}`,
           {
             method: "DELETE",
           }

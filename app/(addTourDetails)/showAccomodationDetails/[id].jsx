@@ -32,7 +32,7 @@ const showAccomodationDetails = () => {
   const getBookedUsers = async () => {
     try {
       const response = await fetch(
-        `https://trakies-backend.onrender.com/api/booking/get?id=${tourId}`
+        `${process.env.EXPO_PUBLIC_BASE_URL}/api/booking/get?id=${tourId}`
       );
 
       if (response.status !== 200) {
@@ -49,7 +49,7 @@ const showAccomodationDetails = () => {
   const getAllocationsByGuestHouseId = async () => {
     try {
       const response = await fetch(
-        `https://trakies-backend.onrender.com/api/allocated/getByAcco?accoId=${id}`
+        `${process.env.EXPO_PUBLIC_BASE_URL}/api/allocated/getByAcco?accoId=${id}`
       );
 
       if (response.status !== 200) {
@@ -69,7 +69,7 @@ const showAccomodationDetails = () => {
     setLoading(true);
     try {
       const response = await fetch(
-        `https://trakies-backend.onrender.com/api/allocated/get?tourId=${tourId}`
+        `${process.env.EXPO_PUBLIC_BASE_URL}/api/allocated/get?tourId=${tourId}`
       );
 
       if (response.status !== 200) {

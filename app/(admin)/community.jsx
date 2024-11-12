@@ -53,7 +53,7 @@ const Community = () => {
   const getAllPosts = async () => {
     try {
       const res = await fetch(
-        "https://trakies-backend.onrender.com/api/Post/get-posts"
+        `${process.env.EXPO_PUBLIC_BASE_URL}/api/Post/get-posts`
       );
       const posts = await res.json();
       setAllPosts(posts.data);
@@ -74,7 +74,7 @@ const Community = () => {
       };
 
       const postRes = await fetch(
-        "https://trakies-backend.onrender.com/api/Post/create-post",
+        `${process.env.EXPO_PUBLIC_BASE_URL}/api/Post/create-post`,
         {
           method: "POST",
           headers: {
@@ -93,7 +93,7 @@ const Community = () => {
 
       if (!imgRes) {
         await fetch(
-          `https://trakies-backend.onrender.com/api/Post/delete-post?id=${res.data._id}`,
+          `${process.env.EXPO_PUBLIC_BASE_URL}/api/Post/delete-post?id=${res.data._id}`,
           { method: "DELETE" }
         );
         throw new Error("Failed to post images.");

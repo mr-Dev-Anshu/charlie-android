@@ -4,7 +4,6 @@ import {
   TouchableOpacity,
   Dimensions,
   Alert,
-  ActivityIndicator,
   ScrollView,
   RefreshControl,
 } from "react-native";
@@ -22,7 +21,7 @@ const Accomodation = () => {
   const getAllGuestHouses = async () => {
     try {
       const response = await fetch(
-        `https://trakies-backend.onrender.com/api/accommodation/get?tourId=${id}`
+        `${process.env.EXPO_PUBLIC_BASE_URL}/api/accommodation/get?tourId=${id}`
       );
 
       if (response.status !== 200) {

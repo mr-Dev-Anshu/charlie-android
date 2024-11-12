@@ -59,7 +59,7 @@ const TransportDetails = () => {
     setLoading(true);
     try {
       const response = await fetch(
-        `https://trakies-backend.onrender.com/api/transport/create`,
+        `${process.env.EXPO_PUBLIC_BASE_URL}/api/transport/create`,
         {
           method: "POST",
           headers: {
@@ -86,7 +86,7 @@ const TransportDetails = () => {
         await uploadFilesToS3(images, result._id, "bus");
       } catch (error) {
         await fetch(
-          `https://trakies-backend.onrender.com/api/transport/delete?id=${result._id}`
+          `${process.env.EXPO_PUBLIC_BASE_URL}/api/transport/delete?id=${result._id}`
         );
         throw new Error("Failed to upload images.");
       }

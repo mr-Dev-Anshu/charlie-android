@@ -95,7 +95,7 @@ const Checkpoints = () => {
     setLoading(true);
     try {
       const res = await fetch(
-        `https://trakies-backend.onrender.com/api/get-points?tourId=${id}`
+        `${process.env.EXPO_PUBLIC_BASE_URL}/api/get-points?tourId=${id}`
       );
 
       if (res.status !== 200) {
@@ -124,7 +124,7 @@ const Checkpoints = () => {
 
     try {
       const response = await fetch(
-        `https://trakies-backend.onrender.com/api/update-point?id=${id}`,
+        `${process.env.EXPO_PUBLIC_BASE_URL}/api/update-point?id=${id}`,
         {
           method: "POST",
           headers: {

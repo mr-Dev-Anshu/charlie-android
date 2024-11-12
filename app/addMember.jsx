@@ -40,7 +40,7 @@ const AddMember = () => {
     setLoading(true);
     try {
       const response = await fetch(
-        "https://trakies-backend.onrender.com/api/member/add-member",
+        `${process.env.EXPO_PUBLIC_BASE_URL}/api/member/add-member`,
         {
           method: "POST",
           headers: {

@@ -6,6 +6,7 @@ import {
   StyleSheet,
   TouchableOpacity,
   Switch,
+  RefreshControl,
 } from "react-native";
 import React, { useEffect, useState } from "react";
 import { router, useRouter } from "expo-router";
@@ -27,7 +28,7 @@ const Profile = () => {
   const dispatch = useDispatch();
   const [membersData, setMembersData] = useState([]);
 
-  const navigation = useNavigation();
+  const [refresh, setRefresh] = useState(false);
 
   const handleAccessChange = (value) => {
     if (value) {
@@ -47,7 +48,7 @@ const Profile = () => {
 
     try {
       const response = await fetch(
-        `https://trakies-backend.onrender.com/api/member/get-member?email=${user.email}`,
+        `${process.env.EXPO_PUBLIC_BASE_URL}/api/member/get-member?email=${user.email}`,
         {
           method: "GET",
           headers: {
@@ -69,8 +70,17 @@ const Profile = () => {
     }
   };
 
+  const onRefresh = async () => {
+    setRefresh(true);
+    try {
+      await handleGetMembers();
+    } finally {
+      setRefresh(false);
+    }
+  };
+
   useEffect(() => {
-    handleGetMembers();
+    onRefresh();
   }, []);
 
   return (
@@ -79,6 +89,9 @@ const Profile = () => {
         style={styles.scrollView}
         showsVerticalScrollIndicator={false}
         contentContainerStyle={styles.scrollContent}
+        refreshControl={
+          <RefreshControl refreshing={refresh} onRefresh={onRefresh} />
+        }
       >
         <View style={{ paddingVertical: 7 }}>
           <Text style={styles.titleText}>Personal Details</Text>
@@ -173,6 +186,7 @@ const Profile = () => {
           <Text style={[styles.actionButtonText]}>Add Member</Text>
         </TouchableOpacity>
         <TouchableOpacity
+          disabled={!profile}
           activeOpacity={0.8}
           onPress={() => router.push("/updateProfile")}
           style={[styles.actionButton, styles.editProfileButton]}
@@ -285,7 +299,7 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     width: "100%",
     marginTop: height * 0.002,
-    backgroundColor:"transparent",
+    backgroundColor: "transparent",
     paddingHorizontal: width * 0.05,
   },
   actionButton: {

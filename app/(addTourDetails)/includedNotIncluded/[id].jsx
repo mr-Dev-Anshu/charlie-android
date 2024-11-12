@@ -33,11 +33,11 @@ const TourDetails = () => {
     setGetLoading(true);
     try {
       const response1 = await fetch(
-        `https://trakies-backend.onrender.com/api/included/get?tourId=${id}`
+        `${process.env.EXPO_PUBLIC_BASE_URL}/api/included/get?tourId=${id}`
       );
 
       const response2 = await fetch(
-        `https://trakies-backend.onrender.com/api/notIncluded/get?tourId=${id}`
+        `${process.env.EXPO_PUBLIC_BASE_URL}/api/notIncluded/get?tourId=${id}`
       );
 
       if (response1.status !== 200 || response2.status !== 200) {
@@ -62,8 +62,8 @@ const TourDetails = () => {
     setLoading(true);
     try {
       const url = isIncludedTab
-        ? `https://trakies-backend.onrender.com/api/included/add`
-        : `https://trakies-backend.onrender.com/api/notIncluded/add`;
+        ? `${process.env.EXPO_PUBLIC_BASE_URL}/api/included/add`
+        : `${process.env.EXPO_PUBLIC_BASE_URL}/api/notIncluded/add`;
 
       const body = {
         tourId: id,
@@ -97,8 +97,8 @@ const TourDetails = () => {
   const handleDelete = async (itemId) => {
     try {
       const url = isIncludedTab
-        ? `https://trakies-backend.onrender.com/api/included/delete?id=${itemId}`
-        : `https://trakies-backend.onrender.com/api/notIncluded/delete?id=${itemId}`;
+        ? `${process.env.EXPO_PUBLIC_BASE_URL}/api/included/delete?id=${itemId}`
+        : `${process.env.EXPO_PUBLIC_BASE_URL}/api/notIncluded/delete?id=${itemId}`;
 
       const response = await fetch(url, {
         method: "DELETE",

@@ -59,7 +59,7 @@ const payment = () => {
         };
 
         const res = await fetch(
-          "https://trakies-backend.onrender.com/api/booking/add",
+          `${process.env.EXPO_PUBLIC_BASE_URL}/api/booking/add`,
           {
             method: "POST",
             headers: {

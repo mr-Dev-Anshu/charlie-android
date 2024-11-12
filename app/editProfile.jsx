@@ -12,6 +12,8 @@ import { Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import { useDispatch, useSelector } from "react-redux";
 import { setProfile } from "../redux/slices/userSlice";
+import { format } from "date-fns";
+import DateTimePicker from "@react-native-community/datetimepicker";
 
 const EditProfile = () => {
   const router = useRouter();
@@ -30,6 +32,14 @@ const EditProfile = () => {
   const [error, setError] = useState("");
   const [gender, setGender] = useState(null);
   const [idProofType, setIdProofType] = useState(null);
+
+  const [showDatePicker, setShowDatePicker] = useState(false);
+
+  const onChangeStart = (event, selectedDate) => {
+    const currentDate = selectedDate || startDate;
+    setShowDatePicker(false);
+    setDob(currentDate);
+  };
 
   const handleUpdate = async () => {
     setError("");
@@ -51,7 +61,7 @@ const EditProfile = () => {
     setLoading(true);
     try {
       const res = await fetch(
-        "https://trakies-backend.onrender.com/api/users/createProfile",
+        `${process.env.EXPO_PUBLIC_BASE_URL}/api/users/createProfile`,
         {
           method: "POST",
           headers: {
@@ -115,13 +125,24 @@ const EditProfile = () => {
               className="text-lg  w-full mt-3 indent-3 border border-slate-500/50 rounded-[10px] p-2"
               value={name}
             />
-            <TextInput
-              placeholder="Enter Date of Birth (YYYY-MM-DD)"
-              keyboardType="default"
-              onChangeText={setDob}
-              className="text-lg  w-full mt-3 indent-3 border border-slate-500/50 rounded-[10px] p-2"
-              value={dob}
-            />
+            <View>
+            <TouchableOpacity onPress={() => setShowDatePicker(true)}>
+              <TextInput
+                editable={false}
+                className={`border py-3 mt-3 w-full border-slate-500/50 rounded-lg text-black placeholder:text-base  px-3 `}
+                value={dob && format(dob, "yyyy-MM-dd")}
+                placeholder={"Enter Date of Birth"}
+              />
+            </TouchableOpacity>
+            {showDatePicker && (
+              <DateTimePicker
+                value={new Date()}
+                mode="date"
+                display="default"
+                onChange={onChangeStart}
+              />
+            )}
+          </View>
             <TextInput
               placeholder="Enter Age"
               keyboardType="numeric"
@@ -190,7 +211,7 @@ const EditProfile = () => {
           )}
         </TouchableOpacity>
         <TouchableOpacity
-          onPress={() => router.back()}
+          onPress={() => router.push("/profile")}
           className="w-full py-2 px-2 rounded-[10px] border border-[#228B22] mt-3"
           activeOpacity={0.8}
         >

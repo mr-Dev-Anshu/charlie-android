@@ -64,7 +64,7 @@ const EditModal = ({
 
       for (let id of idsToDelete) {
         const response = await fetch(
-          `https://trakies-backend.onrender.com/api/allocated/delete?id=${id}`,
+          `${process.env.EXPO_PUBLIC_BASE_URL}/api/allocated/delete?id=${id}`,
           {
             method: "DELETE",
           }
@@ -86,7 +86,7 @@ const EditModal = ({
         };
 
         const response = await fetch(
-          "https://trakies-backend.onrender.com/api/allocated/create",
+          `${process.env.EXPO_PUBLIC_BASE_URL}/api/allocated/create",
           {
             method: "POST",
             headers: {

@@ -7,7 +7,7 @@ export const uploadFilesToS3 = async (files, id = 12, type) => {
       const fileName = file.fileName + Date.now();
 
       const response = await fetch(
-        "https://trakies-backend.onrender.com/api/putObject",
+        `${process.env.EXPO_PUBLIC_BASE_URL}/api/putObject`,
         {
           method: "POST",
           headers: {
@@ -42,7 +42,7 @@ export const uploadFilesToS3 = async (files, id = 12, type) => {
 
       if (uploadResponse.status === 200) {
         const newImage = await axios.post(
-          "https://trakies-backend.onrender.com/api/image/create-image",
+          `${process.env.EXPO_PUBLIC_BASE_URL}/api/image/create-image`,
           {
             id,
             url:
@@ -66,7 +66,7 @@ export const uploadFileToS3 = async (file) => {
     const fileName = file.fileName + Date.now();
 
     const response = await fetch(
-      "https://trakies-backend.onrender.com/api/putObject",
+      `${process.env.EXPO_PUBLIC_BASE_URL}/api/putObject`,
       {
         method: "POST",
         headers: {

@@ -18,7 +18,7 @@ const postdetails = () => {
   const getPostById = async () => {
     try {
       const res = await fetch(
-        `https://trakies-backend.onrender.com/api/Post/get-post?id=${id}`
+        `${process.env.EXPO_PUBLIC_BASE_URL}/api/Post/get-post?id=${id}`
       );
       if (res.status !== 200) {
         throw new Error("Failed to get post.");

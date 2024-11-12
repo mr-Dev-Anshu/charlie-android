@@ -35,7 +35,7 @@ const RoomDetails = () => {
     };
     try {
       const response = await fetch(
-        "https://trakies-backend.onrender.com/api/accommodation/create",
+        `${process.env.EXPO_PUBLIC_BASE_URL}/api/accommodation/create`,
         {
           method: "POST",
           headers: {

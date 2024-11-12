@@ -36,8 +36,8 @@ const Luggage = () => {
     setLoading(true);
     try {
       const url = isBackpack
-        ? `https://trakies-backend.onrender.com/api/backpack/add`
-        : `https://trakies-backend.onrender.com/api/baggage/add`;
+        ? `${process.env.EXPO_PUBLIC_BASE_URL}/api/backpack/add`
+        : `${process.env.EXPO_PUBLIC_BASE_URL}/api/baggage/add`;
       const body = {
         tourId: id,
         item: newItem,
@@ -70,8 +70,8 @@ const Luggage = () => {
   const handleDelete = async (itemId) => {
     try {
       const url = isBackpack
-        ? `https://trakies-backend.onrender.com/api/backpack/delete?id=${itemId}`
-        : `https://trakies-backend.onrender.com/api/baggage/delete?id=${itemId}`;
+        ? `${process.env.EXPO_PUBLIC_BASE_URL}/api/backpack/delete?id=${itemId}`
+        : `${process.env.EXPO_PUBLIC_BASE_URL}/api/baggage/delete?id=${itemId}`;
       const response = await fetch(url, {
         method: "DELETE",
         headers: {
@@ -92,10 +92,10 @@ const Luggage = () => {
     setGetLoading(true);
     try {
       const response1 = await fetch(
-        `https://trakies-backend.onrender.com/api/backpack/get?tourId=${id}`
+        `${process.env.EXPO_PUBLIC_BASE_URL}/api/backpack/get?tourId=${id}`
       );
       const response2 = await fetch(
-        `https://trakies-backend.onrender.com/api/baggage/get?tourId=${id}`
+        `${process.env.EXPO_PUBLIC_BASE_URL}/api/baggage/get?tourId=${id}`
       );
 
       if (response1.status !== 200 || response2.status !== 200) {
