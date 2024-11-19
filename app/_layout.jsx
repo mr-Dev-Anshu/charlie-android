@@ -13,12 +13,12 @@ import "react-native-get-random-values";
 SplashScreen.preventAutoHideAsync();
 
 export default function RootLayout() {
-
-  const [loaded] = useFonts({
+  const [loaded, error] = useFonts({
     SpaceMono: require("../assets/fonts/SpaceMono-Regular.ttf"),
   });
 
   useEffect(() => {
+    if (error) throw error;
     if (loaded) {
       SplashScreen.hideAsync();
     }
@@ -73,7 +73,10 @@ export default function RootLayout() {
           />
           <Stack.Screen
             name="(addTourDetails)/allocatedCoordinators/[id]"
-            options={getOpt("Allocated Coordinators", "(addTourDetails)/allocatedCoordinators")}
+            options={getOpt(
+              "Allocated Coordinators",
+              "(addTourDetails)/allocatedCoordinators"
+            )}
           />
           <Stack.Screen
             name="(addTourDetails)/checkPoints/[id]"
@@ -81,7 +84,10 @@ export default function RootLayout() {
           />
           <Stack.Screen
             name="(addTourDetails)/includedNotIncluded/[id]"
-            options={getOpt("Included/Not Included", "(addTourDetails)/includedNotIncluded")}
+            options={getOpt(
+              "Included/Not Included",
+              "(addTourDetails)/includedNotIncluded"
+            )}
           />
           <Stack.Screen
             name="(addTourDetails)/myNotes/[id]"
@@ -93,7 +99,10 @@ export default function RootLayout() {
           />
           <Stack.Screen
             name="(addTourDetails)/transportation/[id]"
-            options={getOpt("Transportations", "(addTourDetails)/transportation")}
+            options={getOpt(
+              "Transportations",
+              "(addTourDetails)/transportation"
+            )}
           />
           <Stack.Screen
             name="(addTourDetails)/guestsEnrolled/[id]"
