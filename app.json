@@ -64,7 +64,14 @@
     "experiments": {
       "typedRoutes": true
     },
-    "extra": {},
+    "extra": {
+      "router": {
+        "origin": false
+      },
+      "eas": {
+        "projectId": "492d9093-8144-4155-b019-962b57ee71b0"
+      }
+    },
     "owner": "prince_24",
     "ios": {
       "bundleIdentifier": "com.anonymous.trekies"

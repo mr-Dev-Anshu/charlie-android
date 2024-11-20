@@ -18,6 +18,7 @@ export default function RootLayout() {
   //   SpaceMono: require("../assets/fonts/SpaceMono-Regular.ttf"),
   // });
 
+<<<<<<< HEAD
   // useEffect(() => {
   //   const hideSplashScreen = async () => {
   //     try {
@@ -36,6 +37,22 @@ export default function RootLayout() {
   //     </View>
   //   );
   // }
+=======
+  const [loaded, error] = useFonts({
+    SpaceMono: require("../assets/fonts/SpaceMono-Regular.ttf"),
+  });
+
+  useEffect(() => {
+    if (error) throw error;
+    if (loaded) {
+      SplashScreen.hideAsync();
+    }
+  }, [loaded, error]);
+
+  if (!loaded) {
+    return null;
+  }
+>>>>>>> 7cdc9f363ff71060d89df766256a9bc760c3d996
 
   return (
     <Provider store={store}>
