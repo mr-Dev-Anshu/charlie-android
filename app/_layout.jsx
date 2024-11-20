@@ -9,30 +9,40 @@ import { Provider } from "react-redux";
 import store from "@/redux/store.js";
 import CustomBackButton from "@/components/UI/CustomBackButton";
 import "react-native-get-random-values";
+import { Text, View } from "react-native";
 
-SplashScreen.preventAutoHideAsync();
+// SplashScreen.preventAutoHideAsync();
 
 export default function RootLayout() {
-  const [loaded, error] = useFonts({
-    SpaceMono: require("../assets/fonts/SpaceMono-Regular.ttf"),
-  });
+  // const [loaded, error] = useFonts({
+  //   SpaceMono: require("../assets/fonts/SpaceMono-Regular.ttf"),
+  // });
 
-  useEffect(() => {
-    if (error) throw error;
-    if (loaded) {
-      SplashScreen.hideAsync();
-    }
-  }, [loaded]);
+  // useEffect(() => {
+  //   const hideSplashScreen = async () => {
+  //     try {
+  //       if (loaded) {
+  //         await SplashScreen.hideAsync();
+  //       }
+  //     } catch (error) {}
+  //   };
+  //   hideSplashScreen();
+  // }, [loaded]);
 
-  if (!loaded) {
-    return null;
-  }
+  // if (!loaded) {
+  //   return (
+  //     <View>
+  //       <Text>Loading...</Text>
+  //     </View>
+  //   );
+  // }
 
   return (
     <Provider store={store}>
       <GestureHandlerRootView style={{ flex: 1 }}>
         <StatusBar style="light" backgroundColor="#000" translucent={false} />
         <Stack>
+        <Stack.Screen name="index" options={{headerShown: false}}/>
           <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
           <Stack.Screen name="(admin)" options={{ headerShown: false }} />
           <Stack.Screen name="login" options={{ headerShown: false }} />
