@@ -11,6 +11,12 @@ npm-debug.*
 web-build/
 .DS_Store
 expo-env.d.ts
+/android
+/ios
+android
+ios
+./android
+./ios
 
 # Expo
 .expo

@@ -4,7 +4,6 @@
     "slug": "trekies",
     "version": "1.0.0",
     "orientation": "portrait",
-    "entryPoint": "./app/(tabs)/index.js",
     "icon": "./assets/images/icon.png",
     "scheme": "trekies",
     "userInterfaceStyle": "automatic",
@@ -23,7 +22,7 @@
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "package": "com.anonymous.trekies",
+      "package": "com.payanisu.trekies",
       "intentFilters": [
         {
           "action": "VIEW",
@@ -32,10 +31,7 @@
             "host": "trekies",
             "pathPrefix": "/"
           },
-          "category": [
-            "BROWSABLE",
-            "DEFAULT"
-          ]
+          "category": ["BROWSABLE", "DEFAULT"]
         }
       ],
       "permissions": [
@@ -49,9 +45,7 @@
       "favicon": "./assets/images/favicon.png"
     },
     "plugins": [
-      [
-        "expo-router"
-      ],
+      ["expo-router"],
       [
         "expo-camera",
         {
@@ -75,7 +69,7 @@
     },
     "owner": "prince_24",
     "ios": {
-      "bundleIdentifier": "com.anonymous.trekies"
+      "bundleIdentifier": "com.payanisu.trekies"
     }
   }
 }

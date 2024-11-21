@@ -23,6 +23,8 @@ const MemberCard = ({ data }) => {
       console.log("Some error occured!");
     }
   };
+
+  
   return (
     <View className="h-48 w-full mt-4 bg-white shadow-xl shadow-black/70 rounded-lg justify-start items-center ">
       <View className="flex flex-row w-full justify-between items-center pr-3 ">

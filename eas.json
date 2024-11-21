@@ -18,9 +18,6 @@
       "distribution": "internal",
       "ios": {
         "simulator": true
-      },
-      "android": {
-        "buildType": "apk"
       }
     },
     "preview": {
@@ -38,6 +35,12 @@
       },
       "android": {
         "buildType": "apk"
+      },
+      "env": {
+        "EXPO_PUBLIC_ANDROID_CLIENT_ID": "589470403357-14lokbo11sjp1cqigkfvgl5hlmauo6ln.apps.googleusercontent.com",
+        "EXPO_PUBLIC_BASE_URL": "https://trakies-backend.onrender.com",
+        "EXPO_PUBLIC_NN_APP_ID": "24785",
+        "EXPO_PUBLIC_NN_APP_TOKEN": "OtXSAq1N7jAogLbdYOdzCy"
       }
     }
   },

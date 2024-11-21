@@ -1,7 +1,4 @@
-import { useFonts } from "expo-font";
 import { Stack } from "expo-router";
-import * as SplashScreen from "expo-splash-screen";
-import { useEffect } from "react";
 import "react-native-reanimated";
 import { StatusBar } from "expo-status-bar";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
@@ -9,57 +6,14 @@ import { Provider } from "react-redux";
 import store from "@/redux/store.js";
 import CustomBackButton from "@/components/UI/CustomBackButton";
 import "react-native-get-random-values";
-import { Text, View } from "react-native";
-
-// SplashScreen.preventAutoHideAsync();
 
 export default function RootLayout() {
-  // const [loaded, error] = useFonts({
-  //   SpaceMono: require("../assets/fonts/SpaceMono-Regular.ttf"),
-  // });
-
-<<<<<<< HEAD
-  // useEffect(() => {
-  //   const hideSplashScreen = async () => {
-  //     try {
-  //       if (loaded) {
-  //         await SplashScreen.hideAsync();
-  //       }
-  //     } catch (error) {}
-  //   };
-  //   hideSplashScreen();
-  // }, [loaded]);
-
-  // if (!loaded) {
-  //   return (
-  //     <View>
-  //       <Text>Loading...</Text>
-  //     </View>
-  //   );
-  // }
-=======
-  const [loaded, error] = useFonts({
-    SpaceMono: require("../assets/fonts/SpaceMono-Regular.ttf"),
-  });
-
-  useEffect(() => {
-    if (error) throw error;
-    if (loaded) {
-      SplashScreen.hideAsync();
-    }
-  }, [loaded, error]);
-
-  if (!loaded) {
-    return null;
-  }
->>>>>>> 7cdc9f363ff71060d89df766256a9bc760c3d996
-
   return (
     <Provider store={store}>
       <GestureHandlerRootView style={{ flex: 1 }}>
         <StatusBar style="light" backgroundColor="#000" translucent={false} />
         <Stack>
-        <Stack.Screen name="index" options={{headerShown: false}}/>
+          <Stack.Screen name="index" options={{ headerShown: false }} />
           <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
           <Stack.Screen name="(admin)" options={{ headerShown: false }} />
           <Stack.Screen name="login" options={{ headerShown: false }} />
@@ -82,6 +36,14 @@ export default function RootLayout() {
             name="updateProfile"
             options={getOpt("Update Profile")}
           />
+          <Stack.Screen name="terms" options={getOpt("Terms & Conditions")} />
+          <Stack.Screen name="contact" options={getOpt("Contact Us")} />
+          <Stack.Screen name="about" options={getOpt("About Us")} />
+          <Stack.Screen
+            name="privacyPolicy"
+            options={getOpt("Privacy Policy")}
+          />
+          <Stack.Screen name="Menu" options={getOpt("Menu")} />
           <Stack.Screen name="profile" options={getOpt("My Profile")} />
           <Stack.Screen name="tourmates" options={getOpt("Tour Mates")} />
           <Stack.Screen name="details/[id]" options={getOpt("Tour Details")} />

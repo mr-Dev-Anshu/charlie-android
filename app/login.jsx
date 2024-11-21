@@ -12,22 +12,25 @@ import { router } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
 import * as WebBrowser from "expo-web-browser";
 import * as Google from "expo-auth-session/providers/google";
+import * as AuthSession from "expo-auth-session";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useDispatch } from "react-redux";
-import {setUser } from "../redux/slices/userSlice";
+import { setProfile, setRole, setUser } from "../redux/slices/userSlice";
+import payanisuPoster from "../assets/payanisu.png";
 
 const { width, height } = Dimensions.get("window");
 
 WebBrowser.maybeCompleteAuthSession();
 
-const androidClientId = process.env.EXPO_PUBLIC_ANDROID_CLIENT_ID;
-
 const Login = () => {
   const dispatch = useDispatch();
   const [loading, setLoading] = useState(false);
-  const [sessionActive, setSessionActive] = useState(false);
+
   const [request, response, promptAsync] = Google.useAuthRequest({
-    androidClientId,
+    androidClientId: process.env.EXPO_PUBLIC_ANDROID_CLIENT_ID,
+    redirectUri: AuthSession.makeRedirectUri({
+      useProxy: true,
+    }),
   });
 
   const storeUserData = async (user) => {
@@ -54,7 +57,7 @@ const Login = () => {
         }
       );
 
-      if (response.status !== 200) {
+      if (!response.ok) {
         const text = await response.text();
         console.error("Error fetching Google user data:", text);
         throw new Error("Failed to fetch Google user data.");
@@ -63,18 +66,56 @@ const Login = () => {
       const user = await response.json();
       dispatch(setUser(user));
       await storeUserData(user);
+
+      const userEmail = user?.email;
+
+      if (userEmail) {
+        // Fetch role data
+        const roleResponse = await fetch(
+          `${process.env.EXPO_PUBLIC_BASE_URL}/api/users/signin`,
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ email: userEmail }),
+          }
+        );
+
+        if (!roleResponse.ok) {
+          console.error("Error fetching role data");
+          throw new Error("Failed to fetch role data.");
+        }
+
+        const roleData = await roleResponse.json();
+        dispatch(setRole(roleData));
+
+        // Fetch profile data
+        const profileResponse = await fetch(
+          `${process.env.EXPO_PUBLIC_BASE_URL}/api/users/getProfile`,
+          {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+              email: userEmail,
+            },
+          }
+        );
+
+        if (!profileResponse.ok) {
+          console.error("Error fetching profile data");
+          throw new Error("Failed to fetch profile data.");
+        }
+
+        const profileData = await profileResponse.json();
+        if (profileData && !profileData.error) {
+          dispatch(setProfile(profileData));
+        }
+      }
     } catch (error) {
       console.error("Error fetching user profile:", error);
     } finally {
       setLoading(false);
-      setSessionActive(false);
-    }
-  };
-
-  const handleLogin = () => {
-    if (!sessionActive) {
-      setSessionActive(true);
-      promptAsync();
     }
   };
 
@@ -89,25 +130,23 @@ const Login = () => {
     fetchProfile();
   }, [response]);
 
+  const handleLogin = () => {
+    if (!loading) {
+      promptAsync();
+    }
+  };
+
   return (
     <View style={styles.container}>
       <View style={styles.backgroundImageContainer}>
-        <Image
-          style={styles.backgroundImage}
-          source="https://images.pexels.com/photos/931007/pexels-photo-931007.jpeg?auto=compress&cs=tinysrgb&w=600"
-        />
+        <Image style={styles.backgroundImage} source={payanisuPoster} />
       </View>
-      <View style={styles.overlay} />
       <View style={styles.contentContainer}>
-        <View style={styles.welcomeContainer}>
-          <Text style={styles.welcomeText}>Welcome to</Text>
-          <Text style={styles.appTitle}>Trekies.</Text>
-        </View>
         <TouchableOpacity
           activeOpacity={0.7}
           onPress={handleLogin}
           style={styles.loginButton}
-          disabled={sessionActive}
+          disabled={loading}
         >
           <View style={styles.loginButtonContent}>
             {loading ? (
@@ -148,27 +187,16 @@ const styles = StyleSheet.create({
   contentContainer: {
     flex: 1,
     width: "100%",
-    justifyContent: "space-between",
+    justifyContent: "center",
+    alignItems: "center",
+    position: "relative",
     paddingHorizontal: width * 0.08,
-  },
-  welcomeContainer: {
-    marginTop: height * 0.15,
-    marginLeft: width * 0.05,
-  },
-  welcomeText: {
-    fontSize: width * 0.06,
-    fontWeight: "bold",
-    color: "white",
-  },
-  appTitle: {
-    fontSize: width * 0.12,
-    fontWeight: "bold",
-    color: "white",
   },
   loginButton: {
     width: "100%",
     paddingHorizontal: width * 0.01,
-    marginBottom: height * 0.05,
+    position: "absolute",
+    bottom: 24,
   },
   loginButtonContent: {
     backgroundColor: "rgba(96, 96, 96, 0.8)",

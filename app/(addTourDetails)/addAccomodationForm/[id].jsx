@@ -6,7 +6,7 @@ import {
   Alert,
   ActivityIndicator,
 } from "react-native";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { router, useLocalSearchParams } from "expo-router";
 
 const RoomDetails = () => {
@@ -18,10 +18,8 @@ const RoomDetails = () => {
   const [totalOccupancy, setTotalOccupancy] = useState("");
   const [loading, setLoading] = useState(false);
 
-  const [isEmpty, setIsEmpty] = useState(true);
-
   const handleAddGuestHouse = async () => {
-    if (isEmpty) {
+    if (!guestHouseName || !location || !numberOfRooms || !totalOccupancy) {
       Alert.alert("Info", "Please fill all the fields.");
       return;
     }
@@ -77,7 +75,7 @@ const RoomDetails = () => {
         <TextInput
           style={{ fontSize: 16, marginTop: 4 }}
           placeholder="Enter guest house name"
-          onChangeText={(text) => setGuestHouseName(text)}
+          onChangeText={setGuestHouseName}
         />
       </View>
       <View
@@ -93,7 +91,7 @@ const RoomDetails = () => {
         <TextInput
           style={{ fontSize: 16, marginTop: 4 }}
           placeholder="Enter location"
-          onChangeText={(text) => setLocation(text)}
+          onChangeText={setLocation}
         />
       </View>
       <View
@@ -110,7 +108,7 @@ const RoomDetails = () => {
           style={{ fontSize: 16, marginTop: 4 }}
           placeholder="Enter number of rooms"
           keyboardType="number-pad"
-          onChangeText={(text) => setNumberOfRooms(text)}
+          onChangeText={setNumberOfRooms}
         />
       </View>
       <View
@@ -127,7 +125,7 @@ const RoomDetails = () => {
           style={{ fontSize: 16, marginTop: 4 }}
           placeholder="Enter total occupancy"
           keyboardType="number-pad"
-          onChangeText={(text) => setTotalOccupancy(text)}
+          onChangeText={setTotalOccupancy}
         />
       </View>
       <TouchableOpacity

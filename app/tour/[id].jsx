@@ -21,6 +21,21 @@ const tourDetails = () => {
 
   const dispatch = useDispatch();
 
+  const getAllTours = async () => {
+    try {
+      const response = await fetch(
+        `${process.env.EXPO_PUBLIC_BASE_URL}/api/tour/get-alltours`
+      );
+      if (!response.ok || response.status !== 200) {
+        throw new Error("Failed to fetch tours");
+      }
+      const tour = await response.json();
+      dispatch(setTour(tour));
+    } catch (error) {
+      console.error("Error fetching tours:", error);
+    }
+  };
+
   const handleDeleteTour = async () => {
     setLoading(true);
     try {
@@ -37,6 +52,8 @@ const tourDetails = () => {
       if (response.status !== 200) {
         throw new Error("Failed to delete");
       }
+
+      await getAllTours();
       Alert.alert("Success", "Tour deleted.");
       router.push("/(admin)/tours");
     } catch (error) {

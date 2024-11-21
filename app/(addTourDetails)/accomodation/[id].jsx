@@ -14,6 +14,7 @@ const { width } = Dimensions.get("window");
 
 const Accomodation = () => {
   const { id } = useLocalSearchParams();
+
   const [refreshing, setRefreshing] = useState(false);
 
   const [guestHouses, setGuestHouses] = useState([]);
@@ -21,12 +22,13 @@ const Accomodation = () => {
   const getAllGuestHouses = async () => {
     try {
       const response = await fetch(
-        `${process.env.EXPO_PUBLIC_BASE_URL}/api/accommodation/get?tourId=${id}`
+        `${process.env.EXPO_PUBLIC_BASE_URL}/api/accommodation/getByTourId?tourId=${id}`
       );
 
       if (response.status !== 200) {
         throw new Error("Failed to fetch guest houses");
       }
+
       const data = await response.json();
       setGuestHouses(data);
     } catch (error) {

@@ -9,10 +9,11 @@ const Header = () => {
   const data = useSelector((state) => state.user);
   const { user } = data;
 
+  const route = user ? "/Menu" : "/login";
+
   const picture =
     user?.picture ||
     "https://www.pngitem.com/pimgs/m/146-1468479_my-profile-icon-blank-profile-picture-circle-hd.png";
-
 
   return (
     <View className="absolute mt-[45px] w-full h-[60px] bg-white">
@@ -30,7 +31,7 @@ const Header = () => {
           </Text>
         </TouchableOpacity>
         <TouchableOpacity
-          onPress={() => router.push("/profile")}
+          onPress={() => router.push(route)}
           activeOpacity={0.7}
         >
           <View className="h-12 w-12 rounded-full border-2 border-green-700 p-0.5 ">

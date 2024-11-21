@@ -1,12 +1,17 @@
-import React, { useState } from "react";
-import { Text, View, TouchableOpacity, ScrollView } from "react-native";
-import LinearGradient from "react-native-linear-gradient";
+import React, { useEffect, useState } from "react";
+import {
+  Text,
+  View,
+  TouchableOpacity,
+  ScrollView,
+  RefreshControl,
+  Alert,
+} from "react-native";
 import ListComponent from "./UI/ListComponent";
-import { FontAwesome6, Ionicons } from "@expo/vector-icons";
-import { accomodationDetails, transportDetails } from "../constants/tours.js";
-import AccomodationDetailsElement from "./UI/AccomodationDetailsElement.jsx";
+import { Ionicons } from "@expo/vector-icons";
 import { router } from "expo-router";
 import { formatDate } from "../utils/helpers.js";
+import { format } from "date-fns";
 
 const MyTourInfo = ({ tour }) => {
   const {
@@ -18,16 +23,105 @@ const MyTourInfo = ({ tour }) => {
     allocatedAccommodation,
     allocatedTransport,
     accommodation,
-    transport
   } = tour;
 
-  console.log("tour--->", transport);
+  const [refresh, setRefresh] = useState(false);
+
+  const [transport, setTransport] = useState({});
+  const [boardingPoints, setBoardingPoints] = useState([]);
+  const [accomodationDetails, setAccomodationDetails] = useState([]);
+
+  console.log("allocatedAccomodation---->", allocatedAccommodation);
+
+  const { transportId } = allocatedTransport[0] || {};
+  const { accommodationId } = allocatedAccommodation[0] || {};
+
+  const getTransportDetails = async () => {
+    try {
+      const response = await fetch(
+        `${process.env.EXPO_PUBLIC_BASE_URL}/api/transport/get?id=${transportId}`
+      );
+
+      if (!response.ok || response.status !== 200) {
+        throw new Error("Failed to get transportation details.");
+      }
+
+      const result = await response.json();
+      setTransport(result);
+    } catch (error) {
+      Alert.alert("Oops!", "Something went wrong. Please try again later.");
+      console.log("Error:", error);
+    }
+  };
+
+  const getBoardingPoints = async () => {
+    try {
+      const response = await fetch(
+        `${process.env.EXPO_PUBLIC_BASE_URL}/api/board/get?transportId=${transportId}`
+      );
+      if (!response.ok || response.status !== 200) {
+        throw new Error("Failed to get boarding points.");
+      }
+      const result = await response.json();
+      setBoardingPoints(result);
+    } catch (error) {
+      Alert.alert("Oops!", "Something went wrong. Please try again later.");
+      console.log("Error:", error);
+    }
+  };
+
+  const getAccomodationDetails = async () => {
+    try {
+      
+      const response = await fetch(
+        `${process.env.EXPO_PUBLIC_BASE_URL}/api/accommodation/get?id=${accommodationId}`
+      );
+
+      if (response.status !== 200) {
+        throw new Error("Failed to fetch guest houses");
+      }
+
+      const data = await response.json();
+      setAccomodationDetails(data);
+    } catch (error) {
+      console.log(error);
+      Alert.alert("Oops", "Something went wrong. Please try again later.");
+    }
+  };
+
+  const { busName, busNumber, driverNumber } = transport || {};
+  const { boardingPointDate, boardingPointName, boardingPointTime, location } =
+    boardingPoints[0] || {};
+
+  const onRefresh = async () => {
+    setRefresh(true);
+
+    try {
+      await getBoardingPoints();
+      if (allocatedTransport && allocatedTransport.length > 0) {
+        await getTransportDetails();
+      }
+      if (allocatedAccommodation && allocatedAccommodation.length > 0) {
+        await getAccomodationDetails();
+      }
+    } finally {
+      setRefresh(false);
+    }
+  };
+
+  useEffect(() => {
+    onRefresh();
+  }, []);
+
   return (
     <View className={`pb-14 `}>
       <ScrollView
         className="flex h-full"
         contentContainerStyle={{ paddingBottom: 64 }}
         showsVerticalScrollIndicator={false}
+        refreshControl={
+          <RefreshControl refreshing={refresh} onRefresh={onRefresh} />
+        }
       >
         <View className="mt-5">
           <Text className={`text-md font-bold`}>Tour Name</Text>
@@ -128,30 +222,32 @@ const MyTourInfo = ({ tour }) => {
           </View>
           <View className="ml-2 mt-2">
             <View className="mt-2">
-              <Text className={` mt-2 font-semibold`}>
-                {transport[0].busName}
-              </Text>
+              <Text className={` mt-2 font-semibold`}>{busName}</Text>
               <Text
-                className={`mt-1`}
-              >{`Bus No : ${transport[0].busNumber}`}</Text>
+                className={`mt-1 font-semibold`}
+              >{`Bus No : ${busNumber}`}</Text>
             </View>
             <View className="mt-2">
-              <Text className={`font-semibold`}>Contact Details</Text>
+              <Text>Contact Details</Text>
               <Text
-                className={`mt-1`}
-              >{`Mob No: ${transport[0].driverNumber}`}</Text>
+                className={`mt-1 font-semibold`}
+              >{`Mob No: ${driverNumber}`}</Text>
             </View>
             <View className="mt-2">
-              <Text className={`font-semibold`}>Boarding Point</Text>
+              <Text>Boarding Point</Text>
               <Text
-                className={`mt-1`}
-              >{`${transportDetails?.up?.boardingPoint}`}</Text>
+                className={`mt-1 font-semibold`}
+              >{`${boardingPointName}`}</Text>
             </View>
             <View className="mt-2">
-              <Text className={`font-semibold`}>Boarding Time</Text>
+              <Text>Boarding Location</Text>
+              <Text className={`mt-1 font-semibold`}>{`${location}`}</Text>
+            </View>
+            <View className="mt-2">
+              <Text>Boarding Time</Text>
               <Text
-                className={`mt-1`}
-              >{`${transportDetails?.up?.boardingTime}`}</Text>
+                className={`mt-1 font-semibold`}
+              >{`${boardingPointDate && format(new Date(boardingPointDate), "dd MMM yyyy")} - ${boardingPointTime && format(new Date(boardingPointTime), "hh:mm a")}`}</Text>
             </View>
             <View className="flex flex-row justify-start space-x-4 items-center mt-2">
               <View className="mt-3 flex flex-row justify-start items-center space-x-2">
@@ -175,15 +271,41 @@ const MyTourInfo = ({ tour }) => {
             <Ionicons name="bed" size={20} color={"green"} />
             <Text className={`font-bold`}>Accomodation Details</Text>
           </View>
-          <View className="">
-            {allocatedAccommodation.map((details, index) => (
-              <AccomodationDetailsElement
-                key={index}
-                details={details}
-                accommodation={accommodation}
-              />
-            ))}
-          </View>
+          {allocatedAccommodation && allocatedAccommodation.lenght > 0 ? (
+            <View className="">
+              <View className="mt-4 space-y-2 pl-2">
+                <View>
+                  <Text>Place</Text>
+                  <Text
+                    className={`font-semibold `}
+                  >{`${accomodationDetails?.location}`}</Text>
+                </View>
+                <View>
+                  <Text>{`Hotel Name`}</Text>
+                  <Text
+                    className={`font-semibold `}
+                  >{`${accomodationDetails?.guestHouseName}`}</Text>
+                </View>
+                <View>
+                  <Text>Room</Text>
+                  <Text
+                    className={`font-bold `}
+                  >{`${allocatedAccommodation[0]?.roomNumber} (${allocatedAccommodation[0]?.roomType})`}</Text>
+                </View>
+                <View>
+                  <Text>Occupancy</Text>
+                  <Text
+                    className={`font-bold `}
+                  >{`${allocatedAccommodation[0]?.occupancy}`}</Text>
+                </View>
+                <View className={`w-full h-[1px] "bg-green-700"`} />
+              </View>
+            </View>
+          ) : (
+            <View>
+              <Text>Accommodation not allocated. </Text>
+            </View>
+          )}
         </View>
         <TouchableOpacity
           onPress={() => router.push("/tourmates")}

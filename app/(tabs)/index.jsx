@@ -18,13 +18,12 @@ import { StatusBar } from "expo-status-bar";
 import * as Network from "expo-network";
 import { MaterialIcons } from "@expo/vector-icons";
 import { useIsFocused } from "@react-navigation/native";
-import registerNNPushToken from "native-notify";
+// import registerNNPushToken from "native-notify";
 
 const { width, height } = Dimensions.get("window");
 
 export default function HomeScreen() {
-
-  registerNNPushToken(process.env.EXPO_PUBLIC_NN_APP_ID, process.env.EXPO_PUBLIC_NN_APP_TOKEN);
+  // registerNNPushToken(process.env.EXPO_PUBLIC_NN_APP_ID, process.env.EXPO_PUBLIC_NN_APP_TOKEN);
 
   const dispatch = useDispatch();
   const [isConnected, setIsConnected] = useState(null);

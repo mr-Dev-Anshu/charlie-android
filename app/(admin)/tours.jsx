@@ -5,8 +5,9 @@ import {
   TouchableOpacity,
   Dimensions,
   StyleSheet,
+  RefreshControl,
 } from "react-native";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import TourCard from "../../components/admin/UI/TourCard";
 import { router } from "expo-router";
 import { useSelector } from "react-redux";
@@ -16,11 +17,24 @@ const { width, height } = Dimensions.get("window");
 const Tours = () => {
   const { tour } = useSelector((state) => state.tour);
 
+  const [refresh, setRefresh] = useState(false);
+
+  const onRefresh = () => {
+    try {
+      setRefresh(true);
+    } finally {
+      setRefresh(false);
+    }
+  };
+
   return (
     <View style={styles.container}>
       <ScrollView
         contentContainerStyle={styles.scrollContainer}
         showsVerticalScrollIndicator={false}
+        refreshControl={
+          <RefreshControl onRefresh={onRefresh} refreshing={refresh} />
+        }
       >
         <View style={styles.tourListContainer}>
           {tour.length > 0 ? (

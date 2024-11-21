@@ -7,7 +7,6 @@ import Header from "@/components/common/Header";
 
 export default function TabLayout() {
 
-
   return (
     <Tabs
       screenOptions={() => ({
