@@ -89,7 +89,7 @@ const UpdateProfile = () => {
         dispatch(setProfile(profileData));
       }
       setLoading(false);
-      router.push("/profile");
+      router.push("/Menu");
     } catch (error) {
       console.log(error?.message);
       setError("An error occurred. Please try again.");
@@ -229,7 +229,7 @@ const UpdateProfile = () => {
           )}
         </TouchableOpacity>
         <TouchableOpacity
-          onPress={() => router.push("/profile")}
+          onPress={() => router.back("")}
           style={{
             marginTop: 10,
             padding: 8,

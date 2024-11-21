@@ -1,6 +1,11 @@
 import { useDispatch } from "react-redux";
 import { setTour } from "../redux/slices/tourSlice";
-import { Alert } from "react-native";
+import { Alert, Platform } from "react-native";
+import * as FileSystem from "expo-file-system";
+import * as Sharing from "expo-sharing";
+import * as XLSX from "xlsx";
+import * as MediaLibrary from "expo-media-library";
+
 
 export const formatDate = (dateValue) => {
   const date = new Date(dateValue);
@@ -92,5 +97,61 @@ export const getAllTours = async () => {
   } catch (error) {
     Alert.alert("Oops", "Something went wrong.");
     console.error("Error fetching tours:", error);
+  }
+};
+
+
+export const exportDataToExcel = async (data, fileName) => {
+  try {
+    const { status } = await MediaLibrary.requestPermissionsAsync();
+    if (status !== "granted") {
+      Alert.alert(
+        "Permission Denied",
+        "Permission to access media library is required!"
+      );
+      return;
+    }
+
+    const ws = XLSX.utils.json_to_sheet(data);
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, "Data");
+
+    const wbout = XLSX.write(wb, { type: "base64", bookType: "xlsx" });
+    const fileUri = FileSystem.cacheDirectory + `${fileName}.xlsx`;
+
+    await FileSystem.writeAsStringAsync(fileUri, wbout, {
+      encoding: FileSystem.EncodingType.Base64,
+    });
+
+    if (Platform.OS === "android") {
+      const permissions =
+        await FileSystem.StorageAccessFramework.requestDirectoryPermissionsAsync();
+      if (!permissions.granted) {
+        Alert.alert(
+          "Permission required",
+          "Cannot save file without permission"
+        );
+        return;
+      }
+
+      await FileSystem.StorageAccessFramework.createFileAsync(
+        permissions.directoryUri,
+        `${fileName}.xlsx`,
+        "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+      ).then(async (uri) => {
+        await FileSystem.writeAsStringAsync(uri, wbout, {
+          encoding: FileSystem.EncodingType.Base64,
+        });
+        Alert.alert(
+          "Success",
+          `${fileName} saved successfully in Downloads folder`
+        );
+      });
+    } else {
+      Alert.alert("Error", "This method is only supported on Android");
+    }
+  } catch (error) {
+    console.log(error);
+    Alert.alert("Oops!", "Something went wrong. Please try again.");
   }
 };

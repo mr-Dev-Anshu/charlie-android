@@ -72,7 +72,6 @@ const MyTourInfo = ({ tour }) => {
 
   const getAccomodationDetails = async () => {
     try {
-      
       const response = await fetch(
         `${process.env.EXPO_PUBLIC_BASE_URL}/api/accommodation/get?id=${accommodationId}`
       );
@@ -220,51 +219,65 @@ const MyTourInfo = ({ tour }) => {
             <Ionicons name="bus" size={20} color={"green"} />
             <Text className={`font-bold`}>Transport Details</Text>
           </View>
-          <View className="ml-2 mt-2">
-            <View className="mt-2">
-              <Text className={` mt-2 font-semibold`}>{busName}</Text>
-              <Text
-                className={`mt-1 font-semibold`}
-              >{`Bus No : ${busNumber}`}</Text>
-            </View>
-            <View className="mt-2">
-              <Text>Contact Details</Text>
-              <Text
-                className={`mt-1 font-semibold`}
-              >{`Mob No: ${driverNumber}`}</Text>
-            </View>
-            <View className="mt-2">
-              <Text>Boarding Point</Text>
-              <Text
-                className={`mt-1 font-semibold`}
-              >{`${boardingPointName}`}</Text>
-            </View>
-            <View className="mt-2">
-              <Text>Boarding Location</Text>
-              <Text className={`mt-1 font-semibold`}>{`${location}`}</Text>
-            </View>
-            <View className="mt-2">
-              <Text>Boarding Time</Text>
-              <Text
-                className={`mt-1 font-semibold`}
-              >{`${boardingPointDate && format(new Date(boardingPointDate), "dd MMM yyyy")} - ${boardingPointTime && format(new Date(boardingPointTime), "hh:mm a")}`}</Text>
-            </View>
-            <View className="flex flex-row justify-start space-x-4 items-center mt-2">
-              <View className="mt-3 flex flex-row justify-start items-center space-x-2">
-                <Ionicons name="images" size={16} color={"green"} />
-                <Text className={`font-semibold text-green-600`}>
-                  View Bus Images
-                </Text>
+          {allocatedTransport && allocatedTransport.length > 0 ? (
+            <View className="ml-2 mt-2">
+              <View className="mt-2">
+                <Text className={` mt-2 font-semibold`}>{busName}</Text>
+                <Text
+                  className={`mt-1 font-semibold`}
+                >{`Bus No : ${busNumber}`}</Text>
               </View>
-              <View className="mt-3 flex flex-row justify-start items-center space-x-2">
-                <Ionicons name="compass" size={16} color={"green"} />
-                <Text className={`font-semibold text-green-600`}>
-                  View Direction
-                </Text>
+              <View className="mt-2">
+                <Text>Contact Details</Text>
+                <Text
+                  className={`mt-1 font-semibold`}
+                >{`Mob No: ${driverNumber}`}</Text>
               </View>
+              <View className="mt-2">
+                <Text>Boarding Point</Text>
+                <Text
+                  className={`mt-1 font-semibold`}
+                >{`${boardingPointName}`}</Text>
+              </View>
+              <View className="mt-2">
+                <Text>Boarding Location</Text>
+                <Text className={`mt-1 font-semibold`}>{`${location}`}</Text>
+              </View>
+              <View className="mt-2">
+                <Text>Boarding Time</Text>
+                <Text
+                  className={`mt-1 font-semibold`}
+                >{`${boardingPointDate && format(new Date(boardingPointDate), "dd MMM yyyy")} - ${boardingPointTime && format(new Date(boardingPointTime), "hh:mm a")}`}</Text>
+              </View>
+              <View className="flex flex-row justify-start space-x-4 items-center mt-2">
+                <View className="mt-3 flex flex-row justify-start items-center space-x-2">
+                  <Ionicons name="images" size={16} color={"green"} />
+                  <Text className={`font-semibold text-green-600`}>
+                    View Bus Images
+                  </Text>
+                </View>
+                <View className="mt-3 flex flex-row justify-start items-center space-x-2">
+                  <Ionicons name="compass" size={16} color={"green"} />
+                  <Text className={`font-semibold text-green-600`}>
+                    View Direction
+                  </Text>
+                </View>
+              </View>
+              <View className="w-full h-[1px] mt-2" />
             </View>
-            <View className="w-full h-[1px] mt-2" />
-          </View>
+          ) : (
+            <View
+              style={{
+                width: "100%",
+                height: 40,
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            >
+              <Text>Tranport not allocated</Text>
+            </View>
+          )}
         </View>
         <View className="mt-6 px-2">
           <View className="flex flex-row space-x-2 justify-start items-center my-1 ml-2 ">
@@ -302,7 +315,15 @@ const MyTourInfo = ({ tour }) => {
               </View>
             </View>
           ) : (
-            <View>
+            <View
+              style={{
+                width: "100%",
+                height: 40,
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            >
               <Text>Accommodation not allocated. </Text>
             </View>
           )}

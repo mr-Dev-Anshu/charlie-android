@@ -70,7 +70,7 @@ const Menu = () => {
           <TouchableOpacity
             key={option.id}
             activeOpacity={0.7}
-            // onPress={() => router.push(option.route)}
+            onPress={() => router.push(option.route)}
             style={styles.optionButtonContainer}
           >
             <Text style={{ fontSize: 16, fontWeight: "600" }}>
@@ -108,22 +108,22 @@ const options = [
   {
     id: "pp",
     name: "Privacy Policy",
-    route: "/privacy-policy",
+    route: "/privacyPolicy",
   },
   {
     id: "tc",
     name: "Terms and Conditions",
-    route: "/terms-and-conditions",
+    route: "/terms",
   },
   {
     id: "contact",
     name: "Contact Us",
-    route: "/contact-us",
+    route: "/contact",
   },
   {
     id: "abt",
     name: "About Us",
-    route: "/about-us",
+    route: "/about",
   },
 ];
 

@@ -22,7 +22,7 @@
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "package": "com.payanisu.trekies",
+      "package": "com.anonymous.trekies",
       "intentFilters": [
         {
           "action": "VIEW",
@@ -69,7 +69,7 @@
     },
     "owner": "prince_24",
     "ios": {
-      "bundleIdentifier": "com.payanisu.trekies"
+      "bundleIdentifier": "com.anonymous.trekies"
     }
   }
 }

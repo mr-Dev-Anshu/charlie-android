@@ -10,6 +10,8 @@ import React, { useEffect, useState } from "react";
 import { Dimensions } from "react-native";
 import { router, useLocalSearchParams } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
+import { exportDataToExcel } from "../../../utils/helpers";
+import { ActivityIndicator } from "react-native-paper";
 
 const { width, height } = Dimensions.get("window");
 
@@ -19,15 +21,16 @@ const Transportation = () => {
   const [loading, setLoading] = useState(false);
   const [transportationDetails, setTransportationDetails] = useState([]);
   const [refreshing, setRefreshing] = useState(false);
+  const [exporting, setExporting] = useState(false);
 
   const handelGetTranportationDetails = async () => {
     setLoading(true);
     try {
       const response = await fetch(
-        `${process.env.EXPO_PUBLIC_BASE_URL}/api/transport/get?tourId=${id}`
+        `${process.env.EXPO_PUBLIC_BASE_URL}/api/transport/getByTourId?tourId=${id}`
       );
 
-      if (!response.ok) {
+      if (!response.ok || response.status !== 200) {
         throw new Error("Failed to get transportation details.");
       }
 
@@ -46,6 +49,25 @@ const Transportation = () => {
       await handelGetTranportationDetails();
     } finally {
       setRefreshing(false);
+    }
+  };
+
+  const handleExport = async () => {
+    setExporting(true);
+    try {
+      const formattedData = transportationDetails?.map((d) => ({
+        BusName: d?.busName || "",
+        PlateNumber: d?.busNumber || "",
+        Driver: d?.driverName || "",
+        Contact: d?.driverNo || "",
+        AllocatedNo: d?.allocatedCount || 0,
+      }));
+
+      await exportDataToExcel(formattedData, "tranportDetails");
+    } catch (error) {
+      console.log("Failed to export tranport details", error);
+    } finally {
+      setExporting(false);
     }
   };
 
@@ -73,12 +95,12 @@ const Transportation = () => {
             <>
               {transportationDetails?.map((item) => (
                 <TransportDetailButton
-                  key={item._id}
-                  id={item._id}
+                  key={item?._id}
+                  id={item?._id}
                   tourId={id}
-                  name={item.busName}
-                  totalCapacity={item.capacity}
-                  filled={"30"}
+                  name={item?.busName}
+                  totalCapacity={item?.capacity}
+                  filled={item?.allocatedCount}
                 />
               ))}
             </>
@@ -113,9 +135,13 @@ const Transportation = () => {
         <TouchableOpacity
           style={[styles.buttons, { backgroundColor: "white", borderWidth: 1 }]}
           activeOpacity={0.6}
-          onPress={() => {}}
+          onPress={handleExport}
         >
-          <Text style={styles.buttonText}>Export Excel</Text>
+          {exporting ? (
+            <ActivityIndicator color="green" size={"small"} />
+          ) : (
+            <Text style={styles.buttonText}>Export Excel</Text>
+          )}
         </TouchableOpacity>
         <TouchableOpacity
           style={[styles.buttons, { backgroundColor: "green" }]}
@@ -140,7 +166,7 @@ const TransportDetailButton = ({ id, name, totalCapacity, filled, tourId }) => {
       onPress={() =>
         router.push(`(addTourDetails)/transportDetails/${id}?tourId=${tourId}`)
       }
-      style={{ width: "100%", marginBottom:5 }}
+      style={{ width: "100%", marginBottom: 10 }}
     >
       <View style={styles.transportButtonContainer}>
         <Text style={{ fontWeight: "500" }}>{name}</Text>

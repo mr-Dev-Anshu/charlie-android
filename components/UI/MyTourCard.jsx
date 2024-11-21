@@ -1,4 +1,4 @@
-import { View, Text, TouchableOpacity } from "react-native";
+import { View, Text, TouchableOpacity, Alert } from "react-native";
 import React from "react";
 import { router } from "expo-router";
 import { FontAwesome6, Ionicons } from "@expo/vector-icons";
@@ -9,10 +9,20 @@ import { calculateDuration, formatDate } from "../../utils/helpers";
 const MyTourCard = ({ tour, status }) => {
   const images = tour.images.filter((i) => !i.type).map((i) => i.url);
 
+  const onClickHandler = () => {
+    const clickEnabled = status === 1 ? true : false;
+
+    if (clickEnabled) {
+      router.push(`/mytour/${tour?._id}`);
+    } else {
+      Alert.alert("Sorry..", "Booking rejected or not accepted yet.");
+    }
+  };
+
   return (
     <TouchableOpacity
       activeOpacity={0.8}
-      onPress={() => router.push(`/mytour/${tour?._id}`)}
+      onPress={onClickHandler}
       className="mt-4"
     >
       <View

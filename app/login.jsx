@@ -12,7 +12,6 @@ import { router } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
 import * as WebBrowser from "expo-web-browser";
 import * as Google from "expo-auth-session/providers/google";
-import * as AuthSession from "expo-auth-session";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useDispatch } from "react-redux";
 import { setProfile, setRole, setUser } from "../redux/slices/userSlice";
@@ -25,12 +24,9 @@ WebBrowser.maybeCompleteAuthSession();
 const Login = () => {
   const dispatch = useDispatch();
   const [loading, setLoading] = useState(false);
-
+  const [sessionActive, setSessionActive] = useState(false);
   const [request, response, promptAsync] = Google.useAuthRequest({
     androidClientId: process.env.EXPO_PUBLIC_ANDROID_CLIENT_ID,
-    redirectUri: AuthSession.makeRedirectUri({
-      useProxy: true,
-    }),
   });
 
   const storeUserData = async (user) => {
@@ -115,6 +111,7 @@ const Login = () => {
     } catch (error) {
       console.error("Error fetching user profile:", error);
     } finally {
+      setSessionActive(true);
       setLoading(false);
     }
   };
@@ -131,7 +128,8 @@ const Login = () => {
   }, [response]);
 
   const handleLogin = () => {
-    if (!loading) {
+    if (!sessionActive) {
+      setSessionActive(true);
       promptAsync();
     }
   };

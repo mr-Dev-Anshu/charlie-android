@@ -182,7 +182,6 @@ const Profile = () => {
           onPress={() => router.push("/addMember")}
           style={[styles.actionButton, styles.addMemberButton]}
         >
-          <Ionicons name="add-outline" size={16} color={"white"} />
           <Text style={[styles.actionButtonText]}>Add Member</Text>
         </TouchableOpacity>
         <TouchableOpacity

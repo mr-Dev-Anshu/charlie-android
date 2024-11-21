@@ -6,21 +6,23 @@ import {
   ScrollView,
   TextInput,
   TouchableOpacity,
+  Dimensions,
 } from "react-native";
 import React, { useEffect, useRef, useState } from "react";
 import { Modalize } from "react-native-modalize";
 import { Ionicons } from "@expo/vector-icons";
 import { shorten } from "../../components/UI/PostComponent";
-
 import DropDownPicker from "react-native-dropdown-picker";
 import { useSelector } from "react-redux";
 import * as ImagePicker from "expo-image-picker";
-import { formatDate } from "../../utils/helpers.js";
+import { exportDataToExcel, formatDate } from "../../utils/helpers.js";
 import { Image } from "expo-image";
 import { uploadFileToS3 } from "../../utils/uploadFileHelper.js";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { format as formatDateFns } from "date-fns";
 import LabelValue from "../../components/UI/LabelValue.jsx";
+
+const { width, height } = Dimensions.get("window");
 
 const expense = () => {
   const { tour } = useSelector((state) => state.tour);
@@ -32,8 +34,8 @@ const expense = () => {
 
   const addExpenseDetailRef = useRef(null);
   const showExpenseDetailRef = useRef(null);
-  const exportExcelSheet = useRef(null);
 
+  const [exporting, setExporting] = useState(false);
   const [open, setOpen] = useState(false);
 
   const [showExpenseDetails, setShowExpenseDetails] = useState(null);
@@ -50,6 +52,8 @@ const expense = () => {
   const [currentTour, setCurrentTour] = useState(
     toursDataForDropdown[0]?.value
   );
+
+  const [excelData, setExcelData] = useState(null);
 
   const [showDatePicker, setShowDatePicker] = useState(false);
 
@@ -69,7 +73,7 @@ const expense = () => {
 
   const handleAddExpense = async () => {
     if (!expenseCategory || !amount || !date || !user.name) {
-      console.log("All fields required");
+      Alert.alert("Empty Field", "All fields required.")
       return;
     }
 
@@ -143,16 +147,34 @@ const expense = () => {
       const data = await res.json();
 
       setExpenseData({
-        budget: data.budget,
-        expanses: data.expanses,
-        spent: data.spent[0]?.spent || 0,
+        budget: data?.budget,
+        expanses: data?.expanses,
+        spent: data?.spent[0]?.spent || 0,
         balance: data?.balance,
       });
+      setExcelData(data?.expanses);
     } catch (error) {
       console.error("Failed to load expenses --->", error.message);
       Alert.alert("Something went wrong", "Please try again.");
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleExport = async () => {
+    setExporting(true);
+    try {
+      const formattedData = await excelData.map((d) => ({
+        Name: d?.name || "",
+        Category: d?.category || "",
+        Amount: d?.amount || 0,
+      }));
+
+      await exportDataToExcel(formattedData, `expenseDetail`);
+    } catch (error) {
+      console.log("Error exporting expense data: ", error);
+    } finally {
+      setExporting(false);
     }
   };
 
@@ -289,17 +311,18 @@ const expense = () => {
           </>
         )}
         <View
-          className={`flex flex-grow flex-row justify-between items-center w-full bottom-14 px-3 py-2 bg-transparent `}
+          className={`flex flex-grow flex-row justify-between items-center w-full bottom-14 px-6 py-2 bg-transparent `}
         >
-          <TouchableOpacity
-            activeOpacity={0.7}
-            onPress={() => exportExcelSheet?.current?.open()}
-          >
-            <View className="bg-green-700 py-2 rounded-lg flex justify-center items-center w-[160px]">
-              <Text className="text-white text-base font-semibold">
-                Export Excel
-              </Text>
-            </View>
+          <TouchableOpacity activeOpacity={0.7} onPress={handleExport}>
+            {exporting ? (
+              <ActivityIndicator color={"white"} size={"small"} />
+            ) : (
+              <View className="bg-green-700 py-2 rounded-lg flex justify-center items-center w-[160px]">
+                <Text className="text-white text-base font-semibold">
+                  Export Excel
+                </Text>
+              </View>
+            )}
           </TouchableOpacity>
           <TouchableOpacity
             activeOpacity={0.7}
@@ -340,11 +363,6 @@ const expense = () => {
               <Text className="text-white font-semibold">Delete</Text>
             </TouchableOpacity>
           </View>
-        </View>
-      </Modalize>
-      <Modalize ref={exportExcelSheet} adjustToContentHeight>
-        <View>
-          <Text>Hello</Text>
         </View>
       </Modalize>
       <Modalize ref={addExpenseDetailRef} adjustToContentHeight>
@@ -413,7 +431,7 @@ const expense = () => {
           />
           <TouchableOpacity
             activeOpacity={0.8}
-            containerStyle={{ width: "100%" }}
+            style={{ width: "100%" }}
             onPress={pickImage}
           >
             <View className="h-32 flex justify-center items-center border-2 border-dashed rounded-lg mb-3 border-green-600 w-full overflow-hidden">
@@ -428,7 +446,7 @@ const expense = () => {
                   />
                 </View>
               ) : (
-                <View className="flex flex-row justify-center items-center space-x-3">
+                <View className="flex flex-row justify-center items-center space-x-3 w-full">
                   <Ionicons name="add-circle" size={20} color={"green"} />
                   <Text className="text-base font-semibold text-green-600">
                     Upload Receipt Image ( optional )
@@ -438,21 +456,23 @@ const expense = () => {
             </View>
           </TouchableOpacity>
         </View>
-        <TouchableOpacity
-          activeOpacity={0.8}
-          containerStyle={{ width: "100%", paddingHorizontal: 24 }}
-          onPress={handleAddExpense}
-        >
-          <View className="flex justify-center items-center mt-2 bg-green-600 w-full py-2 rounded-[10px]">
-            {loading ? (
-              <ActivityIndicator size={"small"} color={"white"} />
-            ) : (
-              <Text className="text-white text-lg font-semibold">
-                Add Expense
-              </Text>
-            )}
-          </View>
-        </TouchableOpacity>
+        <View className="w-full flex justify-center items-center">
+          <TouchableOpacity
+            activeOpacity={0.8}
+            style={{ width: width * 0.7 }}
+            onPress={handleAddExpense}
+          >
+            <View className="flex justify-center items-center mt-2 bg-green-600 w-full py-2 rounded-[10px]">
+              {loading ? (
+                <ActivityIndicator size={"small"} color={"white"} />
+              ) : (
+                <Text className="text-white text-lg font-semibold">
+                  Add Expense
+                </Text>
+              )}
+            </View>
+          </TouchableOpacity>
+        </View>
       </Modalize>
     </>
   );

@@ -1,3 +1,4 @@
+import { useFonts } from "expo-font";
 import { Stack } from "expo-router";
 import "react-native-reanimated";
 import { StatusBar } from "expo-status-bar";
@@ -8,12 +9,35 @@ import CustomBackButton from "@/components/UI/CustomBackButton";
 import "react-native-get-random-values";
 
 export default function RootLayout() {
+  // const [loaded, error] = useFonts({
+  //   SpaceMono: require("../assets/fonts/SpaceMono-Regular.ttf"),
+  // });
+
+  // useEffect(() => {
+  //   const hideSplashScreen = async () => {
+  //     try {
+  //       if (loaded) {
+  //         await SplashScreen.hideAsync();
+  //       }
+  //     } catch (error) {}
+  //   };
+  //   hideSplashScreen();
+  // }, [loaded]);
+
+  // if (!loaded) {
+  //   return (
+  //     <View>
+  //       <Text>Loading...</Text>
+  //     </View>
+  //   );
+  // }
+
   return (
     <Provider store={store}>
       <GestureHandlerRootView style={{ flex: 1 }}>
         <StatusBar style="light" backgroundColor="#000" translucent={false} />
         <Stack>
-          <Stack.Screen name="index" options={{ headerShown: false }} />
+        <Stack.Screen name="index" options={{headerShown: false}}/>
           <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
           <Stack.Screen name="(admin)" options={{ headerShown: false }} />
           <Stack.Screen name="login" options={{ headerShown: false }} />
@@ -36,7 +60,7 @@ export default function RootLayout() {
             name="updateProfile"
             options={getOpt("Update Profile")}
           />
-          <Stack.Screen name="terms" options={getOpt("Terms & Conditions")} />
+           <Stack.Screen name="terms" options={getOpt("Terms & Conditions")} />
           <Stack.Screen name="contact" options={getOpt("Contact Us")} />
           <Stack.Screen name="about" options={getOpt("About Us")} />
           <Stack.Screen

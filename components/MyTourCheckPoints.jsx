@@ -1,8 +1,11 @@
 import React, { useState } from "react";
-import { View } from "react-native";
-import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplete";
+import { Dimensions, StyleSheet, View } from "react-native";
 import MapView, { Marker } from "react-native-maps";
 import MapViewDirections from "react-native-maps-directions";
+
+const { width, height } = Dimensions.get("window");
+
+const apiKey = process.env.EXPO_PUBLIC_GOOGLE_API_KEY;
 
 const MyTourCheckPoints = () => {
   const [region, setRegion] = useState({
@@ -39,87 +42,24 @@ const MyTourCheckPoints = () => {
   };
 
   return (
-    <View>
+    <View style={styles.screenContainer}>
       <View className="rounded-xl overflow-hidden">
-        <View className="w-full py-1 pb-10 z-10 border border-gray-500/40 rounded-xl">
-          <GooglePlacesAutocomplete
-            placeholder="Search for start location"
-            minLength={2}
-            fetchDetails={true}
-            onPress={(data, details = null) => handleLocationSelect(details, true)}
-            query={{
-              key: "AIzaSyB_EhOLUePnuFPSOSSjRyAWZRUb2jWcQ8s",
-              language: "en",
-            }}
-            styles={{
-              container: {
-                position: "absolute",
-                width: "100%",
-                zIndex: 1,
-              },
-              textInput: {
-                height: 44,
-                paddingHorizontal: 10,
-                backgroundColor: "#FFFFFF",
-                borderRadius: 5,
-                color: "black",
-                elevation: 5,
-              },
-            }}
-          />
-
-          {/* Destination Location Autocomplete */}
-          <GooglePlacesAutocomplete
-            placeholder="Search for destination"
-            minLength={2}
-            fetchDetails={true}
-            onPress={(data, details = null) => handleLocationSelect(details, false)}
-            query={{
-              key: "AIzaSyB_EhOLUePnuFPSOSSjRyAWZRUb2jWcQ8s", // Replace with your Google API key
-              language: "en",
-            }}
-            styles={{
-              container: {
-                position: "absolute",
-                width: "100%",
-                zIndex: 1,
-                marginTop: 60, // Adjust this if needed to avoid overlap
-              },
-              textInput: {
-                height: 44,
-                paddingHorizontal: 10,
-                backgroundColor: "#FFFFFF",
-                borderRadius: 5,
-                color: "black",
-                elevation: 5,
-              },
-            }}
-          />
-        </View>
-
-        <View className="h-[500px] w-full rounded-xl overflow-hidden mt-2 border border-gray-500/50">
-          <MapView className="h-[500px] w-full rounded-xl" region={region}>
+        <View className="w-full rounded-xl overflow-hidden mt-2 border border-gray-500/50">
+          <MapView style={styles.mapViewStyle} region={region}>
             {/* Markers for Start and Destination */}
             {startLocation && (
-              <Marker
-                coordinate={startLocation}
-                title="Start"
-              />
+              <Marker coordinate={startLocation} title="Start" />
             )}
 
             {destination && (
-              <Marker
-                coordinate={destination}
-                title="Destination"
-              />
+              <Marker coordinate={destination} title="Destination" />
             )}
-
             {/* Directions */}
             {startLocation && destination && (
               <MapViewDirections
                 origin={startLocation}
                 destination={destination}
-                apikey={"AIzaSyB_EhOLUePnuFPSOSSjRyAWZRUb2jWcQ8s"} // Replace with your Google API key
+                apikey={apiKey}
                 strokeWidth={3}
                 strokeColor="blue"
                 optimizeWaypoints={true}
@@ -135,5 +75,17 @@ const MyTourCheckPoints = () => {
     </View>
   );
 };
+
+const styles = StyleSheet.create({
+  screenContainer: {
+    height: "100%",
+    width: "100%",
+  },
+  mapViewStyle: {
+    height: height * 0.75,
+    width: "100%",
+    borderRadius: 10,
+  },
+});
 
 export default MyTourCheckPoints;
