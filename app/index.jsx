@@ -1,49 +1,48 @@
 import React, { useEffect, useState } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { setProfile, setRole, setUser } from "../redux/slices/userSlice";
 import Loader from "../components/common/Loader";
 import { Redirect } from "expo-router";
+import { Alert } from "react-native";
 
 const Index = () => {
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [authenticated, setAuthenticated] = useState(false);
 
   const dispatch = useDispatch();
 
-  const fetchUserData = async (email) => {
+  const fetchUserData = async (userData) => {
+    const { email } = userData;
+
     try {
-      // Fetch role data
-      const roleResponse = await fetch(
-        `${process.env.EXPO_PUBLIC_BASE_URL}/api/users/signin`,
-        {
+      const [roleResponse, profileResponse] = await Promise.all([
+        fetch(`${process.env.EXPO_PUBLIC_BASE_URL}/api/users/signin`, {
           method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
+          headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ email }),
-        }
-      );
-
-      if (!roleResponse.ok) throw new Error("Failed to fetch role data.");
-      const roleData = await roleResponse.json();
-      dispatch(setRole(roleData));
-
-      // Fetch profile data
-      const profileResponse = await fetch(
-        `${process.env.EXPO_PUBLIC_BASE_URL}/api/users/getProfile`,
-        {
+        }),
+        fetch(`${process.env.EXPO_PUBLIC_BASE_URL}/api/users/getProfile`, {
           method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-            email,
-          },
-        }
-      );
+          headers: { "Content-Type": "application/json", email },
+        }),
+      ]);
 
-      if (!profileResponse.ok) throw new Error("Failed to fetch profile data.");
-      const profileData = await profileResponse.json();
-      if (profileData && !profileData.error) dispatch(setProfile(profileData));
+      if (roleResponse.ok) {
+        const roleData = await roleResponse.json();
+        dispatch(setRole(roleData));
+      } else {
+        console.warn("Failed to fetch role data.");
+      }
+
+      if (profileResponse.ok) {
+        const profileData = await profileResponse.json();
+        if (profileData && !profileData.error) {
+          dispatch(setProfile(profileData));
+        }
+      } else {
+        console.warn("Failed to fetch profile data.");
+      }
     } catch (error) {
       console.error("Error fetching user data:", error);
       throw error;
@@ -51,6 +50,7 @@ const Index = () => {
   };
 
   const loadUserData = async () => {
+    setLoading(true);
     try {
       const storedUser = await AsyncStorage.getItem("user");
       if (storedUser) {
@@ -58,14 +58,17 @@ const Index = () => {
         dispatch(setUser(userData));
         setAuthenticated(true);
 
-        const userEmail = userData?.email;
-        if (userEmail) {
-          await fetchUserData(userEmail);
+        if (userData?.email) {
+          await fetchUserData(userData);
         }
       } else {
         setAuthenticated(false);
       }
     } catch (error) {
+      Alert.alert(
+        "Oops",
+        "Something went wrong. Please try again.\n\n User Role could not be loaded."
+      );
       console.error("Error loading user data:", error);
     } finally {
       setLoading(false);

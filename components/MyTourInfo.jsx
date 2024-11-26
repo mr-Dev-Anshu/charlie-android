@@ -31,10 +31,8 @@ const MyTourInfo = ({ tour }) => {
   const [boardingPoints, setBoardingPoints] = useState([]);
   const [accomodationDetails, setAccomodationDetails] = useState([]);
 
-  console.log("allocatedAccomodation---->", allocatedAccommodation);
-
   const { transportId } = allocatedTransport[0] || {};
-  const { accommodationId } = allocatedAccommodation[0] || {};
+  const { accommodationId } = allocatedAccommodation[0] || [];
 
   const getTransportDetails = async () => {
     try {
@@ -96,7 +94,9 @@ const MyTourInfo = ({ tour }) => {
     setRefresh(true);
 
     try {
-      await getBoardingPoints();
+      if (transportId) {
+        await getBoardingPoints();
+      }
       if (allocatedTransport && allocatedTransport.length > 0) {
         await getTransportDetails();
       }
@@ -250,18 +250,34 @@ const MyTourInfo = ({ tour }) => {
                 >{`${boardingPointDate && format(new Date(boardingPointDate), "dd MMM yyyy")} - ${boardingPointTime && format(new Date(boardingPointTime), "hh:mm a")}`}</Text>
               </View>
               <View className="flex flex-row justify-start space-x-4 items-center mt-2">
-                <View className="mt-3 flex flex-row justify-start items-center space-x-2">
-                  <Ionicons name="images" size={16} color={"green"} />
-                  <Text className={`font-semibold text-green-600`}>
+                <TouchableOpacity
+                  activeOpacity={0.7}
+                  className="mt-3 flex flex-row justify-start items-center space-x-2"
+                >
+                  <Ionicons name="images" size={12} color={"green"} />
+                  <Text className={`font-semibold text-xs text-green-600`}>
                     View Bus Images
                   </Text>
-                </View>
-                <View className="mt-3 flex flex-row justify-start items-center space-x-2">
-                  <Ionicons name="compass" size={16} color={"green"} />
-                  <Text className={`font-semibold text-green-600`}>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  activeOpacity={0.7}
+                  className="mt-3 flex flex-row justify-start items-center space-x-2"
+                >
+                  <Ionicons name="compass" size={12} color={"green"} />
+                  <Text className={`font-semibold text-xs text-green-600`}>
                     View Direction
                   </Text>
-                </View>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  onPress={() => router.push(`/bus-mates/${busNumber}`)}
+                  activeOpacity={0.7}
+                  className="mt-3 flex flex-row justify-start items-center space-x-2"
+                >
+                  <Ionicons name="compass" size={12} color={"green"} />
+                  <Text className={`font-semibold text-xs text-green-600`}>
+                    Your Bus Mates
+                  </Text>
+                </TouchableOpacity>
               </View>
               <View className="w-full h-[1px] mt-2" />
             </View>
@@ -284,7 +300,7 @@ const MyTourInfo = ({ tour }) => {
             <Ionicons name="bed" size={20} color={"green"} />
             <Text className={`font-bold`}>Accomodation Details</Text>
           </View>
-          {allocatedAccommodation && allocatedAccommodation.lenght > 0 ? (
+          {Object.keys(accomodationDetails).length > 0 ? (
             <View className="">
               <View className="mt-4 space-y-2 pl-2">
                 <View>
@@ -311,7 +327,20 @@ const MyTourInfo = ({ tour }) => {
                     className={`font-bold `}
                   >{`${allocatedAccommodation[0]?.occupancy}`}</Text>
                 </View>
-                <View className={`w-full h-[1px] "bg-green-700"`} />
+                {allocatedAccommodation[0]?.occupancy !== "Single" && (
+                  <View className="flex flex-row justify-center space-x-4 items-center mt-2">
+                    <TouchableOpacity
+                      onPress={() => router.push(`/bus-mates/${busNumber}`)}
+                      activeOpacity={0.7}
+                      className="mt-3 flex flex-row justify-start items-center space-x-2"
+                    >
+                      <Ionicons name="compass" size={12} color={"green"} />
+                      <Text className={`font-semibold text-xs text-green-600`}>
+                        Your Room Mates
+                      </Text>
+                    </TouchableOpacity>
+                  </View>
+                )}
               </View>
             </View>
           ) : (
@@ -328,36 +357,6 @@ const MyTourInfo = ({ tour }) => {
             </View>
           )}
         </View>
-        <TouchableOpacity
-          onPress={() => router.push("/tourmates")}
-          activeOpacity={0.7}
-          className="mt-4 px-2 mx-2 flex flex-row justify-between items-center py-1 rounded-lg bg-white shadow-xl shadow-black/50"
-        >
-          <View className="flex flex-row  space-x-4 justify-between items-center">
-            <Text className="font-semibold text-green-700">
-              Know Your Tour-Mates
-            </Text>
-          </View>
-          <Ionicons name="chevron-forward" size={16} color="green" />
-        </TouchableOpacity>
-        {/* <TouchableOpacity
-          onPress={() => {}}
-          activeOpacity={0.7}
-          className=" mt-4 px-2"
-        >
-          <LinearGradient
-            start={{ x: 0, y: 0 }}
-            end={{ x: 1, y: 0 }}
-            colors={["rgba(17, 117, 8, 1)", "rgba(17, 117, 8, 1)"]}
-            className="rounded-md w-full flex flex-row justify-between items-center py-2 px-4"
-          >
-            <View className="flex flex-row  space-x-4 justify-center items-center">
-              <FontAwesome6 name="star" size={20} color="white" />
-              <Text className="font-semibold text-white">Rating & Reviews</Text>
-            </View>
-            <Ionicons name="chevron-forward" size={16} color="white" />
-          </LinearGradient>
-        </TouchableOpacity> */}
       </ScrollView>
     </View>
   );

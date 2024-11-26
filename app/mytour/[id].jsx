@@ -1,4 +1,12 @@
-import { View, Text, Pressable,TouchableOpacity, Alert } from "react-native";
+import {
+  View,
+  Text,
+  Pressable,
+  TouchableOpacity,
+  Alert,
+  StyleSheet,
+  Dimensions,
+} from "react-native";
 import React, { useEffect, useState } from "react";
 import { useLocalSearchParams } from "expo-router";
 import Animated, {
@@ -11,6 +19,7 @@ import MyTourCheckPoints from "../../components/MyTourCheckPoints";
 import { Ionicons } from "@expo/vector-icons";
 import MyTourCheckPointsListView from "../../components/MyTourCheckPointsListView";
 import { useSelector } from "react-redux";
+
 
 const MyTourDetails = () => {
   const { id } = useLocalSearchParams();
@@ -96,13 +105,17 @@ const MyTourDetails = () => {
         {activeTab === "tourInfo" ? (
           <MyTourInfo tour={tour} />
         ) : listView ? (
-        <MyTourCheckPointsListView checkPoints={checkPoints} tourId={id} handleGetCheckPoints={handleGetCheckPoints} />
+          <MyTourCheckPointsListView
+            checkPoints={checkPoints}
+            tourId={id}
+            handleGetCheckPoints={handleGetCheckPoints}
+          />
         ) : (
           <MyTourCheckPoints />
         )}
       </View>
       <View
-        className={`absolute bottom-0 w-full py-2 px-2 flex flex-row justify-between bg-white`}
+        className={`absolute bottom-0 w-full py-2 px-2 flex flex-row justify-between bg-transparent`}
       >
         {activeTab === "tourInfo" ? (
           <TouchableOpacity
@@ -110,7 +123,7 @@ const MyTourDetails = () => {
             activeOpacity={0.8}
           >
             <View
-              className={`flex flex-row justify-center items-center bg-gray-500 w-[160px] h-12 space-x-4 rounded-lg`}
+              className={`flex flex-row justify-center items-center bg-gray-500 w-[170px] h-12 space-x-4 rounded-lg`}
             >
               <Ionicons
                 name={"checkmark-circle-outline"}
@@ -126,7 +139,7 @@ const MyTourDetails = () => {
             activeOpacity={0.8}
           >
             <View
-              className={`flex flex-row justify-center items-center bg-gray-500 w-[160px] h-12 space-x-4 rounded-lg`}
+              className={`flex flex-row justify-center items-center bg-gray-500 w-[170px] h-12 space-x-4 rounded-lg`}
             >
               <Ionicons
                 name={listView ? "compass" : "list"}
@@ -141,7 +154,7 @@ const MyTourDetails = () => {
         )}
         <TouchableOpacity activeOpacity={0.8}>
           <View
-            className={`flex flex-row justify-center items-center bg-green-700 w-[160px] h-12 space-x-4 rounded-lg`}
+            className={`flex flex-row justify-center items-center bg-green-700 w-[170px] h-12 space-x-4 rounded-lg`}
           >
             <Ionicons name="qr-code-outline" size={20} color="white" />
             <Text className={` font-semibold`}>Check-In</Text>

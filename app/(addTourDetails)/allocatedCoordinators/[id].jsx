@@ -1,9 +1,10 @@
 import React, { useEffect, useRef, useState } from "react";
-import { View, Text, Alert,TouchableOpacity } from "react-native";
+import { View, Text, Alert, TouchableOpacity } from "react-native";
 import { Modalize } from "react-native-modalize";
 import { TextInput } from "react-native";
 import { router, useLocalSearchParams } from "expo-router";
 import { ActivityIndicator } from "react-native-paper";
+import { Ionicons } from "@expo/vector-icons";
 
 const AllocatedCoordinators = () => {
   const { id } = useLocalSearchParams();
@@ -119,15 +120,24 @@ const AllocatedCoordinators = () => {
             }}
           />
           <View className="w-full">
-            {filteredCoordinators.map((i) => (
-              <CoordinatorCard
-                key={i._id}
-                name={i.name}
-                age={i.age}
-                gender={i.gender}
-                phone={i.phone}
-              />
-            ))}
+            {filteredCoordinators.length > 0 ? (
+              filteredCoordinators.map((i) => (
+                <CoordinatorCard
+                  key={i._id}
+                  name={i.name}
+                  age={i.age}
+                  gender={i.gender}
+                  phone={i.phone}
+                />
+              ))
+            ) : (
+              <View className="h-44 w-full flex justify-center items-center mt-10">
+                <Ionicons name="document-outline" size={48} color="green" />
+                <Text className="text-xl font-semibold mt-4">
+                  No coordinators added yet
+                </Text>
+              </View>
+            )}
           </View>
         </View>
         <View className="w-full flex flex-row justify-center items-center h-16 bg-transparent">

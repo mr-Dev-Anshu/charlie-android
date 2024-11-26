@@ -147,7 +147,7 @@ const UpdateProfile = () => {
             Enter Updates
           </Text>
           <TextInput
-            placeholder={user.name}
+            placeholder={profile?.name || user?.name}
             textContentType="name"
             autoCapitalize="words"
             onChangeText={setName}

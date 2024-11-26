@@ -6,6 +6,7 @@ import {
   ScrollView,
   TouchableOpacity,
   ActivityIndicator,
+  StyleSheet,
 } from "react-native";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { router, useLocalSearchParams } from "expo-router";
@@ -147,7 +148,10 @@ const DetailsScreen = () => {
   };
 
   const handleRemoveMembers = (id) => {
-    if (id === profile?._id) return;
+    if (id === profile?._id) {
+      Alert.alert("Cannot remove!", "You cannot remove yourself");
+      return;
+    }
     setCuratedMembers((prevData) =>
       prevData.filter((member) => member.id !== id)
     );
@@ -202,7 +206,7 @@ const DetailsScreen = () => {
             </View>
           </LinearGradient>
           <View
-            className={`flex flex-row justify-between py-3 px-4 rounded-xl mt-4 bg-white`}
+            className={`flex flex-row justify-between py-3 px-4 rounded-xl mt-4`}
           >
             <View className="space-y-2">
               <Text className={`font-medium `}>Tour Name</Text>
@@ -317,9 +321,9 @@ const DetailsScreen = () => {
           </View>
         </View>
       </ScrollView>
-      <View className="h-fit mb-5 flex flex-row justify-center items-center w-full px-6 space-x-6">
+      <View className="h-fit mb-2 flex flex-row justify-center items-center w-full px-6 space-x-6 bg-transparent">
         <TouchableOpacity onPress={handleInterested} activeOpacity={0.8}>
-          <View className=" bg-slate-500 w-[160px] rounded-xl h-12 flex justify-center items-center ">
+          <View className=" bg-slate-500 w-[170px] rounded-lg h-12 flex justify-center items-center ">
             {loading ? (
               <ActivityIndicator color="white" size={"small"} />
             ) : (
@@ -330,7 +334,7 @@ const DetailsScreen = () => {
           </View>
         </TouchableOpacity>
         <TouchableOpacity onPress={handleReserveButton} activeOpacity={0.8}>
-          <View className="py-3 bg-green-700 w-[160px] rounded-xl h-12 flex justify-center items-center">
+          <View className="py-3 bg-green-700 w-[170px] rounded-lg h-12 flex justify-center items-center">
             <Text className="text-center text-white font-semibold">
               Reserve Seat
             </Text>
@@ -373,7 +377,8 @@ const DetailsScreen = () => {
             </View>
             <ScrollView
               showsVerticalScrollIndicator={false}
-              contentContainerStyle={{ paddingBottom: 150 }}
+              contentContainerStyle={{ paddingBottom: 150, backgroundColor: "#f9f9f9" }}
+              style={{ backgroundColor: "#f9f9f9" }}
             >
               <View className="mt-6 space-y-5">
                 {curatedMembers.map((member) => (
@@ -388,7 +393,7 @@ const DetailsScreen = () => {
               <TouchableOpacity
                 activeOpacity={0.8}
                 onPress={() => router.push("/addMember")}
-                className="bg-green-600 w-40 h-10 flex flex-row justify-center items-center rounded-lg mt-5"
+                className="bg-green-600 w-40 h-10 flex flex-row justify-center items-center rounded-sm mt-5"
               >
                 <Ionicons name="add-circle-outline" color="white" size={20} />
                 <Text className="font-semibold ml-1 text-white">
@@ -426,7 +431,7 @@ const BookingMembers = ({
   handleRemoveMembers,
 }) => {
   return (
-    <View className="space-y-2 mt-2 px-1 py-1 rounded-lg bg-white shadow-xl shadow-black/70">
+    <View style={styles.memberCardStyle}>
       <View className="w-full flex flex-row justify-between items-center">
         <Text className={`text-lg font-semibold `}>{member.name}</Text>
         <TouchableOpacity
@@ -459,5 +464,16 @@ const BookingMembers = ({
     </View>
   );
 };
+
+const styles = StyleSheet.create({
+  memberCardStyle: {
+    padding: 10,
+    marginVertical: 10,
+    borderRadius: 10,
+    backgroundColor: "#fff",
+    elevation: 5,
+
+  },
+});
 
 export default DetailsScreen;

@@ -237,6 +237,8 @@ const GuestsEnrolled = () => {
     }
   };
 
+  console.log("interestedMembers", interestedMembers);
+
   useEffect(() => {
     handleGetInterestedMembers();
     getPendingApprovals();

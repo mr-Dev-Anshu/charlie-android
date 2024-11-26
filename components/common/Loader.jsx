@@ -7,7 +7,7 @@ import walk from "../../assets/walk.gif";
 const Loader = () => {
   return (
     <SafeAreaView>
-      <View className="h-screen w-full items-center justify-center">
+      <View className="h-screen w-full items-center justify-center bg-white">
         <Image source={walk} style={{ height: 200, width: 200 }} />
       </View>
     </SafeAreaView>

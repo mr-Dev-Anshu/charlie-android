@@ -11,6 +11,7 @@ import React, { useEffect, useState } from "react";
 import { router, useLocalSearchParams } from "expo-router";
 import { exportDataToExcel } from "../../../utils/helpers";
 import { ActivityIndicator } from "react-native-paper";
+import { Ionicons } from "@expo/vector-icons";
 
 const { width } = Dimensions.get("window");
 
@@ -108,9 +109,18 @@ const Accomodation = () => {
             alignItems: "center",
           }}
         >
-          {guestHouses.map((i) => (
-            <AccomodationButton key={i._id} tourId={id} {...i} />
-          ))}
+          {guestHouses.length > 0 ? (
+            guestHouses.map((i) => (
+              <AccomodationButton key={i._id} tourId={id} {...i} />
+            ))
+          ) : (
+            <View className="h-44 w-full flex justify-center items-center mt-10">
+              <Ionicons name="document-outline" size={48} color="green" />
+              <Text className="text-xl font-semibold mt-4">
+                No guest houses added yet
+              </Text>
+            </View>
+          )}
         </View>
       </ScrollView>
       <View
@@ -166,12 +176,6 @@ const Accomodation = () => {
     </View>
   );
 };
-
-const hotels = [
-  { id: 1, name: "Sai Krupa Hotel", occupancy: 40, filled: 23 },
-  { id: 2, name: "Sai Dwarka Hotel", occupancy: 40, filled: 23 },
-  { id: 3, name: "Sai Nath Hotel", occupancy: 40, filled: 23 },
-];
 
 const AccomodationButton = ({
   guestHouseName,

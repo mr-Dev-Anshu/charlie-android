@@ -46,7 +46,6 @@ const MyTourCheckPoints = () => {
       <View className="rounded-xl overflow-hidden">
         <View className="w-full rounded-xl overflow-hidden mt-2 border border-gray-500/50">
           <MapView style={styles.mapViewStyle} region={region}>
-            {/* Markers for Start and Destination */}
             {startLocation && (
               <Marker coordinate={startLocation} title="Start" />
             )}
@@ -54,7 +53,6 @@ const MyTourCheckPoints = () => {
             {destination && (
               <Marker coordinate={destination} title="Destination" />
             )}
-            {/* Directions */}
             {startLocation && destination && (
               <MapViewDirections
                 origin={startLocation}

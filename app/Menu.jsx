@@ -61,7 +61,9 @@ const Menu = () => {
           style={styles.linearGradientContainerStyle}
         >
           <Image source={user?.picture} style={styles.imageStyle} />
-          <Text style={{ fontSize: 18, fontWeight: "600" }}>{user?.name}</Text>
+          <Text style={{ fontSize: 18, fontWeight: "600" }}>
+            {profile?.name || user?.name}
+          </Text>
           <Ionicons name="chevron-forward" size={24} color={"green"} />
         </LinearGradient>
       </TouchableOpacity>

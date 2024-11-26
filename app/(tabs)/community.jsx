@@ -7,6 +7,7 @@ import {
   Dimensions,
   StyleSheet,
   ActivityIndicator,
+  RefreshControl,
 } from "react-native";
 import { ScrollView, TextInput } from "react-native-gesture-handler";
 import { Modalize } from "react-native-modalize";
@@ -26,9 +27,10 @@ const Community = () => {
   const [images, setImages] = useState([]);
   const [text, setText] = useState("");
   const [loading, setLoading] = useState(false);
-  const [postLoading, setPostLoading] = useState(false);
   const [allPosts, setAllPosts] = useState([]);
   const addPostRef = useRef(null);
+
+  const [refresh, setRefresh] = useState(false);
 
   const handleSelectImages = (existingImages, assets) => {
     setImages([...existingImages, ...assets]);
@@ -52,7 +54,7 @@ const Community = () => {
   };
 
   const getAllPosts = async () => {
-    setPostLoading(true);
+    setRefresh(true);
     try {
       const res = await fetch(
         `${process.env.EXPO_PUBLIC_BASE_URL}/api/Post/get-posts`
@@ -62,7 +64,7 @@ const Community = () => {
     } catch (error) {
       console.log("Failed to get posts", error);
     } finally {
-      setPostLoading(false);
+      setRefresh(false);
     }
   };
 
@@ -103,6 +105,9 @@ const Community = () => {
         throw new Error("Failed to post images.");
       }
       addPostRef.current?.close();
+      setText("");
+      setImages([]);
+      await getAllPosts();
     } catch (error) {
       console.log(error);
       Alert.alert("Oops!", "Something went wrong\n\nPlease try again");
@@ -111,17 +116,18 @@ const Community = () => {
     }
   };
 
-  useEffect(() => {
-    getAllPosts();
-  }, []);
+  const handleRefresh = async () => {
+    setRefresh(true);
+    try {
+      await getAllPosts();
+    } finally {
+      setRefresh(false);
+    }
+  };
 
-  if (postLoading) {
-    return (
-      <View style={styles.loaderContainer}>
-        <ActivityIndicator size={"large"} color={"green"} />
-      </View>
-    );
-  }
+  useEffect(() => {
+    handleRefresh();
+  }, []);
 
   return (
     <>
@@ -130,6 +136,9 @@ const Community = () => {
           <ScrollView
             contentContainerStyle={styles.scrollContainer}
             showsVerticalScrollIndicator={false}
+            refreshControl={
+              <RefreshControl refreshing={refresh} onRefresh={handleRefresh} />
+            }
           >
             <View style={styles.postsContainer}>
               {allPosts.map((post, index) => (
@@ -341,6 +350,15 @@ const styles = StyleSheet.create({
     borderRadius: 10,
   },
   postButtonText: {
+    color: "white",
+  },
+  addImagesButton: {
+    backgroundColor: "green",
+    padding: 10,
+    borderRadius: 8,
+    marginTop: 10,
+  },
+  addImagesButtonText: {
     color: "white",
   },
 });

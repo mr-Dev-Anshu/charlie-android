@@ -96,7 +96,7 @@ const Profile = () => {
         <View style={{ paddingVertical: 7 }}>
           <Text style={styles.titleText}>Personal Details</Text>
         </View>
-        <LabelValue label={"Name"} value={user?.given_name} />
+        <LabelValue label={"Name"} value={profile?.name || user?.given_name} />
         <View style={styles.detailsContainer}>
           {profile ? (
             <View>
