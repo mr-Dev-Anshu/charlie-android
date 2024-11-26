@@ -5,6 +5,7 @@ import {
   ScrollView,
   TextInput,
   TouchableOpacity,
+  Dimensions,
 } from "react-native";
 import React, { useState } from "react";
 
@@ -14,6 +15,9 @@ import { useDispatch, useSelector } from "react-redux";
 import { setProfile } from "../redux/slices/userSlice";
 import { format } from "date-fns";
 import DateTimePicker from "@react-native-community/datetimepicker";
+import { Picker } from "@react-native-picker/picker";
+
+const { height } = Dimensions.get("window");
 
 const UpdateProfile = () => {
   const router = useRouter();
@@ -27,9 +31,13 @@ const UpdateProfile = () => {
   const [dob, setDob] = useState(profile.dob);
   const [age, setAge] = useState(profile.age);
   const [contact, setContact] = useState(profile.contact);
-  const [emergencyContact, setEmergencyContact] = useState(profile.emergency_contact);
+  const [emergencyContact, setEmergencyContact] = useState(
+    profile.emergency_contact
+  );
   const [address, setAddress] = useState(profile.address);
-  const [identityProofNumber, setIdentityProofNumber] = useState(profile.id_number);
+  const [identityProofNumber, setIdentityProofNumber] = useState(
+    profile.id_number
+  );
   const [gender, setGender] = useState(profile.gender);
   const [idProofType, setIdProofType] = useState(profile.id_type);
 
@@ -169,13 +177,13 @@ const UpdateProfile = () => {
             onChangeText={setAge}
             style={styles.input}
           />
-          <TextInput
-            placeholder={profile.gender}
-            keyboardType="default"
-            onChangeText={setGender}
-            autoCapitalize="words"
-            style={styles.input}
-          />
+          <View style={styles.pickerContainer}>
+            <Picker selectedValue={gender} onValueChange={setGender}>
+              <Picker.Item label="Select Gender" value={null} />
+              <Picker.Item label="Male" value="Male" />
+              <Picker.Item label="Female" value="Female" />
+            </Picker>
+          </View>
           <TextInput
             placeholder={profile.contact}
             keyboardType="phone-pad"
@@ -193,11 +201,18 @@ const UpdateProfile = () => {
             onChangeText={setAddress}
             style={styles.input}
           />
-          <TextInput
-            placeholder={profile.id_type}
-            onChangeText={setIdProofType}
-            style={styles.input}
-          />
+          <View style={styles.pickerContainer}>
+            <Picker
+              selectedValue={profile.idProofType}
+              onValueChange={setIdProofType}
+            >
+              <Picker.Item label="Select tour type" value={null} />
+              <Picker.Item label="Aadhar Card" value="Aadhar" />
+              <Picker.Item label="Driving License" value="Driving License" />
+              <Picker.Item label="Pan Card" value="Pan Card" />
+              <Picker.Item label="Voter ID Card" value="Voter ID Card" />
+            </Picker>
+          </View>
           <TextInput
             placeholder={profile.id_number}
             onChangeText={setIdentityProofNumber}
@@ -259,6 +274,14 @@ const styles = {
     borderWidth: 1,
     borderRadius: 10,
     marginTop: 10,
+  },
+  pickerContainer: {
+    borderWidth: 1,
+    borderColor: "gray",
+    borderRadius: 10,
+    width: "100%",
+    marginBottom: height * 0.002,
+    marginTop: height * 0.02,
   },
 };
 

@@ -1,21 +1,19 @@
+import React, { useState } from "react";
 import {
   View,
   Text,
   ActivityIndicator,
   Alert,
-  Dimensions,
   StyleSheet,
   TextInput,
   TouchableOpacity,
 } from "react-native";
-import React, { useState } from "react";
 import { Image } from "expo-image";
 import { Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import { useSelector } from "react-redux";
+import { Picker } from "@react-native-picker/picker";
 import trekkersImg from "../assets/trekkers.jpeg";
-
-const { width, height } = Dimensions.get("window");
 
 const AddMember = () => {
   const { user } = useSelector((state) => state.user);
@@ -65,7 +63,7 @@ const AddMember = () => {
         throw new Error(data.message || "An error occurred");
       }
     } catch (error) {
-      console.log(error);
+      console.error(error);
       setError("An error occurred. Please try again.");
     } finally {
       setLoading(false);
@@ -77,15 +75,10 @@ const AddMember = () => {
       <Image style={styles.backgroundImage} source={trekkersImg} />
       <View style={styles.overlay}>
         <Text style={styles.title}>Add Member</Text>
-
         <View style={styles.formContainer}>
           {error && (
             <View style={styles.errorContainer}>
-              <Ionicons
-                name="warning-outline"
-                size={width * 0.06}
-                color="red"
-              />
+              <Ionicons name="warning-outline" size={20} color="red" />
               <Text style={styles.errorText}>{error}</Text>
             </View>
           )}
@@ -115,13 +108,18 @@ const AddMember = () => {
             placeholderTextColor="gray"
             value={age}
           />
-          <TextInput
-            placeholder="Enter Gender"
-            onChangeText={setGender}
-            style={styles.input}
-            placeholderTextColor="gray"
-            value={gender}
-          />
+          <View style={styles.pickerContainer}>
+            <Picker
+              selectedValue={gender}
+              onValueChange={setGender}
+              dropdownIconColor="white"
+              style={styles.picker}
+            >
+              <Picker.Item label="Select Gender" value={null} />
+              <Picker.Item label="Male" value="Male" />
+              <Picker.Item label="Female" value="Female" />
+            </Picker>
+          </View>
           <TextInput
             placeholder="Enter Relation"
             onChangeText={setRelation}
@@ -139,7 +137,7 @@ const AddMember = () => {
           />
           <TouchableOpacity onPress={handleSubmit} style={styles.submitButton}>
             {loading ? (
-              <ActivityIndicator size={24} color="#00ff00" />
+              <ActivityIndicator size="small" color="#fff" />
             ) : (
               <Text style={styles.submitButtonText}>Add Member</Text>
             )}
@@ -171,67 +169,69 @@ const styles = StyleSheet.create({
     backgroundColor: "rgba(0, 0, 0, 0.6)",
     justifyContent: "center",
     alignItems: "center",
-    paddingHorizontal: width * 0.1,
+    paddingHorizontal: "10%",
   },
   title: {
     color: "white",
-    fontSize: width * 0.08,
+    fontSize: 26,
     fontWeight: "bold",
     textAlign: "center",
-    marginBottom: height * 0.03,
-  },
-  scrollViewContent: {
-    flexGrow: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    paddingBottom: height * 0.05,
+    marginBottom: 20,
   },
   formContainer: {
-    width: "80%",
+    width: "100%",
     alignItems: "center",
   },
   errorContainer: {
     flexDirection: "row",
     alignItems: "center",
-    justifyContent: "center",
-    marginBottom: height * 0.015,
+    marginBottom: 10,
   },
   errorText: {
     color: "red",
-    fontSize: width * 0.04,
-    fontWeight: "bold",
-    textAlign: "center",
-    marginLeft: width * 0.02,
+    fontSize: 14,
+    marginLeft: 5,
   },
   input: {
     color: "white",
-    fontSize: width * 0.04,
-    fontWeight: "600",
+    fontSize: 16,
     width: "100%",
-    paddingVertical: height * 0.012,
-    paddingHorizontal: width * 0.03,
+    paddingVertical: 12,
+    paddingHorizontal: 15,
     borderRadius: 8,
     borderColor: "green",
     borderWidth: 1,
-    marginBottom: height * 0.015,
+    marginBottom: 12,
     backgroundColor: "rgba(34, 139, 34, 0.4)",
+  },
+  pickerContainer: {
+    width: "100%",
+    borderWidth: 1,
+    borderColor: "green",
+    borderRadius: 8,
+    marginBottom: 12,
+    backgroundColor: "rgba(34, 139, 34, 0.4)",
+  },
+  picker: {
+    color: "white",
+    height: 50,
   },
   submitButton: {
     backgroundColor: "#228B22",
     width: "100%",
-    paddingVertical: height * 0.015,
+    paddingVertical: 12,
     borderRadius: 8,
     alignItems: "center",
-    marginBottom: height * 0.015,
+    marginBottom: 12,
   },
   submitButtonText: {
     color: "white",
-    fontSize: width * 0.045,
+    fontSize: 16,
     fontWeight: "bold",
   },
   cancelButton: {
     width: "100%",
-    paddingVertical: height * 0.012,
+    paddingVertical: 10,
     borderRadius: 8,
     borderWidth: 1.5,
     borderColor: "#228B22",
@@ -239,7 +239,7 @@ const styles = StyleSheet.create({
   },
   cancelButtonText: {
     color: "white",
-    fontSize: width * 0.045,
+    fontSize: 16,
     fontWeight: "bold",
   },
 });

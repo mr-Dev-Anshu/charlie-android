@@ -6,6 +6,8 @@ import {
   ScrollView,
   TextInput,
   TouchableOpacity,
+  StyleSheet,
+  Dimensions,
 } from "react-native";
 import React, { useState } from "react";
 import { Ionicons } from "@expo/vector-icons";
@@ -14,6 +16,9 @@ import { useDispatch, useSelector } from "react-redux";
 import { setProfile } from "../redux/slices/userSlice";
 import { format } from "date-fns";
 import DateTimePicker from "@react-native-community/datetimepicker";
+import { Picker } from "@react-native-picker/picker";
+
+const { height } = Dimensions.get("window");
 
 const EditProfile = () => {
   const router = useRouter();
@@ -126,23 +131,23 @@ const EditProfile = () => {
               value={name}
             />
             <View>
-            <TouchableOpacity onPress={() => setShowDatePicker(true)}>
-              <TextInput
-                editable={false}
-                className={`border py-3 mt-3 w-full border-slate-500/50 rounded-lg text-black placeholder:text-base  px-3 `}
-                value={dob && format(dob, "yyyy-MM-dd")}
-                placeholder={"Enter Date of Birth"}
-              />
-            </TouchableOpacity>
-            {showDatePicker && (
-              <DateTimePicker
-                value={new Date()}
-                mode="date"
-                display="default"
-                onChange={onChangeStart}
-              />
-            )}
-          </View>
+              <TouchableOpacity onPress={() => setShowDatePicker(true)}>
+                <TextInput
+                  editable={false}
+                  className={`border py-3 mt-3 w-full border-slate-500/50 rounded-lg text-black placeholder:text-base  px-3 `}
+                  value={dob && format(dob, "yyyy-MM-dd")}
+                  placeholder={"Enter Date of Birth"}
+                />
+              </TouchableOpacity>
+              {showDatePicker && (
+                <DateTimePicker
+                  value={new Date()}
+                  mode="date"
+                  display="default"
+                  onChange={onChangeStart}
+                />
+              )}
+            </View>
             <TextInput
               placeholder="Enter Age"
               keyboardType="numeric"
@@ -150,14 +155,13 @@ const EditProfile = () => {
               className="text-lg  w-full mt-3 indent-3 border border-slate-500/50 rounded-[10px] p-2"
               value={age}
             />
-            <TextInput
-              placeholder="Gender"
-              keyboardType="default"
-              onChangeText={setGender}
-              autoCapitalize="words"
-              className="text-lg  w-full mt-3 indent-3 border border-slate-500/50 rounded-[10px] p-2"
-              value={gender}
-            />
+            <View style={styles.pickerContainer}>
+              <Picker selectedValue={gender} onValueChange={setGender}>
+                <Picker.Item label="Select Gender" value={null} />
+                <Picker.Item label="Male" value="Male" />
+                <Picker.Item label="Female" value="Female" />
+              </Picker>
+            </View>
             <TextInput
               placeholder="Enter Contact Number"
               keyboardType="phone-pad"
@@ -178,12 +182,18 @@ const EditProfile = () => {
               className="text-lg  w-full mt-3 indent-3 border border-slate-500/50 rounded-[10px] p-2"
               value={address}
             />
-            <TextInput
-              placeholder="Enter Id Proof Name"
-              onChangeText={setIdProofType}
-              className="text-lg  w-full mt-3 indent-3 border border-slate-500/50 rounded-[10px] p-2"
-              value={idProofType}
-            />
+            <View style={styles.pickerContainer}>
+              <Picker
+                selectedValue={idProofType}
+                onValueChange={setIdProofType}
+              >
+                <Picker.Item label="Select tour type" value={null} />
+                <Picker.Item label="Aadhar Card" value="Expedition" />
+                <Picker.Item label="Driving License" value="Educational" />
+                <Picker.Item label="Pan Card" value="Historic Place" />
+                <Picker.Item label="Voter ID Card" value="Adventure" />
+              </Picker>
+            </View>
             <TextInput
               placeholder="Enter Id Proof Number"
               onChangeText={setIdentityProofNumber}
@@ -221,5 +231,16 @@ const EditProfile = () => {
     </View>
   );
 };
+
+const styles = StyleSheet.create({
+  pickerContainer: {
+    borderWidth: 1,
+    borderColor: "gray",
+    borderRadius: 10,
+    width: "100%",
+    marginBottom: height * 0.002,
+    marginTop: height * 0.02,
+  },
+});
 
 export default EditProfile;
