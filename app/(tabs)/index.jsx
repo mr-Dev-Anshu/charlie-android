@@ -18,13 +18,13 @@ import { StatusBar } from "expo-status-bar";
 import * as Network from "expo-network";
 import { MaterialIcons } from "@expo/vector-icons";
 import { useIsFocused } from "@react-navigation/native";
-// import registerNNPushToken from "native-notify";
+import { registerForPushNotificationsAsync } from "../../utils/notification";
+import * as Notifications from "expo-notifications";
 
 const { width, height } = Dimensions.get("window");
 
 export default function HomeScreen() {
-  // registerNNPushToken(process.env.EXPO_PUBLIC_NN_APP_ID, process.env.EXPO_PUBLIC_NN_APP_TOKEN);
-
+  
   const dispatch = useDispatch();
   const [isConnected, setIsConnected] = useState(null);
   const { user } = useSelector((state) => state.user);
@@ -69,6 +69,18 @@ export default function HomeScreen() {
       dispatch(setAdminAccessEnabled(false));
     }
   }, [isFocused]);
+
+  useEffect(() => {
+    registerForPushNotificationsAsync();
+  }, []);
+
+  Notifications.setNotificationHandler({
+    handleNotification: async () => ({
+      shouldShowAlert: true,
+      shouldPlaySound: true,
+      shouldSetBadge: true,
+    }),
+  });
 
   return (
     <SafeAreaView style={styles.safeAreaView}>

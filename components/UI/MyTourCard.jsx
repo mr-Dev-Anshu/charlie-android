@@ -85,7 +85,7 @@ const MyTourCard = ({ tour, status }) => {
 
           <View className="flex flex-row space-x-3">
             <FontAwesome6 name="route" size={16} color="green" />
-            <Text>{tour?.distance}</Text>
+            <Text>{tour?.distance} Kms</Text>
           </View>
 
           <View className="flex flex-row space-x-3">

@@ -19,6 +19,8 @@ import { Image } from "expo-image";
 import { format } from "date-fns";
 import { uploadFilesToS3 } from "../utils/uploadFileHelper";
 import { Picker } from "@react-native-picker/picker";
+import * as DocumentPicker from 'expo-document-picker';
+
 
 const { width, height } = Dimensions.get("window");
 
@@ -47,6 +49,28 @@ const addTours = () => {
   const [showStartPicker, setShowStartPicker] = useState(false);
   const [showEndPicker, setShowEndPicker] = useState(false);
   const [showBookingClosePicker, setShowBookingClosePicker] = useState(false);
+
+  const pickPdf = async () => {
+    try {
+      const result = await DocumentPicker.getDocumentAsync({
+        type: 'application/pdf',
+      });
+  
+      if (result.type === 'success') {
+        console.log('PDF selected:', result.uri);
+        return result;
+      }
+    } catch (error) {
+      console.error('Error picking PDF:', error);
+    }
+  };
+
+  const handleUpload = async () => {
+    const pdf = await pickPdf();
+    if (pdf) {
+      await uploadPdf(pdf.uri);
+    }
+  };
 
   const onChangeStart = (event, selectedDate) => {
     const currentDate = selectedDate || startDate;
@@ -139,7 +163,7 @@ const addTours = () => {
 
       const notificationData = {
         title: `Buckle up! New tour: ${tourName}`,
-        content:description,
+        content: description,
         id: result._id,
       };
 
@@ -358,6 +382,12 @@ const addTours = () => {
               </Text>
             </TouchableOpacity>
           )}
+          <View>
+            <TouchableOpacity onPress={pickImage} style={styles.imagePicker}>
+              <Ionicons name="add-circle" size={20} color="green" />
+              <Text style={styles.imagePickerText}>Add Consent Form</Text>
+            </TouchableOpacity>
+          </View>
         </View>
       </ScrollView>
       <View

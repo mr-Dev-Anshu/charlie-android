@@ -7,6 +7,7 @@ import {
   TextInput,
   TouchableOpacity,
   Dimensions,
+  RefreshControl,
 } from "react-native";
 import React, { useEffect, useRef, useState } from "react";
 import { Modalize } from "react-native-modalize";
@@ -59,6 +60,8 @@ const expense = () => {
 
   const [tours, setTours] = useState(toursDataForDropdown);
 
+  const [refresh, setRefresh] = useState(false);
+
   const pickImage = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.All,
@@ -73,7 +76,7 @@ const expense = () => {
 
   const handleAddExpense = async () => {
     if (!expenseCategory || !amount || !date || !user.name) {
-      Alert.alert("Empty Field", "All fields required.")
+      Alert.alert("Empty Field", "All fields required.");
       return;
     }
 
@@ -206,6 +209,17 @@ const expense = () => {
     }
   };
 
+  const onRefresh = async () => {
+    setRefresh(true);
+    try {
+      if (currentTour) {
+        fetchExpense();
+      }
+    } finally {
+      setRefresh(false);
+    }
+  };
+
   return (
     <>
       <View className="mt-16 h-full w-full relative">
@@ -267,6 +281,9 @@ const expense = () => {
               <ScrollView
                 showsVerticalScrollIndicator={false}
                 contentContainerStyle={{ paddingTop: 10, paddingBottom: 56 }}
+                refreshControl={
+                  <RefreshControl refreshing={refresh} onRefresh={onRefresh} />
+                }
               >
                 {expenseData?.expanses?.map((item, index) => (
                   <View
