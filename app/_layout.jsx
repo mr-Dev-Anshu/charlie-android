@@ -58,7 +58,6 @@ export default function RootLayout() {
           />
           <Stack.Screen name="payment" options={getOpt("Payment")} />
           <Stack.Screen name="+not-found" options={{ headerShown: false }} />
-          {/* add tour details screens */}
           <Stack.Screen
             name="(addTourDetails)/accomodation/[id]"
             options={getOpt("Accomodations", "(addTourDetails)/tourDetails")}

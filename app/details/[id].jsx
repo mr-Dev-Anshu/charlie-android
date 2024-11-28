@@ -40,7 +40,23 @@ const DetailsScreen = () => {
 
   const { backpacks, checkinbagages, includeds, notincludeds } = tourData;
 
-  const [curatedMembers, setCuratedMembers] = useState([]);
+  const [curatedMembers, setCuratedMembers] = useState(() => {
+    if (profile && user && id) {
+      return [
+        {
+          id: profile._id,
+          name: user?.given_name,
+          age: profile?.age,
+          gender: profile?.gender,
+          email: user.email,
+          tourId: id,
+          isTrekker: false,
+          noAccommodation: false,
+        },
+      ];
+    }
+    return [];
+  });
 
   const reserveRef = useRef(null);
   const interestedRef = useRef(null);
@@ -87,7 +103,7 @@ const DetailsScreen = () => {
   };
 
   useEffect(() => {
-    if (members?.length > 0 && profile) {
+    if (members?.length > 0) {
       const initialData = members.map((member) => ({
         id: member._id,
         name: member.name,
@@ -98,20 +114,9 @@ const DetailsScreen = () => {
         isTrekker: false,
         noAccommodation: false,
       }));
-
-      const loggedInUser = {
-        id: profile._id,
-        name: user?.given_name,
-        age: profile?.age,
-        gender: profile?.gender,
-        email: user.email,
-        tourId: id,
-        isTrekker: false,
-        noAccommodation: false,
-      };
-      setCuratedMembers([loggedInUser, ...initialData]);
+      setCuratedMembers((prevMembers) => [...prevMembers, ...initialData]);
     }
-  }, [members, profile, user, id]);
+  }, [members, id]);
 
   const handlePayNow = async () => {
     if (!tourData) return;
@@ -377,7 +382,10 @@ const DetailsScreen = () => {
             </View>
             <ScrollView
               showsVerticalScrollIndicator={false}
-              contentContainerStyle={{ paddingBottom: 150, backgroundColor: "#f9f9f9" }}
+              contentContainerStyle={{
+                paddingBottom: 150,
+                backgroundColor: "#f9f9f9",
+              }}
               style={{ backgroundColor: "#f9f9f9" }}
             >
               <View className="mt-6 space-y-5">
@@ -472,7 +480,6 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     backgroundColor: "#fff",
     elevation: 5,
-
   },
 });
 

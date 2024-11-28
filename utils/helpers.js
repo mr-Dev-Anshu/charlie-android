@@ -155,3 +155,8 @@ export const exportDataToExcel = async (data, fileName) => {
     Alert.alert("Oops!", "Something went wrong. Please try again.");
   }
 };
+
+export const shorten = (text, maxLength) => {
+  if (text.length <= maxLength) return text;
+  return text.substr(0, maxLength) + "...";
+};

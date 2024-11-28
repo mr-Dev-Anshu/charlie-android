@@ -269,7 +269,7 @@ const MyTourInfo = ({ tour }) => {
                   </Text>
                 </TouchableOpacity>
                 <TouchableOpacity
-                  onPress={() => router.push(`/bus-mates/${busNumber}`)}
+                  onPress={() => router.push(`/bus-mates/${transportId}`)}
                   activeOpacity={0.7}
                   className="mt-3 flex flex-row justify-start items-center space-x-2"
                 >
@@ -330,7 +330,11 @@ const MyTourInfo = ({ tour }) => {
                 {allocatedAccommodation[0]?.occupancy !== "Single" && (
                   <View className="flex flex-row justify-center space-x-4 items-center mt-2">
                     <TouchableOpacity
-                      onPress={() => router.push(`/bus-mates/${busNumber}`)}
+                      onPress={() =>
+                        router.push(
+                          `/room-mates/${allocatedAccommodation[0]?.roomNumber}`
+                        )
+                      }
                       activeOpacity={0.7}
                       className="mt-3 flex flex-row justify-start items-center space-x-2"
                     >

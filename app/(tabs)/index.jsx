@@ -18,8 +18,6 @@ import { StatusBar } from "expo-status-bar";
 import * as Network from "expo-network";
 import { MaterialIcons } from "@expo/vector-icons";
 import { useIsFocused } from "@react-navigation/native";
-import { registerForPushNotificationsAsync } from "../../utils/notification";
-import * as Notifications from "expo-notifications";
 
 const { width, height } = Dimensions.get("window");
 
@@ -69,18 +67,6 @@ export default function HomeScreen() {
       dispatch(setAdminAccessEnabled(false));
     }
   }, [isFocused]);
-
-  useEffect(() => {
-    registerForPushNotificationsAsync();
-  }, []);
-
-  Notifications.setNotificationHandler({
-    handleNotification: async () => ({
-      shouldShowAlert: true,
-      shouldPlaySound: true,
-      shouldSetBadge: true,
-    }),
-  });
 
   return (
     <SafeAreaView style={styles.safeAreaView}>
