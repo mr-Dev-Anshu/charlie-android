@@ -20,7 +20,6 @@ import { Ionicons } from "@expo/vector-icons";
 import MyTourCheckPointsListView from "../../components/MyTourCheckPointsListView";
 import { useSelector } from "react-redux";
 
-
 const MyTourDetails = () => {
   const { id } = useLocalSearchParams();
   const { user } = useSelector((state) => state.user);
@@ -29,6 +28,8 @@ const MyTourDetails = () => {
 
   const [loading, setLoading] = useState();
   const [checkPoints, setCheckPoints] = useState();
+
+  const [geoTaggedCheckPoints, setGeoTaggedCheckPoints] = useState([]);
 
   const tour = bookedTour?.find((t) => t.tourDetails._id === id);
 
@@ -53,6 +54,10 @@ const MyTourDetails = () => {
       }
       const result = await response.json();
       setCheckPoints(result);
+      const geoTaggedData = result.filter(
+        (i) => i.type === "Geo Tagging" && i.checked === false
+      );
+      setGeoTaggedCheckPoints(geoTaggedData);
     } catch (error) {
       console.log("error:", error);
       Alert.alert("Oops!", "Something went wrong. Please try again later.");
@@ -107,6 +112,7 @@ const MyTourDetails = () => {
         ) : listView ? (
           <MyTourCheckPointsListView
             checkPoints={checkPoints}
+            geoTaggedCheckPoints={geoTaggedCheckPoints}
             tourId={id}
             handleGetCheckPoints={handleGetCheckPoints}
           />

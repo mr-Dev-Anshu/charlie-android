@@ -18,11 +18,15 @@ import { StatusBar } from "expo-status-bar";
 import * as Network from "expo-network";
 import { MaterialIcons } from "@expo/vector-icons";
 import { useIsFocused } from "@react-navigation/native";
+import {
+  checkNetworkStatus,
+  getUserLocation,
+  requestLocationPermissions,
+} from "../../utils/offlineLocationHelper";
 
 const { width, height } = Dimensions.get("window");
 
 export default function HomeScreen() {
-  
   const dispatch = useDispatch();
   const [isConnected, setIsConnected] = useState(null);
   const { user } = useSelector((state) => state.user);
@@ -47,8 +51,8 @@ export default function HomeScreen() {
   };
 
   const checkNetworkConnection = async () => {
-    const networkState = await Network.getNetworkStateAsync();
-    setIsConnected(networkState.isConnected);
+    const isConnected = await checkNetworkStatus();
+    setIsConnected(isConnected);
   };
 
   useEffect(() => {
@@ -67,6 +71,11 @@ export default function HomeScreen() {
       dispatch(setAdminAccessEnabled(false));
     }
   }, [isFocused]);
+
+
+  useEffect(() => {
+    requestLocationPermissions();
+  }, []);
 
   return (
     <SafeAreaView style={styles.safeAreaView}>

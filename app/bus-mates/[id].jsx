@@ -43,7 +43,7 @@ const BusMates = () => {
   };
 
   useEffect(() => {
-    onRefresh;
+    onRefresh();
   }, []);
 
   return (

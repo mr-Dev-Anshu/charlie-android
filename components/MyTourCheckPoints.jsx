@@ -84,6 +84,12 @@ const styles = StyleSheet.create({
     width: "100%",
     borderRadius: 10,
   },
+  container: {
+    flex: 1,
+  },
+  map: {
+    flex: 1,
+  },
 });
 
 export default MyTourCheckPoints;

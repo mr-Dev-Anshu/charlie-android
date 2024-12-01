@@ -17,17 +17,14 @@ import { apiRequest } from "../../../utils/helpers";
 const Page = () => {
   const { id } = useLocalSearchParams();
 
-  const viewMapRef = useRef(null);
   const googlePlacesRef = useRef();
 
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [locationType, setLocationType] = useState("");
   const [latitude, setLatitude] = useState(null);
-  const [longitude, setLogitude] = useState(null);
-
+  const [longitude, setLongitude] = useState(null);
   const [loading, setLoading] = useState(false);
-
   const [selectLocation, setSelectLocation] = useState(false);
 
   const [region, setRegion] = useState({
@@ -44,6 +41,7 @@ const Page = () => {
 
   const [selectedAddress, setSelectedAddress] = useState("");
 
+  // Function to fetch address based on latitude and longitude
   const reverseGeocode = async (latitude, longitude) => {
     const apiKey = "AIzaSyB_EhOLUePnuFPSOSSjRyAWZRUb2jWcQ8s";
     const url = `https://maps.googleapis.com/maps/api/geocode/json?latlng=${latitude},${longitude}&key=${apiKey}`;
@@ -62,7 +60,9 @@ const Page = () => {
     }
   };
 
+  // Function to handle location selection (e.g., from Google Places)
   const handleLocationSelect = (details) => {
+    console.log("details-->", details);
     if (details && details.geometry) {
       const { lat, lng } = details.geometry.location;
       setRegion({
@@ -72,23 +72,28 @@ const Page = () => {
         longitudeDelta: 0.015,
       });
       setLatitude(lat);
-      setLogitude(lng);
+      setLongitude(lng);
       setMarkerPosition({ latitude: lat, longitude: lng });
       setSelectedAddress(details.formatted_address);
+    } else {
+      console.error("Invalid location details:", details);
     }
   };
 
+  // Function to handle map press and update location
   const handleMapPress = (event) => {
     const { latitude, longitude } = event.nativeEvent.coordinate;
-    setMarkerPosition({
-      latitude,
-      longitude,
-    });
+
+    // Update the marker and reverse geocode to fetch the address
+    setMarkerPosition({ latitude, longitude });
     setLatitude(latitude);
-    setLogitude(longitude);
+    setLongitude(longitude);
+
+    // Fetch the address for the selected coordinates
     reverseGeocode(latitude, longitude);
   };
 
+  // Function to create a checkpoint
   const handleAddCheckPoint = async () => {
     if (
       !id ||
@@ -103,7 +108,7 @@ const Page = () => {
     }
 
     setLoading(true);
-    
+
     const body = {
       tourId: id,
       name: title,
@@ -112,17 +117,22 @@ const Page = () => {
       longitude,
       latitude,
     };
+
     try {
+      console.log("Saving checkpoint with data:", body);
+
       const res = await apiRequest(
         `${process.env.EXPO_PUBLIC_BASE_URL}/api/create-point`,
         "POST",
         body
       );
+
       if (res) {
+        console.log("Checkpoint created successfully:", res);
         router.push(`/(addTourDetails)/checkPoints/${id}`);
       }
     } catch (error) {
-      console.log("Failed to create checkpoint", error?.message);
+      console.error("Failed to create checkpoint:", error.message);
     } finally {
       setLoading(false);
     }

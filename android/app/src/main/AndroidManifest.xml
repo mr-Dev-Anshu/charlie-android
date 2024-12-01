@@ -11,6 +11,8 @@
   <uses-permission android:name="android.permission.READ_MEDIA_AUDIO" />
   <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
   <uses-permission android:name="android.permission.READ_MEDIA_VIDEO" />
+  <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+  <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
   <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"
       tools:targetApi="30" />
   <uses-permission android:name="android.permission.RECORD_AUDIO" />
@@ -58,6 +60,9 @@
     <meta-data
         android:name="expo.modules.updates.EXPO_UPDATES_LAUNCH_WAIT_MS"
         android:value="0" />
+    <meta-data
+    android:name="com.mapbox.token"
+    android:value="sk.eyJ1IjoiZGV2LXByaW5jZSIsImEiOiJjbTQ0azdpcWMwaHBsMmpxeGs3aGJkazVhIn0.TqNHhd71lV3U_dTX89-PTg" />
 
     <!-- Main Activity -->
     <activity

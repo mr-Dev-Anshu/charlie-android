@@ -43,7 +43,7 @@ const RoomMates = () => {
   };
 
   useEffect(() => {
-    onRefresh;
+    onRefresh();
   }, []);
 
   return (
