@@ -7,8 +7,35 @@ import { Provider } from "react-redux";
 import store from "@/redux/store.js";
 import CustomBackButton from "@/components/UI/CustomBackButton";
 import "react-native-get-random-values";
+import * as Location from "expo-location";
+import { useEffect, useState } from "react";
 
 export default function RootLayout() {
+  const [location, setLocation] = useState();
+  const [errorMsg, setErrorMsg] = useState("");
+
+  useEffect(() => {
+    async function getCurrentLocation() {
+      let { status } = await Location.requestForegroundPermissionsAsync();
+      if (status !== "granted") {
+        setErrorMsg("Permission to access location was denied");
+        return;
+      }
+
+      let location = await Location.getCurrentPositionAsync({});
+      setLocation(location);
+    }
+
+    getCurrentLocation();
+  }, []);
+
+  let text = "Waiting...";
+  if (errorMsg) {
+    text = errorMsg;
+  } else if (location) {
+    text = JSON.stringify(location);
+    console.log(text)
+  }
   return (
     <Provider store={store}>
       <GestureHandlerRootView style={{ flex: 1 }}>
