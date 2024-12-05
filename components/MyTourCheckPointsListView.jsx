@@ -3,59 +3,59 @@ import React, { useEffect, useState } from "react";
 import CheckPointElement from "./UI/CheckPointElement";
 import { ScrollView } from "react-native-gesture-handler";
 import { Ionicons } from "@expo/vector-icons";
-import {
-  getUserLocation,
-  getUserLocationInOfflineMode,
-  isNearby,
-  isWithin100Meters,
-} from "../utils/offlineLocationHelper";
+// import {
+//   getUserLocation,
+//   getUserLocationInOfflineMode,
+//   isNearby,
+//   isWithin100Meters,
+// } from "../utils/offlineLocationHelper";
 
-import * as Location from "expo-location";
+// import * as Location from "expo-location";
 
 const MyTourCheckPointsListView = ({
   geoTaggedCheckPoints,
   checkPoints,
   handleGetCheckPoints,
 }) => {
-  const [currentUserLocation, setCurrentUserLocation] = useState({});
-  const [location, setLocation] = useState({});
-  const [errorMsg, setErrorMsg] = useState("");
+  // const [currentUserLocation, setCurrentUserLocation] = useState({});
+  // const [location, setLocation] = useState({});
+  // const [errorMsg, setErrorMsg] = useState("");
 
-  console.log("location---->", location);
-  console.log("errror---->", errorMsg);
+  // console.log("location---->", location);
+  // console.log("errror---->", errorMsg);
 
-  const getLocation = async () => {
-    try {
-      const location = await getUserLocation();
-      const { latitude: lat, longitude: long } = location.coords;
-      const currentLatLong = { lat, long };
-      setCurrentUserLocation(currentLatLong);
-    } catch (error) {
-      console.error("Failed to get user location:", error);
-    }
-  };
+  // const getLocation = async () => {
+  //   try {
+  //     const location = await getUserLocation();
+  //     const { latitude: lat, longitude: long } = location.coords;
+  //     const currentLatLong = { lat, long };
+  //     setCurrentUserLocation(currentLatLong);
+  //   } catch (error) {
+  //     console.error("Failed to get user location:", error);
+  //   }
+  // };
 
-  geoTaggedCheckPoints.forEach((element) => {
-    const checking = isNearby(currentUserLocation, element, 100);
-    console.log(checking);
-  });
+  // geoTaggedCheckPoints.forEach((element) => {
+  //   const checking = isNearby(currentUserLocation, element, 100);
+  //   console.log(checking);
+  // });
 
   
-  useEffect(() => {
-    async function getCurrentLocation() {
-      let { status } = await Location.requestForegroundPermissionsAsync();
-      if (status !== "granted") {
-        setErrorMsg("Permission to access location was denied");
-        return;
-      }
+  // useEffect(() => {
+  //   async function getCurrentLocation() {
+  //     let { status } = await Location.requestForegroundPermissionsAsync();
+  //     if (status !== "granted") {
+  //       setErrorMsg("Permission to access location was denied");
+  //       return;
+  //     }
 
-      let location = await Location.getCurrentPositionAsync({});
-      setLocation(location);
-    }
+  //     let location = await Location.getCurrentPositionAsync({});
+  //     setLocation(location);
+  //   }
 
-    getCurrentLocation();
-    getLocation();
-  }, []);
+  //   getCurrentLocation();
+  //   getLocation();
+  // }, []);
 
   return (
     <ScrollView

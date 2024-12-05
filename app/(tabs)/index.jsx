@@ -73,9 +73,9 @@ export default function HomeScreen() {
   }, [isFocused]);
 
 
-  useEffect(() => {
-    requestLocationPermissions();
-  }, []);
+  // useEffect(() => {
+  //   requestLocationPermissions();
+  // }, []);
 
   return (
     <SafeAreaView style={styles.safeAreaView}>

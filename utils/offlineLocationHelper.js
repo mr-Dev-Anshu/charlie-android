@@ -1,12 +1,12 @@
 // import * as Location from "expo-location";
 // import AsyncStorage from "@react-native-async-storage/async-storage";
-// import * as Network from "expo-network";
+import * as Network from "expo-network";
 // import Geolocation from "@react-native-community/geolocation";
 
-// export const checkNetworkStatus = async () => {
-//   const networkState = await Network.getNetworkStateAsync();
-//   return networkState.isConnected;
-// };
+export const checkNetworkStatus = async () => {
+  const networkState = await Network.getNetworkStateAsync();
+  return networkState.isConnected;
+};
 
 // export const saveOfflineAction = async (action) => {
 //   try {

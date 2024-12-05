@@ -34,7 +34,7 @@ export default function RootLayout() {
     text = errorMsg;
   } else if (location) {
     text = JSON.stringify(location);
-    console.log(text)
+    console.log(text);
   }
   return (
     <Provider store={store}>
@@ -72,6 +72,7 @@ export default function RootLayout() {
             options={getOpt("Privacy Policy")}
           />
           <Stack.Screen name="Menu" options={getOpt("Menu")} />
+          <Stack.Screen name="notification" options={getOpt("Notification")} />
           <Stack.Screen name="profile" options={getOpt("My Profile")} />
           <Stack.Screen name="tourmates" options={getOpt("Tour Mates")} />
           <Stack.Screen name="details/[id]" options={getOpt("Tour Details")} />
