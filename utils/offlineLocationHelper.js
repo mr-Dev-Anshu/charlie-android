@@ -1,10 +1,7 @@
-<<<<<<< HEAD
+
 import * as Location from "expo-location";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-=======
-// import * as Location from "expo-location";
-// import AsyncStorage from "@react-native-async-storage/async-storage";
->>>>>>> 1bc9e4d28cbfaf71d1044eaac97d37dff53fde9e
+
 import * as Network from "expo-network";
 // import Geolocation from "@react-native-community/geolocation";
 
