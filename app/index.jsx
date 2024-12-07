@@ -80,7 +80,9 @@ const Index = () => {
   }, []);
 
   if (loading) return <Loader />;
-  return <Redirect href={authenticated ? "/notification" : "/notification"} />;
+
+  return <Redirect href={authenticated ? "/notification" : "/login"} />;
+
 };
 
 export default Index;

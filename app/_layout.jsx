@@ -13,6 +13,19 @@ export default function RootLayout() {
 
 
 
+<<<<<<< HEAD
+=======
+    getCurrentLocation();
+  }, []);
+
+  let text = "Waiting...";
+  if (errorMsg) {
+    text = errorMsg;
+  } else if (location) {
+    text = JSON.stringify(location);
+    console.log(text);
+  }
+>>>>>>> 1bc9e4d28cbfaf71d1044eaac97d37dff53fde9e
   return (
     <Provider store={store}>
       <GestureHandlerRootView style={{ flex: 1 }}>
@@ -49,6 +62,7 @@ export default function RootLayout() {
             options={getOpt("Privacy Policy")}
           />
           <Stack.Screen name="Menu" options={getOpt("Menu")} />
+          <Stack.Screen name="notification" options={getOpt("Notification")} />
           <Stack.Screen name="profile" options={getOpt("My Profile")} />
           <Stack.Screen name="tourmates" options={getOpt("Tour Mates")} />
           <Stack.Screen name="details/[id]" options={getOpt("Tour Details")} />

@@ -127,6 +127,11 @@ const options = [
     name: "About Us",
     route: "/about",
   },
+  {
+    id: "ntf",
+    name: "Notification",
+    route: "/notification",
+  },
 ];
 
 const styles = StyleSheet.create({
