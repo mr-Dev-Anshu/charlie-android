@@ -13,6 +13,7 @@ import MapView, { Marker } from "react-native-maps";
 import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplete";
 import { router, useLocalSearchParams } from "expo-router";
 import { apiRequest } from "../../../utils/helpers";
+import * as Location from "expo-location"
 
 const Page = () => {
   const { id } = useLocalSearchParams();
@@ -26,6 +27,24 @@ const Page = () => {
   const [longitude, setLongitude] = useState(null);
   const [loading, setLoading] = useState(false);
   const [selectLocation, setSelectLocation] = useState(false);
+
+  const [location, setLocation] = useState();
+  const [errorMsg, setErrorMsg] = useState("");
+
+  useEffect(() => {
+    async function getCurrentLocation() {
+      let { status } = await Location.requestForegroundPermissionsAsync();
+      if (status !== "granted") {
+        setErrorMsg("Permission to access location was denied");
+        return;
+      }
+
+      let location = await Location.getCurrentPositionAsync({});
+      setLocation(location);
+    }
+
+    getCurrentLocation();
+  }, []);
 
   const [region, setRegion] = useState({
     latitude: 12.9716,

@@ -1,60 +1,60 @@
-// import * as Location from "expo-location";
-// import AsyncStorage from "@react-native-async-storage/async-storage";
-// import * as Network from "expo-network";
+import * as Location from "expo-location";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import * as Network from "expo-network";
 // import Geolocation from "@react-native-community/geolocation";
 
-// export const checkNetworkStatus = async () => {
-//   const networkState = await Network.getNetworkStateAsync();
-//   return networkState.isConnected;
-// };
+export const checkNetworkStatus = async () => {
+  const networkState = await Network.getNetworkStateAsync();
+  return networkState.isConnected;
+};
 
-// export const saveOfflineAction = async (action) => {
-//   try {
-//     const storedActions =
-//       JSON.parse(await AsyncStorage.getItem("offlineActions")) || [];
-//     storedActions.push(action);
-//     await AsyncStorage.setItem("offlineActions", JSON.stringify(storedActions));
-//   } catch (error) {
-//     console.error("Error saving offline action:", error);
-//   }
-// };
+export const saveOfflineAction = async (action) => {
+  try {
+    const storedActions =
+      JSON.parse(await AsyncStorage.getItem("offlineActions")) || [];
+    storedActions.push(action);
+    await AsyncStorage.setItem("offlineActions", JSON.stringify(storedActions));
+  } catch (error) {
+    console.error("Error saving offline action:", error);
+  }
+};
 
-// export const syncOfflineActions = async () => {
-//   try {
-//     const storedActions =
-//       JSON.parse(await AsyncStorage.getItem("offlineActions")) || [];
-//     if (storedActions.length > 0) {
-//       // Replace with your API endpoint
-//       await fetch("https://your-backend-api.com/sync-actions", {
-//         method: "POST",
-//         headers: { "Content-Type": "application/json" },
-//         body: JSON.stringify(storedActions),
-//       });
-//       await AsyncStorage.removeItem("offlineActions");
-//     }
-//   } catch (error) {
-//     console.error("Error syncing offline actions:", error);
-//   }
-// };
+export const syncOfflineActions = async () => {
+  try {
+    const storedActions =
+      JSON.parse(await AsyncStorage.getItem("offlineActions")) || [];
+    if (storedActions.length > 0) {
+      // Replace with your API endpoint
+      await fetch("https://your-backend-api.com/sync-actions", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(storedActions),
+      });
+      await AsyncStorage.removeItem("offlineActions");
+    }
+  } catch (error) {
+    console.error("Error syncing offline actions:", error);
+  }
+};
 
-// export const requestLocationPermissions = async () => {
-//   const { status } = await Location.requestForegroundPermissionsAsync();
-//   if (status !== "granted") {
-//     alert("Permission to access location was denied");
-//     return false;
-//   }
-//   return true;
-// };
+export const requestLocationPermissions = async () => {
+  const { status } = await Location.requestForegroundPermissionsAsync();
+  if (status !== "granted") {
+    alert("Permission to access location was denied");
+    return false;
+  }
+  return true;
+};
 
-// export const getUserLocation = async () => {
-//   try {
-//     const location = await Location.getCurrentPositionAsync({});
-//     return location;
-//   } catch (error) {
-//     console.error("Error fetching location:", error);
-//     return null;
-//   }
-// };
+export const getUserLocation = async () => {
+  try {
+    const location = await Location.getCurrentPositionAsync({});
+    return location;
+  } catch (error) {
+    console.error("Error fetching location:", error);
+    return null;
+  }
+};
 
 // export const isNearby = (userLocation, targetLocation, radiusInMeters) => {
 //   const toRadians = (degree) => degree * (Math.PI / 180);
