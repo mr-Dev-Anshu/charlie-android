@@ -2,7 +2,6 @@ import { useState, useEffect, useRef } from "react";
 import { Text, View, Button, Platform } from "react-native";
 import * as Device from "expo-device";
 import * as Notifications from "expo-notifications";
-import Constants from "expo-constants";
 
 export default function SendNotificationPage() {
   const [expoPushToken, setExpoPushToken] = useState("");
@@ -49,8 +48,7 @@ export default function SendNotificationPage() {
     }
   
     if (Device.isDevice) {
-      const { status: existingStatus } =
-        await Notifications.getPermissionsAsync();
+      const { status: existingStatus } = await Notifications.getPermissionsAsync();
       let finalStatus = existingStatus;
       if (existingStatus !== "granted") {
         const { status } = await Notifications.requestPermissionsAsync();
@@ -60,19 +58,9 @@ export default function SendNotificationPage() {
         alert("Failed to get push token for push notification!");
         return;
       }
-
+  
       try {
-        const projectId =
-          Constants?.expoConfig?.extra?.eas?.projectId ??
-          Constants?.easConfig?.projectId;
-        if (!projectId) {
-          throw new Error("Project ID not found");
-        }
-        token = (
-          await Notifications.getExpoPushTokenAsync({
-            projectId,
-          })
-        ).data;
+        token = (await Notifications.getExpoPushTokenAsync()).data;
         console.log(token);
       } catch (e) {
         token = `${e}`;
