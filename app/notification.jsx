@@ -4,8 +4,6 @@ import * as Device from "expo-device";
 import * as Notifications from "expo-notifications";
 import Constants from "expo-constants";
 
-
-
 export default function SendNotificationPage() {
   const [expoPushToken, setExpoPushToken] = useState("");
   const [notification, setNotification] = useState(undefined);
@@ -62,9 +60,7 @@ export default function SendNotificationPage() {
         alert("Failed to get push token for push notification!");
         return;
       }
-      // Learn more about projectId:
-      // https://docs.expo.dev/push-notifications/push-notifications-setup/#configure-projectid
-      // EAS projectId is used here.
+
       try {
         const projectId =
           Constants?.expoConfig?.extra?.eas?.projectId ??

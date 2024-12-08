@@ -7,25 +7,9 @@ import { Provider } from "react-redux";
 import store from "@/redux/store.js";
 import CustomBackButton from "@/components/UI/CustomBackButton";
 import "react-native-get-random-values";
-import * as Location from "expo-location";
 
 export default function RootLayout() {
 
-
-
-<<<<<<< HEAD
-=======
-    getCurrentLocation();
-  }, []);
-
-  let text = "Waiting...";
-  if (errorMsg) {
-    text = errorMsg;
-  } else if (location) {
-    text = JSON.stringify(location);
-    console.log(text);
-  }
->>>>>>> 1bc9e4d28cbfaf71d1044eaac97d37dff53fde9e
   return (
     <Provider store={store}>
       <GestureHandlerRootView style={{ flex: 1 }}>
