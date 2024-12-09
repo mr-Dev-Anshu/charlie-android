@@ -40,7 +40,6 @@ const MyTourCheckPointsListView = ({
   //   console.log(checking);
   // });
 
-  
   // useEffect(() => {
   //   async function getCurrentLocation() {
   //     let { status } = await Location.requestForegroundPermissionsAsync();

@@ -99,6 +99,7 @@ export default function RootLayout() {
     return token;
   }
 
+
   return (
     <Provider store={store}>
       <GestureHandlerRootView style={{ flex: 1 }}>

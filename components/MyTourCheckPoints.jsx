@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Dimensions, StyleSheet, View } from "react-native";
-import MapView, { Marker } from "react-native-maps";
+import MapView from "react-native-maps";
 import MapViewDirections from "react-native-maps-directions";
 
 const { width, height } = Dimensions.get("window");
@@ -18,41 +18,11 @@ const MyTourCheckPoints = () => {
   const [startLocation, setStartLocation] = useState(null);
   const [destination, setDestination] = useState(null);
 
-  const handleLocationSelect = (details, isStart) => {
-    if (details && details.geometry) {
-      const { lat, lng } = details.geometry.location;
-
-      const selectedLocation = {
-        latitude: lat,
-        longitude: lng,
-      };
-
-      if (isStart) {
-        setStartLocation(selectedLocation);
-      } else {
-        setDestination(selectedLocation);
-        setRegion({
-          latitude: lat,
-          longitude: lng,
-          latitudeDelta: 0.0922,
-          longitudeDelta: 0.0421,
-        });
-      }
-    }
-  };
-
   return (
     <View style={styles.screenContainer}>
       <View className="rounded-xl overflow-hidden">
         <View className="w-full rounded-xl overflow-hidden mt-2 border border-gray-500/50">
           <MapView style={styles.mapViewStyle} region={region}>
-            {startLocation && (
-              <Marker coordinate={startLocation} title="Start" />
-            )}
-
-            {destination && (
-              <Marker coordinate={destination} title="Destination" />
-            )}
             {startLocation && destination && (
               <MapViewDirections
                 origin={startLocation}
@@ -61,10 +31,6 @@ const MyTourCheckPoints = () => {
                 strokeWidth={3}
                 strokeColor="blue"
                 optimizeWaypoints={true}
-                onReady={(result) => {
-                  console.log(`Distance: ${result.distance} km`);
-                  console.log(`Duration: ${result.duration} min.`);
-                }}
               />
             )}
           </MapView>
