@@ -4,8 +4,6 @@ import * as Device from "expo-device";
 import * as Notifications from "expo-notifications";
 import Constants from "expo-constants";
 
-
-
 export default function SendNotificationPage() {
   const [expoPushToken, setExpoPushToken] = useState("");
   const [notification, setNotification] = useState(undefined);
@@ -21,18 +19,24 @@ export default function SendNotificationPage() {
   });
 
   useEffect(() => {
-    registerForPushNotificationsAsync().then(token => token && setExpoPushToken(token));
-    notificationListener.current = Notifications.addNotificationReceivedListener(notification => {
-      setNotification(notification);
-    });
+    registerForPushNotificationsAsync().then(
+      (token) => token && setExpoPushToken(token)
+    );
+    notificationListener.current =
+      Notifications.addNotificationReceivedListener((notification) => {
+        setNotification(notification);
+      });
 
-    responseListener.current = Notifications.addNotificationResponseReceivedListener(response => {
-      console.log(response);
-    });
+    responseListener.current =
+      Notifications.addNotificationResponseReceivedListener((response) => {
+        console.log(response);
+      });
 
     return () => {
       notificationListener.current &&
-        Notifications.removeNotificationSubscription(notificationListener.current);
+        Notifications.removeNotificationSubscription(
+          notificationListener.current
+        );
       responseListener.current &&
         Notifications.removeNotificationSubscription(responseListener.current);
     };
@@ -40,7 +44,7 @@ export default function SendNotificationPage() {
 
   async function registerForPushNotificationsAsync() {
     let token;
-  
+
     if (Platform.OS === "android") {
       await Notifications.setNotificationChannelAsync("myNotificationChannel", {
         name: "A channel is needed for the permissions prompt to appear",
@@ -49,7 +53,7 @@ export default function SendNotificationPage() {
         lightColor: "#FF231F7C",
       });
     }
-  
+
     if (Device.isDevice) {
       const { status: existingStatus } =
         await Notifications.getPermissionsAsync();
@@ -59,12 +63,9 @@ export default function SendNotificationPage() {
         finalStatus = status;
       }
       if (finalStatus !== "granted") {
-        alert("Failed to get push token for push notification!");
+        alert("Permission not granted to get push token for push notification!");
         return;
       }
-      // Learn more about projectId:
-      // https://docs.expo.dev/push-notifications/push-notifications-setup/#configure-projectid
-      // EAS projectId is used here.
       try {
         const projectId =
           Constants?.expoConfig?.extra?.eas?.projectId ??
@@ -84,10 +85,9 @@ export default function SendNotificationPage() {
     } else {
       alert("Must use physical device for Push Notifications");
     }
-  
+
     return token;
   }
-
 
   return (
     <View
@@ -130,5 +130,3 @@ async function schedulePushNotification() {
     },
   });
 }
-
-

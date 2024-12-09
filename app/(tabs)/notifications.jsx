@@ -12,6 +12,7 @@ import { StatusBar } from "expo-status-bar";
 import { apiRequest } from "../../utils/helpers";
 import { useSelector } from "react-redux";
 import LoginReqCard from "../../components/UI/LoginReqCard";
+import { Link } from "expo-router";
 
 const { width, height } = Dimensions.get("window");
 
@@ -56,6 +57,7 @@ const NotificationsScreen = () => {
     <>
       {user ? (
         <View style={styles.container}>
+          
           <StatusBar
             style="dark"
             backgroundColor="#fff"
@@ -85,6 +87,7 @@ const NotificationsScreen = () => {
               ))}
             </View>
           </ScrollView>
+          
         </View>
       ) : (
         <LoginReqCard />
