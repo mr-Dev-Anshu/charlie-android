@@ -132,6 +132,11 @@ const options = [
     name: "Notification",
     route: "/notification",
   },
+  {
+    id: "olh",
+    name: "Offline Location",
+    route: "/offline",
+  },
 ];
 
 const styles = StyleSheet.create({

@@ -148,6 +148,8 @@ const TransportDetails = () => {
     }
   };
 
+  console.log("boarding points--<", boardingPoints);
+
   const onRefresh = async () => {
     setRefreshing(true);
     try {
@@ -188,7 +190,7 @@ const TransportDetails = () => {
                     _id,
                   }) => (
                     <BoardingPointCard
-                      key={_id}
+                      key={_id+boardingPointName}
                       name={boardingPointName}
                       date={boardingPointDate}
                       time={boardingPointTime}

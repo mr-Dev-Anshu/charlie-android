@@ -1,60 +1,147 @@
-import { Text, View } from "react-native";
 import React, { useEffect, useState } from "react";
-import CheckPointElement from "./UI/CheckPointElement";
+import { View, Text, Alert } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import * as Location from "expo-location";
+import * as Notifications from "expo-notifications";
 import { Ionicons } from "@expo/vector-icons";
-// import {
-//   getUserLocation,
-//   getUserLocationInOfflineMode,
-//   isNearby,
-//   isWithin100Meters,
-// } from "../utils/offlineLocationHelper";
-
-// import * as Location from "expo-location";
+import CheckPointElement from "./UI/CheckPointElement";
+import { checkInUser } from "../utils/helpers";
+import { useSelector } from "react-redux";
 
 const MyTourCheckPointsListView = ({
   geoTaggedCheckPoints,
   checkPoints,
   handleGetCheckPoints,
 }) => {
-  // const [currentUserLocation, setCurrentUserLocation] = useState({});
-  // const [location, setLocation] = useState({});
-  // const [errorMsg, setErrorMsg] = useState("");
+  const [userLocation, setUserLocation] = useState(null);
 
-  // console.log("location---->", location);
-  // console.log("errror---->", errorMsg);
+  const { user } = useSelector((state) => state.user);
 
-  // const getLocation = async () => {
-  //   try {
-  //     const location = await getUserLocation();
-  //     const { latitude: lat, longitude: long } = location.coords;
-  //     const currentLatLong = { lat, long };
-  //     setCurrentUserLocation(currentLatLong);
-  //   } catch (error) {
-  //     console.error("Failed to get user location:", error);
-  //   }
-  // };
+  // Function to calculate distance between two points (Haversine Formula)
+  const calculateDistance = (lat1, lon1, lat2, lon2) => {
+    const toRad = (value) => (value * Math.PI) / 180;
+    const R = 6371000; // Earth's radius in meters
+    const dLat = toRad(lat2 - lat1);
+    const dLon = toRad(lon2 - lon1);
+    const a =
+      Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+      Math.cos(toRad(lat1)) *
+        Math.cos(toRad(lat2)) *
+        Math.sin(dLon / 2) *
+        Math.sin(dLon / 2);
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    return R * c;
+  };
 
-  // geoTaggedCheckPoints.forEach((element) => {
-  //   const checking = isNearby(currentUserLocation, element, 100);
-  //   console.log(checking);
-  // });
+  // Function to send a local notification
+  const sendNotification = async (checkpoint) => {
+    await Notifications.scheduleNotificationAsync({
+      content: {
+        title: "Checkpoint Reached!",
+        body: `You are near ${checkpoint.boardingPointName}.`,
+        data: { checkpoint },
+      },
+      trigger: null, // Immediate notification
+    });
+  };
 
-  // useEffect(() => {
-  //   async function getCurrentLocation() {
-  //     let { status } = await Location.requestForegroundPermissionsAsync();
-  //     if (status !== "granted") {
-  //       setErrorMsg("Permission to access location was denied");
-  //       return;
-  //     }
+  // Function to check if user is within 100 meters of any checkpoint
+  const checkProximity = async (location) => {
+    const unprocessedCheckpoints = [];
 
-  //     let location = await Location.getCurrentPositionAsync({});
-  //     setLocation(location);
-  //   }
+    for (const checkpoint of geoTaggedCheckPoints) {
+      const distance = calculateDistance(
+        location.latitude,
+        location.longitude,
+        checkpoint.latitude,
+        checkpoint.longitude
+      );
 
-  //   getCurrentLocation();
-  //   getLocation();
-  // }, []);
+      if (distance <= 100) {
+        const checkpointKey = `checkpoint_${checkpoint._id}`;
+        const isAlreadyProcessed = await AsyncStorage.getItem(checkpointKey);
+
+        if (!isAlreadyProcessed) {
+          // Log the checkpoint reached
+          const logEntry = {
+            checkpointId: checkpoint._id,
+            userLocation: location,
+            message: `User reached checkpoint: ${checkpoint.boardingPointName}`,
+            timestamp: new Date().toISOString(),
+          };
+          await AsyncStorage.setItem(
+            `log_${checkpoint._id}`,
+            JSON.stringify(logEntry)
+          );
+
+          // Notify and store the checkpoint
+          await sendNotification(checkpoint);
+          await AsyncStorage.setItem(checkpointKey, JSON.stringify(checkpoint));
+
+          unprocessedCheckpoints.push({
+            email: user?.email,
+            tourId: checkpoint.transportId,
+            checkPointId: checkpoint._id,
+          });
+        }
+      }
+    }
+
+    // Process each unprocessed checkpoint (check-in)
+    for (const body of unprocessedCheckpoints) {
+      console.log("Checking in for:", body);
+      await checkInUser(body); // Call the check-in function
+
+      // Log the check-in attempt
+      const logEntry = {
+        checkInAttempt: true,
+        body: body,
+        timestamp: new Date().toISOString(),
+      };
+      await AsyncStorage.setItem(
+        `log_checkin_${body.checkPointId}`,
+        JSON.stringify(logEntry)
+      );
+    }
+  };
+  // Function to track user's live location
+  const trackUserLocation = async () => {
+    try {
+      const { status } = await Location.requestForegroundPermissionsAsync();
+      if (status !== "granted") {
+        Alert.alert("Permission denied", "Location access is required.");
+        return;
+      }
+
+      await Location.watchPositionAsync(
+        {
+          accuracy: Location.Accuracy.High,
+          timeInterval: 5000,
+          distanceInterval: 5,
+        },
+        (location) => {
+          setUserLocation(location.coords);
+          checkProximity(location.coords);
+        }
+      );
+    } catch (error) {
+      console.error("Error tracking location:", error);
+    }
+  };
+
+  // Request notification permissions
+  const requestNotificationPermissions = async () => {
+    const { status } = await Notifications.requestPermissionsAsync();
+    if (status !== "granted") {
+      Alert.alert("Permission denied", "Notification access is required.");
+    }
+  };
+
+  useEffect(() => {
+    requestNotificationPermissions();
+    trackUserLocation();
+  }, []);
 
   return (
     <ScrollView

@@ -160,3 +160,30 @@ export const shorten = (text, maxLength) => {
   if (text.length <= maxLength) return text;
   return text.substr(0, maxLength) + "...";
 };
+
+export const checkInUser = async (body) => {
+  setCheckInLoading(true);
+  try {
+    const response = await fetch(
+      `${process.env.EXPO_PUBLIC_BASE_URL}/api/checked/add`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(body),
+      }
+    );
+
+    if (response.status !== 200) {
+      throw new Error("Failed to check in");
+    }
+    Alert.alert("Successful", "You are checked in.");
+    handleGetCheckPoints();
+  } catch (error) {
+    console.log("Error:", error);
+    Alert.alert("Failed to check-in", "Please try again.");
+  } finally {
+    setCheckInLoading(false);
+  }
+};

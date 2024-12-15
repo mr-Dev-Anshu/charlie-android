@@ -23,8 +23,6 @@ const Transportation = () => {
   const [refreshing, setRefreshing] = useState(false);
   const [exporting, setExporting] = useState(false);
 
-  console.log("transportationDetails", transportationDetails);
-
   const handelGetTranportationDetails = async () => {
     setLoading(true);
     try {

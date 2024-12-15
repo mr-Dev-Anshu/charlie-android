@@ -73,7 +73,9 @@ export default function RootLayout() {
         finalStatus = status;
       }
       if (finalStatus !== "granted") {
-        alert("Permission not granted to get push token for push notification!");
+        alert(
+          "Permission not granted to get push token for push notification!"
+        );
         return;
       }
       try {
@@ -99,7 +101,6 @@ export default function RootLayout() {
     return token;
   }
 
-
   return (
     <Provider store={store}>
       <GestureHandlerRootView style={{ flex: 1 }}>
@@ -110,6 +111,7 @@ export default function RootLayout() {
           <Stack.Screen name="(admin)" options={{ headerShown: false }} />
           <Stack.Screen name="login" options={{ headerShown: false }} />
           <Stack.Screen name="temp" options={{ headerShown: false }} />
+          <Stack.Screen name="offline" options={{ headerShown: false }} />
           <Stack.Screen name="form" options={{ headerShown: false }} />
           <Stack.Screen name="addRoles" options={{ headerShown: false }} />
           <Stack.Screen name="addMember" options={{ headerShown: false }} />
