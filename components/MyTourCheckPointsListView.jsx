@@ -39,8 +39,8 @@ const MyTourCheckPointsListView = ({
     await Notifications.scheduleNotificationAsync({
       content: {
         title: "Checkpoint Reached!",
-        body: `You are near ${checkpoint.boardingPointName}.`,
-        data: { checkpoint },
+        body: `You are near ${checkpoint?.name}.`,
+        data: "You are checked in now.",
       },
       trigger: null, // Immediate notification
     });
@@ -50,7 +50,16 @@ const MyTourCheckPointsListView = ({
   const checkProximity = async (location) => {
     const unprocessedCheckpoints = [];
 
+    if (!geoTaggedCheckPoints) {
+      return;
+    }
+
     for (const checkpoint of geoTaggedCheckPoints) {
+      // Skip checkpoints that are not activated
+      if (!checkpoint?.activated) {
+        continue;
+      }
+
       const distance = calculateDistance(
         location.latitude,
         location.longitude,
@@ -65,13 +74,13 @@ const MyTourCheckPointsListView = ({
         if (!isAlreadyProcessed) {
           // Log the checkpoint reached
           const logEntry = {
-            checkpointId: checkpoint._id,
+            checkpointId: checkpoint?._id,
             userLocation: location,
-            message: `User reached checkpoint: ${checkpoint.boardingPointName}`,
+            message: `User reached checkpoint: ${checkpoint?.name}`,
             timestamp: new Date().toISOString(),
           };
           await AsyncStorage.setItem(
-            `log_${checkpoint._id}`,
+            `log_${checkpoint?._id}`,
             JSON.stringify(logEntry)
           );
 
@@ -81,7 +90,7 @@ const MyTourCheckPointsListView = ({
 
           unprocessedCheckpoints.push({
             email: user?.email,
-            tourId: checkpoint.transportId,
+            tourId: checkpoint.tourId,
             checkPointId: checkpoint._id,
           });
         }
@@ -105,6 +114,7 @@ const MyTourCheckPointsListView = ({
       );
     }
   };
+  
   // Function to track user's live location
   const trackUserLocation = async () => {
     try {

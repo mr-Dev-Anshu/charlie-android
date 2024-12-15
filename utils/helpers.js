@@ -2,7 +2,6 @@ import { useDispatch } from "react-redux";
 import { setTour } from "../redux/slices/tourSlice";
 import { Alert, Platform } from "react-native";
 import * as FileSystem from "expo-file-system";
-import * as Sharing from "expo-sharing";
 import * as XLSX from "xlsx";
 import * as MediaLibrary from "expo-media-library";
 
@@ -162,7 +161,6 @@ export const shorten = (text, maxLength) => {
 };
 
 export const checkInUser = async (body) => {
-  setCheckInLoading(true);
   try {
     const response = await fetch(
       `${process.env.EXPO_PUBLIC_BASE_URL}/api/checked/add`,
@@ -174,16 +172,12 @@ export const checkInUser = async (body) => {
         body: JSON.stringify(body),
       }
     );
-
     if (response.status !== 200) {
       throw new Error("Failed to check in");
     }
     Alert.alert("Successful", "You are checked in.");
-    handleGetCheckPoints();
   } catch (error) {
     console.log("Error:", error);
     Alert.alert("Failed to check-in", "Please try again.");
-  } finally {
-    setCheckInLoading(false);
   }
 };
