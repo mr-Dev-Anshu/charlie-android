@@ -98,7 +98,6 @@ const MyTours = () => {
 
 const styles = StyleSheet.create({
   container: {
-    marginTop: height * 0.08,
     flex: 1,
     width: "100%",
     justifyContent: "center",

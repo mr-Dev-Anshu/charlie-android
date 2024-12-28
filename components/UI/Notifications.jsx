@@ -26,12 +26,14 @@ const Notifications = ({ id, title, content, seen }) => {
       <View
         className={`border-2 border-green-600 h-fit rounded-lg p-2 mt-3 relative`}
       >
-        {seen === false && (
+        {!seen && (
           <View className="h-2 w-2 bg-red-600  absolute right-2 top-2 rounded-full" />
         )}
-        <View className="flex flex-row justify-start items-center space-x-3">
-          <FontAwesome6 name="bell" size={20} color={"green"} />
-          <Text className={`text-base font-semibold `}>{title}</Text>
+        <View className="flex flex-row justify-start space-x-3">
+          <View className="mt-1">
+            <FontAwesome6 name="bell" size={20} color={"green"} />
+          </View>
+          <Text className={`text-base font-semibold w-80`}>{title}</Text>
         </View>
         {content && (
           <View className="mt-2">

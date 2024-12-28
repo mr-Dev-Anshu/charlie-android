@@ -13,6 +13,7 @@ import { apiRequest } from "../../utils/helpers";
 import { useSelector } from "react-redux";
 import LoginReqCard from "../../components/UI/LoginReqCard";
 import { Link } from "expo-router";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 const { width, height } = Dimensions.get("window");
 
@@ -98,7 +99,6 @@ const NotificationsScreen = () => {
 
 const styles = StyleSheet.create({
   container: {
-    paddingTop: height * 0.1,
     flex: 1,
     width: "100%",
     paddingHorizontal: width * 0.03,

@@ -1,4 +1,4 @@
-import { View, Text } from "react-native";
+import { View, Text, Dimensions } from "react-native";
 import React from "react";
 import { FontAwesome6, Ionicons } from "@expo/vector-icons";
 import { Link } from "expo-router";
@@ -6,8 +6,9 @@ import Carousel from "react-native-reanimated-carousel";
 import CarouselImageRender from "./CarouselImageRender";
 import { formatDate, calculateDuration } from "../../utils/helpers.js";
 
-const CarouselCard = ({ tour }) => {
+const { width } = Dimensions.get("screen");
 
+const CarouselCard = ({ tour }) => {
   const images = tour.images.filter((i) => !i.type).map((i) => i.url);
 
   return (
@@ -17,7 +18,7 @@ const CarouselCard = ({ tour }) => {
           <View className="h-[200px] w-full">
             <Carousel
               loop
-              width={320}
+              width={340}
               height={200}
               autoPlay={true}
               data={images}

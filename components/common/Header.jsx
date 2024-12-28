@@ -16,7 +16,7 @@ const Header = () => {
     "https://www.pngitem.com/pimgs/m/146-1468479_my-profile-icon-blank-profile-picture-circle-hd.png";
 
   return (
-    <View className="absolute mt-[45px] w-full h-[60px] bg-white">
+    <View className="mt-[24px] w-full h-[60px] bg-white">
       <View
         className={` h-full py-3 flex justify-between items-center flex-row px-4`}
       >
