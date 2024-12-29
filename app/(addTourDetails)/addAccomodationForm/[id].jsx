@@ -5,6 +5,7 @@ import {
   TextInput,
   Alert,
   ActivityIndicator,
+  ScrollView,
 } from "react-native";
 import React, { useState } from "react";
 import { router, useLocalSearchParams } from "expo-router";
@@ -62,93 +63,99 @@ const RoomDetails = () => {
   };
 
   return (
-    <View className="px-4 pt-4">
-      <View
-        style={{
-          backgroundColor: "white",
-          padding: 8,
-          borderRadius: 5,
-          elevation: 8,
-        }}
-      >
-        <Text style={{ fontSize: 10, color: "gray" }}>Guest House Name</Text>
-        <TextInput
-          style={{ fontSize: 16, marginTop: 4 }}
-          placeholder="Enter guest house name"
-          onChangeText={setGuestHouseName}
-        />
+    <ScrollView
+      contentContainerStyle={{ flex: 1 }}
+      showsVerticalScrollIndicator={false}
+      scrollEventThrottle={16}
+    >
+      <View className="px-4 pt-4">
+        <View
+          style={{
+            backgroundColor: "white",
+            padding: 8,
+            borderRadius: 5,
+            elevation: 8,
+          }}
+        >
+          <Text style={{ fontSize: 10, color: "gray" }}>Guest House Name</Text>
+          <TextInput
+            style={{ fontSize: 16, marginTop: 4 }}
+            placeholder="Enter guest house name"
+            onChangeText={setGuestHouseName}
+          />
+        </View>
+        <View
+          style={{
+            backgroundColor: "white",
+            padding: 8,
+            borderRadius: 5,
+            marginTop: 10,
+            elevation: 8,
+          }}
+        >
+          <Text style={{ fontSize: 10, color: "gray" }}>Location</Text>
+          <TextInput
+            style={{ fontSize: 16, marginTop: 4 }}
+            placeholder="Enter location"
+            onChangeText={setLocation}
+          />
+        </View>
+        <View
+          style={{
+            backgroundColor: "white",
+            padding: 8,
+            borderRadius: 5,
+            marginTop: 10,
+            elevation: 8,
+          }}
+        >
+          <Text style={{ fontSize: 10, color: "gray" }}>Number of rooms</Text>
+          <TextInput
+            style={{ fontSize: 16, marginTop: 4 }}
+            placeholder="Enter number of rooms"
+            keyboardType="number-pad"
+            onChangeText={setNumberOfRooms}
+          />
+        </View>
+        <View
+          style={{
+            backgroundColor: "white",
+            padding: 8,
+            borderRadius: 5,
+            marginTop: 10,
+            elevation: 8,
+          }}
+        >
+          <Text style={{ fontSize: 10, color: "gray" }}>Total Occupancy</Text>
+          <TextInput
+            style={{ fontSize: 16, marginTop: 4 }}
+            placeholder="Enter total occupancy"
+            keyboardType="number-pad"
+            onChangeText={setTotalOccupancy}
+          />
+        </View>
+        <TouchableOpacity
+          activeOpacity={0.7}
+          onPress={handleAddGuestHouse}
+          style={{
+            backgroundColor: "green",
+            paddingVertical: 12,
+            borderRadius: 5,
+            justifyContent: "center",
+            alignItems: "center",
+            marginTop: 16,
+          }}
+        >
+          {loading ? (
+            <ActivityIndicator size={"small"} color={"white"} />
+          ) : (
+            <Text style={{ color: "white", fontWeight: "bold" }}>
+              Add Guest House
+            </Text>
+          )}
+        </TouchableOpacity>
       </View>
-      <View
-        style={{
-          backgroundColor: "white",
-          padding: 8,
-          borderRadius: 5,
-          marginTop: 10,
-          elevation: 8,
-        }}
-      >
-        <Text style={{ fontSize: 10, color: "gray" }}>Location</Text>
-        <TextInput
-          style={{ fontSize: 16, marginTop: 4 }}
-          placeholder="Enter location"
-          onChangeText={setLocation}
-        />
-      </View>
-      <View
-        style={{
-          backgroundColor: "white",
-          padding: 8,
-          borderRadius: 5,
-          marginTop: 10,
-          elevation: 8,
-        }}
-      >
-        <Text style={{ fontSize: 10, color: "gray" }}>Number of rooms</Text>
-        <TextInput
-          style={{ fontSize: 16, marginTop: 4 }}
-          placeholder="Enter number of rooms"
-          keyboardType="number-pad"
-          onChangeText={setNumberOfRooms}
-        />
-      </View>
-      <View
-        style={{
-          backgroundColor: "white",
-          padding: 8,
-          borderRadius: 5,
-          marginTop: 10,
-          elevation: 8,
-        }}
-      >
-        <Text style={{ fontSize: 10, color: "gray" }}>Total Occupancy</Text>
-        <TextInput
-          style={{ fontSize: 16, marginTop: 4 }}
-          placeholder="Enter total occupancy"
-          keyboardType="number-pad"
-          onChangeText={setTotalOccupancy}
-        />
-      </View>
-      <TouchableOpacity
-        activeOpacity={0.7}
-        onPress={handleAddGuestHouse}
-        style={{
-          backgroundColor: "green",
-          paddingVertical: 12,
-          borderRadius: 5,
-          justifyContent: "center",
-          alignItems: "center",
-          marginTop: 16,
-        }}
-      >
-        {loading ? (
-          <ActivityIndicator size={"small"} color={"white"} />
-        ) : (
-          <Text style={{ color: "white", fontWeight: "bold" }}>
-            Add Guest House
-          </Text>
-        )}
-      </TouchableOpacity>
-    </View>
+    </ScrollView>
   );
 };
 

@@ -1,6 +1,11 @@
-import { View, Text, Alert, ScrollView,
+import {
+  View,
+  Text,
+  Alert,
+  ScrollView,
   TextInput,
-  TouchableOpacity, } from "react-native";
+  TouchableOpacity,
+} from "react-native";
 import React, { useEffect, useRef, useState } from "react";
 import { useLocalSearchParams } from "expo-router";
 import { Image } from "expo-image";
@@ -138,7 +143,11 @@ const Mynotes = () => {
   }
 
   return (
-    <>
+    <ScrollView
+      contentContainerStyle={{ flex: 1 }}
+      showsVerticalScrollIndicator={false}
+      scrollEventThrottle={16}
+    >
       <View className="px-3 py-2 flex justify-start items-center w-full h-full relative">
         <View className="w-full">
           {notes.length === 0 ? (
@@ -230,7 +239,7 @@ const Mynotes = () => {
           </View>
         </View>
       </Modalize>
-    </>
+    </ScrollView>
   );
 };
 

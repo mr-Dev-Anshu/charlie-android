@@ -123,70 +123,76 @@ const TourDetails = () => {
   }, []);
 
   return (
-    <View style={styles.container}>
-      <View style={styles.tabContainer}>
+    <ScrollView
+      contentContainerStyle={{ flex: 1 }}
+      showsVerticalScrollIndicator={false}
+      scrollEventThrottle={16}
+    >
+      <View style={styles.container}>
+        <View style={styles.tabContainer}>
+          <TouchableOpacity
+            onPress={() => setIsIncludedTab(true)}
+            activeOpacity={0.8}
+            style={isIncludedTab ? styles.activeTab : styles.tab}
+          >
+            <Text style={styles.tabText}>Included</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            onPress={() => setIsIncludedTab(false)}
+            activeOpacity={0.8}
+            style={!isIncludedTab ? styles.activeTab : styles.tab}
+          >
+            <Text style={styles.tabText}>Not Included</Text>
+          </TouchableOpacity>
+        </View>
+        {getLoading ? (
+          <View style={styles.loaderContainer}>
+            <ActivityIndicator size="large" color="green" />
+          </View>
+        ) : (
+          <ScrollView style={styles.listContainer}>
+            {(isIncludedTab ? includedItems : notIncludedItems).length === 0 ? (
+              <View className="h-44 w-full flex justify-center items-center mt-10">
+                <Ionicons name="document-outline" size={48} color="green" />
+                <Text className="text-xl font-semibold mt-4">
+                  No items added yet
+                </Text>
+              </View>
+            ) : (
+              (isIncludedTab ? includedItems : notIncludedItems).map((i) => (
+                <View key={i?._id} style={styles.listItem}>
+                  <Text style={styles.itemText}>{i?.item}</Text>
+                  <TouchableOpacity
+                    activeOpacity={0.7}
+                    onPress={() => handleDelete(i?._id)}
+                  >
+                    <Image source={trashIcon} className="h-4 w-4" />
+                  </TouchableOpacity>
+                </View>
+              ))
+            )}
+          </ScrollView>
+        )}
+
+        <TextInput
+          style={styles.input}
+          placeholder="Add new item"
+          value={newItem}
+          onChangeText={setNewItem}
+        />
         <TouchableOpacity
-          onPress={() => setIsIncludedTab(true)}
-          activeOpacity={0.8}
-          style={isIncludedTab ? styles.activeTab : styles.tab}
+          onPress={handleAddItem}
+          style={styles.addButton}
+          disabled={newItem === "" || loading ? true : false}
         >
-          <Text style={styles.tabText}>Included</Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          onPress={() => setIsIncludedTab(false)}
-          activeOpacity={0.8}
-          style={!isIncludedTab ? styles.activeTab : styles.tab}
-        >
-          <Text style={styles.tabText}>Not Included</Text>
+          {loading ? (
+            <ActivityIndicator size="small" color="white" />
+          ) : (
+            <Text style={styles.addButtonText}>Add Item</Text>
+          )}
         </TouchableOpacity>
       </View>
-      {getLoading ? (
-        <View style={styles.loaderContainer}>
-          <ActivityIndicator size="large" color="green" />
-        </View>
-      ) : (
-        <ScrollView style={styles.listContainer}>
-          {(isIncludedTab ? includedItems : notIncludedItems).length === 0 ? (
-            <View className="h-44 w-full flex justify-center items-center mt-10">
-              <Ionicons name="document-outline" size={48} color="green" />
-              <Text className="text-xl font-semibold mt-4">
-                No items added yet
-              </Text>
-            </View>
-          ) : (
-            (isIncludedTab ? includedItems : notIncludedItems).map((i) => (
-              <View key={i?._id} style={styles.listItem}>
-                <Text style={styles.itemText}>{i?.item}</Text>
-                <TouchableOpacity
-                  activeOpacity={0.7}
-                  onPress={() => handleDelete(i?._id)}
-                >
-                  <Image source={trashIcon} className="h-4 w-4" />
-                </TouchableOpacity>
-              </View>
-            ))
-          )}
-        </ScrollView>
-      )}
-
-      <TextInput
-        style={styles.input}
-        placeholder="Add new item"
-        value={newItem}
-        onChangeText={setNewItem}
-      />
-      <TouchableOpacity
-        onPress={handleAddItem}
-        style={styles.addButton}
-        disabled={newItem === "" || loading ? true : false}
-      >
-        {loading ? (
-          <ActivityIndicator size="small" color="white" />
-        ) : (
-          <Text style={styles.addButtonText}>Add Item</Text>
-        )}
-      </TouchableOpacity>
-    </View>
+    </ScrollView>
   );
 };
 

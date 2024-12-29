@@ -185,7 +185,11 @@ const ViewCheckIns = () => {
   }, []);
 
   return (
-    <>
+    <ScrollView
+      contentContainerStyle={{ flex: 1 }}
+      scrollEventThrottle={16}
+      showsVerticalScrollIndicator={false}
+    >
       <View className="p-2 mt-2 h-full relative flex justify-center items-center">
         <View className="mb-3 w-full">
           <LinearGradient
@@ -424,7 +428,7 @@ const ViewCheckIns = () => {
           </TouchableOpacity>
         </View>
       </Modalize>
-    </>
+    </ScrollView>
   );
 };
 

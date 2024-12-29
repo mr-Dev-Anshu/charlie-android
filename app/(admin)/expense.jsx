@@ -22,6 +22,7 @@ import { uploadFileToS3 } from "../../utils/uploadFileHelper.js";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { format as formatDateFns } from "date-fns";
 import LabelValue from "../../components/UI/LabelValue.jsx";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 const { width, height } = Dimensions.get("window");
 
@@ -221,7 +222,7 @@ const expense = () => {
   };
 
   return (
-    <>
+    <SafeAreaView>
       <View className="mt-16 h-full w-full relative">
         <View className="z-50 px-3">
           <DropDownPicker
@@ -491,7 +492,7 @@ const expense = () => {
           </TouchableOpacity>
         </View>
       </Modalize>
-    </>
+    </SafeAreaView>
   );
 };
 

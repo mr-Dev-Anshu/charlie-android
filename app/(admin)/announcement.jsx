@@ -16,6 +16,7 @@ import { useSelector } from "react-redux";
 import { Button } from "react-native";
 import { sendNotificaton } from "../../utils/pushNotification";
 import { ActivityIndicator } from "react-native-paper";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 const { width, height } = Dimensions.get("window");
 
@@ -55,118 +56,119 @@ const AnnouncementScreen = () => {
   };
 
   return (
-    <>
-      <View style={styles.container}>
-        <View style={styles.dropDownContainer}>
-          <DropDownPicker
-            open={open}
-            value={currentTour}
-            items={tours}
-            setOpen={setOpen}
-            setValue={setCurrentTour}
-            setItems={setTours}
-            closeOnBackPressed={true}
-            placeholder="Select Tour"
-            zIndex={1000}
-            textStyle={{
-              color: "white",
-              fontWeight: "bold",
-              fontSize: width * 0.04,
-            }}
-            arrowIconStyle={{ tintColor: "white" }}
-            tickIconStyle={{ tintColor: "white" }}
-            style={{ backgroundColor: "#117004", borderColor: "#117004" }}
-            dropDownContainerStyle={{
-              backgroundColor: "#117004",
-              borderColor: "#117004",
-            }}
-          />
-        </View>
-        <ScrollView
-          showsVerticalScrollIndicator={false}
-          contentContainerStyle={styles.scrollViewContent}
-        >
-          <View style={styles.announcementContainer}>
-            <Announcement />
-          </View>
-        </ScrollView>
-      </View>
-      <View style={styles.buttonContainer}>
-        <TouchableOpacity
-          activeOpacity={0.7}
-          onPress={() => addAnnounceMentRef?.current?.open()}
-          style={styles.newAnnouncementButton}
-        >
-          <View style={styles.buttonContent}>
-            <Ionicons
-              name="megaphone-outline"
-              size={width * 0.05}
-              color="white"
+    <SafeAreaView>
+      <ScrollView>
+        <View style={styles.container}>
+          <View style={styles.dropDownContainer}>
+            <DropDownPicker
+              open={open}
+              value={currentTour}
+              items={tours}
+              setOpen={setOpen}
+              setValue={setCurrentTour}
+              setItems={setTours}
+              closeOnBackPressed={true}
+              placeholder="Select Tour"
+              zIndex={1000}
+              textStyle={{
+                color: "white",
+                fontWeight: "bold",
+                fontSize: width * 0.04,
+              }}
+              arrowIconStyle={{ tintColor: "white" }}
+              tickIconStyle={{ tintColor: "white" }}
+              style={{ backgroundColor: "#117004", borderColor: "#117004" }}
+              dropDownContainerStyle={{
+                backgroundColor: "#117004",
+                borderColor: "#117004",
+              }}
             />
-            <Text style={styles.buttonText}>New Announcements</Text>
           </View>
-        </TouchableOpacity>
-      </View>
-      <Modalize ref={addAnnounceMentRef} adjustToContentHeight>
-        <View style={styles.modalContent}>
-          <Text style={styles.modalTitle}>Announcement</Text>
-          <TextInput
-            placeholder="Enter announcement title..."
-            style={styles.textInput}
-            onChangeText={setAnnouncementTitle}
-            value={announcementTitle}
-          />
-          <TextInput
-            value={content}
-            multiline
-            numberOfLines={6}
-            textAlign="left"
-            textAlignVertical="top"
-            onChangeText={setContent}
-            placeholder="Enter announcement content..."
-            style={styles.textInput}
-          />
-          <View
-            style={{
-              width: "100%",
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
-            }}
+          <ScrollView
+            showsVerticalScrollIndicator={false}
+            contentContainerStyle={styles.scrollViewContent}
           >
-            <TouchableOpacity
-              activeOpacity={0.7}
-              onPress={handleCreateAnnouncement}
+            <View style={styles.announcementContainer}>
+              <Announcement />
+            </View>
+          </ScrollView>
+        </View>
+        <View style={styles.buttonContainer}>
+          <TouchableOpacity
+            activeOpacity={0.7}
+            onPress={() => addAnnounceMentRef?.current?.open()}
+            style={styles.newAnnouncementButton}
+          >
+            <View style={styles.buttonContent}>
+              <Ionicons
+                name="megaphone-outline"
+                size={width * 0.05}
+                color="white"
+              />
+              <Text style={styles.buttonText}>New Announcements</Text>
+            </View>
+          </TouchableOpacity>
+        </View>
+        <Modalize ref={addAnnounceMentRef} adjustToContentHeight>
+          <View style={styles.modalContent}>
+            <Text style={styles.modalTitle}>Announcement</Text>
+            <TextInput
+              placeholder="Enter announcement title..."
+              style={styles.textInput}
+              onChangeText={setAnnouncementTitle}
+              value={announcementTitle}
+            />
+            <TextInput
+              value={content}
+              multiline
+              numberOfLines={6}
+              textAlign="left"
+              textAlignVertical="top"
+              onChangeText={setContent}
+              placeholder="Enter announcement content..."
+              style={styles.textInput}
+            />
+            <View
               style={{
-                backgroundColor: "green",
-                width: width * 0.6,
-                height: height * 0.05,
-                borderRadius: 10,
+                width: "100%",
+                display: "flex",
                 justifyContent: "center",
                 alignItems: "center",
               }}
             >
-              {loading ? (
-                <ActivityIndicator size={"small"} color="white" />
-              ) : (
-                <Text
-                  style={{ color: "white", fontSize: 16, fontWeight: "600" }}
-                >
-                  Send
-                </Text>
-              )}
-            </TouchableOpacity>
+              <TouchableOpacity
+                activeOpacity={0.7}
+                onPress={handleCreateAnnouncement}
+                style={{
+                  backgroundColor: "green",
+                  width: width * 0.6,
+                  height: height * 0.05,
+                  borderRadius: 10,
+                  justifyContent: "center",
+                  alignItems: "center",
+                }}
+              >
+                {loading ? (
+                  <ActivityIndicator size={"small"} color="white" />
+                ) : (
+                  <Text
+                    style={{ color: "white", fontSize: 16, fontWeight: "600" }}
+                  >
+                    Send
+                  </Text>
+                )}
+              </TouchableOpacity>
+            </View>
           </View>
-        </View>
-      </Modalize>
-    </>
+        </Modalize>
+      </ScrollView>
+    </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    marginTop: height * 0.13,
     paddingHorizontal: width * 0.01,
   },
   dropDownContainer: {

@@ -6,6 +6,7 @@ import {
   Alert,
   StyleSheet,
   Dimensions,
+  ScrollView,
 } from "react-native";
 import React, { useEffect, useState } from "react";
 import { useLocalSearchParams } from "expo-router";
@@ -84,90 +85,98 @@ const MyTourDetails = () => {
   }, []);
 
   return (
-    <View className={`px-3 relative h-full flex items-center`}>
-      <View className={`px-5 w-full flex justify-center items-center`}>
-        <View className={`flex flex-row justify-between`}>
-          <Pressable onPress={() => handleTabPress("tourInfo")}>
-            <View className={`w-[200px] py-2`}>
-              <Text className={`text-center text-[15px] font-semibold `}>
-                Tour Information
-              </Text>
-            </View>
-          </Pressable>
-          <Pressable onPress={() => handleTabPress("checkPoints")}>
-            <View className={`w-[200px] py-2`}>
-              <Text className={`text-center font-semibold `}>Checkpoints</Text>
-            </View>
-          </Pressable>
-        </View>
-        <Animated.View style={[animatedStyles]}>
-          <View
-            className={`bg-green-600 w-[160px] h-1.5 rounded-t-xl absolute bottom-0 left-5`}
-          />
-        </Animated.View>
-      </View>
-      <View className={`w-full`}>
-        {activeTab === "tourInfo" ? (
-          <MyTourInfo tour={tour} />
-        ) : listView ? (
-          <MyTourCheckPointsListView
-            checkPoints={checkPoints}
-            geoTaggedCheckPoints={geoTaggedCheckPoints}
-            tourId={id}
-            handleGetCheckPoints={handleGetCheckPoints}
-          />
-        ) : (
-          <MyTourCheckPoints />
-        )}
-      </View>
-      <View
-        className={`absolute bottom-0 w-full py-2 px-2 flex flex-row justify-between bg-transparent`}
-      >
-        {activeTab === "tourInfo" ? (
-          <TouchableOpacity
-            onPress={() => handleTabPress("checkPoints")}
-            activeOpacity={0.8}
-          >
-            <View
-              className={`flex flex-row justify-center items-center bg-gray-500 w-[170px] h-12 space-x-4 rounded-lg`}
-            >
-              <Ionicons
-                name={"checkmark-circle-outline"}
-                size={20}
-                color="white"
-              />
-              <Text className={` font-semibold`}>Check Points</Text>
-            </View>
-          </TouchableOpacity>
-        ) : (
-          <TouchableOpacity
-            onPress={() => setListView(!listView)}
-            activeOpacity={0.8}
-          >
-            <View
-              className={`flex flex-row justify-center items-center bg-gray-500 w-[170px] h-12 space-x-4 rounded-lg`}
-            >
-              <Ionicons
-                name={listView ? "compass" : "list"}
-                size={20}
-                color="white"
-              />
-              <Text className={` font-semibold`}>
-                {listView ? "Map View" : "List View"}
-              </Text>
-            </View>
-          </TouchableOpacity>
-        )}
-        <TouchableOpacity activeOpacity={0.8}>
-          <View
-            className={`flex flex-row justify-center items-center bg-green-700 w-[170px] h-12 space-x-4 rounded-lg`}
-          >
-            <Ionicons name="qr-code-outline" size={20} color="white" />
-            <Text className={` font-semibold`}>Check-In</Text>
+    <ScrollView
+      contentContainerStyle={{ flex: 1 }}
+      showsVerticalScrollIndicator={false}
+      scrollEventThrottle={16}
+    >
+      <View className={`px-3 relative h-full flex items-center`}>
+        <View className={`px-5 w-full flex justify-center items-center`}>
+          <View className={`flex flex-row justify-between`}>
+            <Pressable onPress={() => handleTabPress("tourInfo")}>
+              <View className={`w-[200px] py-2`}>
+                <Text className={`text-center text-[15px] font-semibold `}>
+                  Tour Information
+                </Text>
+              </View>
+            </Pressable>
+            <Pressable onPress={() => handleTabPress("checkPoints")}>
+              <View className={`w-[200px] py-2`}>
+                <Text className={`text-center font-semibold `}>
+                  Checkpoints
+                </Text>
+              </View>
+            </Pressable>
           </View>
-        </TouchableOpacity>
+          <Animated.View style={[animatedStyles]}>
+            <View
+              className={`bg-green-600 w-[160px] h-1.5 rounded-t-xl absolute bottom-0 left-5`}
+            />
+          </Animated.View>
+        </View>
+        <View className={`w-full`}>
+          {activeTab === "tourInfo" ? (
+            <MyTourInfo tour={tour} />
+          ) : listView ? (
+            <MyTourCheckPointsListView
+              checkPoints={checkPoints}
+              geoTaggedCheckPoints={geoTaggedCheckPoints}
+              tourId={id}
+              handleGetCheckPoints={handleGetCheckPoints}
+            />
+          ) : (
+            <MyTourCheckPoints />
+          )}
+        </View>
+        <View
+          className={`absolute bottom-0 w-full py-2 px-2 flex flex-row justify-between bg-transparent`}
+        >
+          {activeTab === "tourInfo" ? (
+            <TouchableOpacity
+              onPress={() => handleTabPress("checkPoints")}
+              activeOpacity={0.8}
+            >
+              <View
+                className={`flex flex-row justify-center items-center bg-gray-500 w-[170px] h-12 space-x-4 rounded-lg`}
+              >
+                <Ionicons
+                  name={"checkmark-circle-outline"}
+                  size={20}
+                  color="white"
+                />
+                <Text className={` font-semibold`}>Check Points</Text>
+              </View>
+            </TouchableOpacity>
+          ) : (
+            <TouchableOpacity
+              onPress={() => setListView(!listView)}
+              activeOpacity={0.8}
+            >
+              <View
+                className={`flex flex-row justify-center items-center bg-gray-500 w-[170px] h-12 space-x-4 rounded-lg`}
+              >
+                <Ionicons
+                  name={listView ? "compass" : "list"}
+                  size={20}
+                  color="white"
+                />
+                <Text className={` font-semibold`}>
+                  {listView ? "Map View" : "List View"}
+                </Text>
+              </View>
+            </TouchableOpacity>
+          )}
+          <TouchableOpacity activeOpacity={0.8}>
+            <View
+              className={`flex flex-row justify-center items-center bg-green-700 w-[170px] h-12 space-x-4 rounded-lg`}
+            >
+              <Ionicons name="qr-code-outline" size={20} color="white" />
+              <Text className={` font-semibold`}>Check-In</Text>
+            </View>
+          </TouchableOpacity>
+        </View>
       </View>
-    </View>
+    </ScrollView>
   );
 };
 

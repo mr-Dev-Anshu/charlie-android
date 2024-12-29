@@ -15,7 +15,7 @@ const CarouselComponent = () => {
   }, [tour]);
 
   return (
-    <View className="absolute top-[260px] flex justify-center items-center z-50 h-[500px]">
+    <View className=" flex justify-center items-center z-50 h-[500px]">
       <ScrollView horizontal showsHorizontalScrollIndicator={false}>
         {activeTours && activeTours.length !== 0 ? (
           <View className="flex flex-row px-8 pt-2 justify-center items-center">

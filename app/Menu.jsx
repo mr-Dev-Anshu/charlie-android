@@ -5,6 +5,7 @@ import {
   TouchableOpacity,
   Alert,
   ActivityIndicator,
+  ScrollView,
 } from "react-native";
 import React from "react";
 import { StyleSheet } from "react-native";
@@ -48,56 +49,62 @@ const Menu = () => {
   };
 
   return (
-    <View style={styles.screenContainer}>
-      <TouchableOpacity
-        activeOpacity={0.7}
-        style={styles.profileButtonContainer}
-        onPress={openProfile}
-      >
-        <LinearGradient
-          start={{ x: 0, y: 0 }}
-          end={{ x: 1, y: 0 }}
-          colors={["rgba(240, 101, 2, 0.2)", "rgba(0, 174, 255, 0.2)"]}
-          style={styles.linearGradientContainerStyle}
+    <ScrollView
+      contentContainerStyle={{ flex: 1 }}
+      showsVerticalScrollIndicator={false}
+      scrollEventThrottle={16}
+    >
+      <View style={styles.screenContainer}>
+        <TouchableOpacity
+          activeOpacity={0.7}
+          style={styles.profileButtonContainer}
+          onPress={openProfile}
         >
-          <Image source={user?.picture} style={styles.imageStyle} />
-          <Text style={{ fontSize: 18, fontWeight: "600" }}>
-            {profile?.name || user?.name}
-          </Text>
-          <Ionicons name="chevron-forward" size={24} color={"green"} />
-        </LinearGradient>
-      </TouchableOpacity>
-      <View style={styles.optionsContainer}>
-        {options.map((option) => (
-          <TouchableOpacity
-            key={option.id}
-            activeOpacity={0.7}
-            onPress={() => router.push(option.route)}
-            style={styles.optionButtonContainer}
+          <LinearGradient
+            start={{ x: 0, y: 0 }}
+            end={{ x: 1, y: 0 }}
+            colors={["rgba(240, 101, 2, 0.2)", "rgba(0, 174, 255, 0.2)"]}
+            style={styles.linearGradientContainerStyle}
           >
-            <Text style={{ fontSize: 16, fontWeight: "600" }}>
-              {option.name}
+            <Image source={user?.picture} style={styles.imageStyle} />
+            <Text style={{ fontSize: 18, fontWeight: "600" }}>
+              {profile?.name || user?.name}
             </Text>
             <Ionicons name="chevron-forward" size={24} color={"green"} />
-          </TouchableOpacity>
-        ))}
-      </View>
-      <View style={styles.logOutButtonContainer}>
-        <TouchableOpacity
-          onPress={handleLogOut}
-          activeOpacity={0.7}
-          style={styles.logOutButton}
-        >
-          {loggingOut ? (
-            <ActivityIndicator size={"small"} color={"white"} />
-          ) : (
-            <Text style={{ color: "white", fontWeight: "600", fontSize: 16 }}>
-              Log Out
-            </Text>
-          )}
+          </LinearGradient>
         </TouchableOpacity>
+        <View style={styles.optionsContainer}>
+          {options.map((option) => (
+            <TouchableOpacity
+              key={option.id}
+              activeOpacity={0.7}
+              onPress={() => router.push(option.route)}
+              style={styles.optionButtonContainer}
+            >
+              <Text style={{ fontSize: 16, fontWeight: "600" }}>
+                {option.name}
+              </Text>
+              <Ionicons name="chevron-forward" size={24} color={"green"} />
+            </TouchableOpacity>
+          ))}
+        </View>
+        <View style={styles.logOutButtonContainer}>
+          <TouchableOpacity
+            onPress={handleLogOut}
+            activeOpacity={0.7}
+            style={styles.logOutButton}
+          >
+            {loggingOut ? (
+              <ActivityIndicator size={"small"} color={"white"} />
+            ) : (
+              <Text style={{ color: "white", fontWeight: "600", fontSize: 16 }}>
+                Log Out
+              </Text>
+            )}
+          </TouchableOpacity>
+        </View>
       </View>
-    </View>
+    </ScrollView>
   );
 };
 

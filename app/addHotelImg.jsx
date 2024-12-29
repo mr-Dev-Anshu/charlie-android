@@ -1,4 +1,10 @@
-import { View, Text, ScrollView, TouchableOpacity } from "react-native";
+import {
+  View,
+  Text,
+  ScrollView,
+  TouchableOpacity,
+  ScrollViewBase,
+} from "react-native";
 import React, { useState } from "react";
 import { Ionicons } from "@expo/vector-icons";
 import { deviceWidth } from "../utils/dimensions";
@@ -47,66 +53,68 @@ const addHotelImg = () => {
   };
 
   return (
-    <View className="px-6 pt-6 relative h-full">
-      <View className="w-full flex justify-center items-center">
-        {error && (
-          <Text className="text-base font-semibold text-red-500">{error}</Text>
-        )}
-      </View>
-      <View className="flex justify-center items-center h-[80%] w-full border-2 border-green-600 rounded-xl">
-        {image.length > 0 ? (
-          <ScrollView
-            showsVerticalScrollIndicator={false}
-            style={{ padding: 5, width: "100%" }}
+    <ScrollView
+      contentContainerStyle={{ flex: 1 }}
+      nestedScrollEnabled
+      showsVerticalScrollIndicator={false}
+    >
+      <View className="px-6 pt-6 h-full">
+        <View className="w-full flex justify-center items-center">
+          {error && (
+            <Text className="text-base font-semibold text-red-500">
+              {error}
+            </Text>
+          )}
+        </View>
+        <View className="flex justify-center items-center h-[80%] w-full border-2 border-green-600 rounded-xl">
+          {image.length > 0 ? (
+            <ScrollView
+              showsVerticalScrollIndicator={false}
+              style={{ padding: 5, width: "100%" }}
+            >
+              {image.map((img, idx) => (
+                <Image
+                  key={idx}
+                  source={{ uri: img.uri }}
+                  style={{
+                    width: "100%",
+                    height: 200,
+                    borderRadius: 10,
+                    marginBottom: 14,
+                  }}
+                />
+              ))}
+            </ScrollView>
+          ) : (
+            <Text>Select Hotel Images</Text>
+          )}
+        </View>
+        <View
+        >
+          <TouchableOpacity activeOpacity={0.8} className="mt-1" onPress={pickImage}>
+            <View className="h-12 flex justify-center items-center border-2 border-dashed rounded-lg mb-3 border-green-600">
+              <View className="flex flex-row justify-center items-center space-x-3">
+                <Ionicons name="add-circle" size={20} color={"green"} />
+                <Text className="text-base font-semibold text-green-600">
+                  Add Hotel Images
+                </Text>
+              </View>
+            </View>
+          </TouchableOpacity>
+          <TouchableOpacity
+            activeOpacity={0.8}
+            containerStyle={{ height: "100%" }}
+            onPress={handleHotelImageUpload}
           >
-            {image.map((img, idx) => (
-              <Image
-                key={idx}
-                source={{ uri: img.uri }}
-                style={{
-                  width: "100%",
-                  height: 200,
-                  borderRadius: 10,
-                  marginBottom: 14,
-                }}
-              />
-            ))}
-          </ScrollView>
-        ) : (
-          <Text>Select Hotel Images</Text>
-        )}
-      </View>
-      <View
-        style={{
-          width: deviceWidth,
-          bottom: 32,
-          position: "absolute",
-          paddingHorizontal: 24,
-        }}
-      >
-        <TouchableOpacity activeOpacity={0.8} onPress={pickImage}>
-          <View className="h-12 flex justify-center items-center border-2 border-dashed rounded-lg mb-3 border-green-600">
-            <View className="flex flex-row justify-center items-center space-x-3">
-              <Ionicons name="add-circle" size={20} color={"green"} />
-              <Text className="text-base font-semibold text-green-600">
-                Add Hotel Images
+            <View className="h-12 flex justify-center items-center bg-green-600 rounded-lg">
+              <Text className="text-base font-semibold text-white">
+                {loading ? "Uploading..." : "Proceed"}
               </Text>
             </View>
-          </View>
-        </TouchableOpacity>
-        <TouchableOpacity
-          activeOpacity={0.8}
-          containerStyle={{ height: "100%" }}
-          onPress={handleHotelImageUpload}
-        >
-          <View className="h-12 flex justify-center items-center bg-green-600 rounded-lg">
-            <Text className="text-base font-semibold text-white">
-              {loading ? "Uploading..." : "Proceed"}
-            </Text>
-          </View>
-        </TouchableOpacity>
+          </TouchableOpacity>
+        </View>
       </View>
-    </View>
+    </ScrollView>
   );
 };
 

@@ -5,6 +5,7 @@ import {
   View,
   Dimensions,
   StyleSheet,
+  ScrollView,
 } from "react-native";
 import { Image } from "expo-image";
 import React, { useEffect, useState } from "react";
@@ -135,30 +136,36 @@ const Login = () => {
   };
 
   return (
-    <View style={styles.container}>
-      <View style={styles.backgroundImageContainer}>
-        <Image style={styles.backgroundImage} source={payanisuPoster} />
+    <ScrollView
+      contentContainerStyle={{ flex: 1 }}
+      showsVerticalScrollIndicator={false}
+      scrollEventThrottle={16}
+    >
+      <View style={styles.container}>
+        <View style={styles.backgroundImageContainer}>
+          <Image style={styles.backgroundImage} source={payanisuPoster} />
+        </View>
+        <View style={styles.contentContainer}>
+          <TouchableOpacity
+            activeOpacity={0.7}
+            onPress={handleLogin}
+            style={styles.loginButton}
+            disabled={loading}
+          >
+            <View style={styles.loginButtonContent}>
+              {loading ? (
+                <ActivityIndicator size={24} color="green" />
+              ) : (
+                <View style={styles.loginButtonTextContainer}>
+                  <Ionicons name="logo-google" size={20} color="white" />
+                  <Text style={styles.loginButtonText}>Login with Google</Text>
+                </View>
+              )}
+            </View>
+          </TouchableOpacity>
+        </View>
       </View>
-      <View style={styles.contentContainer}>
-        <TouchableOpacity
-          activeOpacity={0.7}
-          onPress={handleLogin}
-          style={styles.loginButton}
-          disabled={loading}
-        >
-          <View style={styles.loginButtonContent}>
-            {loading ? (
-              <ActivityIndicator size={24} color="green" />
-            ) : (
-              <View style={styles.loginButtonTextContainer}>
-                <Ionicons name="logo-google" size={20} color="white" />
-                <Text style={styles.loginButtonText}>Login with Google</Text>
-              </View>
-            )}
-          </View>
-        </TouchableOpacity>
-      </View>
-    </View>
+    </ScrollView>
   );
 };
 

@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import { View, Text, Alert, TouchableOpacity } from "react-native";
+import { View, Text, Alert, TouchableOpacity, ScrollView } from "react-native";
 import { Modalize } from "react-native-modalize";
 import { TextInput } from "react-native";
 import { router, useLocalSearchParams } from "expo-router";
@@ -103,7 +103,11 @@ const AllocatedCoordinators = () => {
   }
 
   return (
-    <>
+    <ScrollView
+      showsVerticalScrollIndicator={false}
+      contentContainerStyle={{ flex: 1 }}
+      scrollEventThrottle={16}
+    >
       <View className="h-full w-full flex justify-between px-3 pt-4">
         <View>
           <TextInput
@@ -253,7 +257,7 @@ const AllocatedCoordinators = () => {
           </TouchableOpacity>
         </View>
       </Modalize>
-    </>
+    </ScrollView>
   );
 };
 

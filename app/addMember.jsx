@@ -7,6 +7,7 @@ import {
   StyleSheet,
   TextInput,
   TouchableOpacity,
+  ScrollView,
 } from "react-native";
 import { Image } from "expo-image";
 import { Ionicons } from "@expo/vector-icons";
@@ -71,86 +72,91 @@ const AddMember = () => {
   };
 
   return (
-    <View style={styles.container}>
-      <Image style={styles.backgroundImage} source={trekkersImg} />
-      <View style={styles.overlay}>
-        <Text style={styles.title}>Add Member</Text>
-        <View style={styles.formContainer}>
-          {error && (
-            <View style={styles.errorContainer}>
-              <Ionicons name="warning-outline" size={20} color="red" />
-              <Text style={styles.errorText}>{error}</Text>
-            </View>
-          )}
-          <TextInput
-            placeholder="Enter Name"
-            textContentType="name"
-            autoCapitalize="words"
-            onChangeText={setName}
-            style={styles.input}
-            placeholderTextColor="gray"
-            value={name}
-          />
-          <TextInput
-            placeholder="Enter Email"
-            textContentType="emailAddress"
-            autoCapitalize="none"
-            onChangeText={setEmail}
-            style={styles.input}
-            placeholderTextColor="gray"
-            value={email}
-          />
-          <TextInput
-            placeholder="Enter Age"
-            keyboardType="numeric"
-            onChangeText={setAge}
-            style={styles.input}
-            placeholderTextColor="gray"
-            value={age}
-          />
-          <View style={styles.pickerContainer}>
-            <Picker
-              selectedValue={gender}
-              onValueChange={setGender}
-              dropdownIconColor="white"
-              style={styles.picker}
-            >
-              <Picker.Item label="Select Gender" value={null} />
-              <Picker.Item label="Male" value="Male" />
-              <Picker.Item label="Female" value="Female" />
-            </Picker>
-          </View>
-          <TextInput
-            placeholder="Enter Relation"
-            onChangeText={setRelation}
-            style={styles.input}
-            placeholderTextColor="gray"
-            value={relation}
-          />
-          <TextInput
-            placeholder="Enter Contact Number"
-            keyboardType="phone-pad"
-            onChangeText={setContact}
-            style={styles.input}
-            placeholderTextColor="gray"
-            value={contact}
-          />
-          <TouchableOpacity onPress={handleSubmit} style={styles.submitButton}>
-            {loading ? (
-              <ActivityIndicator size="small" color="#fff" />
-            ) : (
-              <Text style={styles.submitButtonText}>Add Member</Text>
+    <ScrollView contentContainerStyle={{flex: 1}} showsVerticalScrollIndicator={false} scrollEventThrottle={16}>
+      <View style={styles.container}>
+        <Image style={styles.backgroundImage} source={trekkersImg} />
+        <View style={styles.overlay}>
+          <Text style={styles.title}>Add Member</Text>
+          <View style={styles.formContainer}>
+            {error && (
+              <View style={styles.errorContainer}>
+                <Ionicons name="warning-outline" size={20} color="red" />
+                <Text style={styles.errorText}>{error}</Text>
+              </View>
             )}
-          </TouchableOpacity>
-          <TouchableOpacity
-            onPress={() => router.back()}
-            style={styles.cancelButton}
-          >
-            <Text style={styles.cancelButtonText}>Cancel</Text>
-          </TouchableOpacity>
+            <TextInput
+              placeholder="Enter Name"
+              textContentType="name"
+              autoCapitalize="words"
+              onChangeText={setName}
+              style={styles.input}
+              placeholderTextColor="gray"
+              value={name}
+            />
+            <TextInput
+              placeholder="Enter Email"
+              textContentType="emailAddress"
+              autoCapitalize="none"
+              onChangeText={setEmail}
+              style={styles.input}
+              placeholderTextColor="gray"
+              value={email}
+            />
+            <TextInput
+              placeholder="Enter Age"
+              keyboardType="numeric"
+              onChangeText={setAge}
+              style={styles.input}
+              placeholderTextColor="gray"
+              value={age}
+            />
+            <View style={styles.pickerContainer}>
+              <Picker
+                selectedValue={gender}
+                onValueChange={setGender}
+                dropdownIconColor="white"
+                style={styles.picker}
+              >
+                <Picker.Item label="Select Gender" value={null} />
+                <Picker.Item label="Male" value="Male" />
+                <Picker.Item label="Female" value="Female" />
+              </Picker>
+            </View>
+            <TextInput
+              placeholder="Enter Relation"
+              onChangeText={setRelation}
+              style={styles.input}
+              placeholderTextColor="gray"
+              value={relation}
+            />
+            <TextInput
+              placeholder="Enter Contact Number"
+              keyboardType="phone-pad"
+              onChangeText={setContact}
+              style={styles.input}
+              placeholderTextColor="gray"
+              value={contact}
+            />
+            <TouchableOpacity
+              onPress={handleSubmit}
+              style={styles.submitButton}
+            >
+              {loading ? (
+                <ActivityIndicator size="small" color="#fff" />
+              ) : (
+                <Text style={styles.submitButtonText}>Add Member</Text>
+              )}
+            </TouchableOpacity>
+            <TouchableOpacity
+              onPress={() => router.back()}
+              style={styles.cancelButton}
+            >
+              <Text style={styles.cancelButtonText}>Cancel</Text>
+            </TouchableOpacity>
+          </View>
         </View>
       </View>
-    </View>
+    </ScrollView>
   );
 };
 

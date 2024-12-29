@@ -132,65 +132,71 @@ const Luggage = () => {
   }
 
   return (
-    <View style={styles.container}>
-      <View style={styles.tabContainer}>
+    <ScrollView
+      contentContainerStyle={{ flex: 1 }}
+      scrollEventThrottle={16}
+      showsVerticalScrollIndicator={false}
+    >
+      <View style={styles.container}>
+        <View style={styles.tabContainer}>
+          <TouchableOpacity
+            onPress={() => setIsBackpack(true)}
+            activeOpacity={0.8}
+            style={isBackpack ? styles.activeTab : styles.tab}
+          >
+            <Text style={styles.tabText}>Backpack</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            onPress={() => setIsBackpack(false)}
+            activeOpacity={0.8}
+            style={!isBackpack ? styles.activeTab : styles.tab}
+          >
+            <Text style={styles.tabText}>Check-In Baggage</Text>
+          </TouchableOpacity>
+        </View>
+        <ScrollView style={styles.listContainer}>
+          <ScrollView style={styles.listContainer}>
+            {(isBackpack ? backpackItems : checkInItems).length === 0 ? (
+              <View className="h-44 w-full flex justify-center items-center mt-10">
+                <Ionicons name="document-outline" size={48} color="green" />
+                <Text className="text-xl font-semibold mt-4">
+                  No items added yet
+                </Text>
+              </View>
+            ) : (
+              (isBackpack ? backpackItems : checkInItems).map((i, index) => (
+                <View key={index} style={styles.listItem}>
+                  <Text>{i?.item}</Text>
+                  <TouchableOpacity
+                    activeOpacity={0.5}
+                    onPress={() => handleDelete(i?._id)}
+                  >
+                    <Image source={trashIcon} className="h-4 w-4" />
+                  </TouchableOpacity>
+                </View>
+              ))
+            )}
+          </ScrollView>
+        </ScrollView>
+        <TextInput
+          style={styles.input}
+          placeholder="Add new item"
+          value={newItem}
+          onChangeText={setNewItem}
+        />
         <TouchableOpacity
-          onPress={() => setIsBackpack(true)}
-          activeOpacity={0.8}
-          style={isBackpack ? styles.activeTab : styles.tab}
+          disabled={newItem === "" ? true : false}
+          onPress={handleAddItem}
+          style={styles.addButton}
         >
-          <Text style={styles.tabText}>Backpack</Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          onPress={() => setIsBackpack(false)}
-          activeOpacity={0.8}
-          style={!isBackpack ? styles.activeTab : styles.tab}
-        >
-          <Text style={styles.tabText}>Check-In Baggage</Text>
+          {loading ? (
+            <ActivityIndicator size={"small"} color="white" />
+          ) : (
+            <Text style={styles.addButtonText}>Add Item</Text>
+          )}
         </TouchableOpacity>
       </View>
-      <ScrollView style={styles.listContainer}>
-        <ScrollView style={styles.listContainer}>
-          {(isBackpack ? backpackItems : checkInItems).length === 0 ? (
-            <View className="h-44 w-full flex justify-center items-center mt-10">
-              <Ionicons name="document-outline" size={48} color="green" />
-              <Text className="text-xl font-semibold mt-4">
-                No items added yet
-              </Text>
-            </View>
-          ) : (
-            (isBackpack ? backpackItems : checkInItems).map((i, index) => (
-              <View key={index} style={styles.listItem}>
-                <Text>{i?.item}</Text>
-                <TouchableOpacity
-                  activeOpacity={0.5}
-                  onPress={() => handleDelete(i?._id)}
-                >
-                  <Image source={trashIcon} className="h-4 w-4" />
-                </TouchableOpacity>
-              </View>
-            ))
-          )}
-        </ScrollView>
-      </ScrollView>
-      <TextInput
-        style={styles.input}
-        placeholder="Add new item"
-        value={newItem}
-        onChangeText={setNewItem}
-      />
-      <TouchableOpacity
-        disabled={newItem === "" ? true : false}
-        onPress={handleAddItem}
-        style={styles.addButton}
-      >
-        {loading ? (
-          <ActivityIndicator size={"small"} color="white" />
-        ) : (
-          <Text style={styles.addButtonText}>Add Item</Text>
-        )}
-      </TouchableOpacity>
-    </View>
+    </ScrollView>
   );
 };
 

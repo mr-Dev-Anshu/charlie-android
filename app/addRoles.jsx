@@ -1,4 +1,4 @@
-import { View, Text, ActivityIndicator, Alert, Dimensions, StyleSheet, TextInput, TouchableOpacity } from "react-native";
+import { View, Text, ActivityIndicator, Alert, Dimensions, StyleSheet, TextInput, TouchableOpacity, ScrollView } from "react-native";
 import React, { useState } from "react";
 import { Image } from "expo-image";
 import { Ionicons } from "@expo/vector-icons";
@@ -44,6 +44,8 @@ const AddRoles = () => {
   };
 
   return (
+    <ScrollView contentContainerStyle={{flex: 1}} showsVerticalScrollIndicator={false} scrollEventThrottle={16}>
+
     <View style={styles.container}>
       <View style={styles.backgroundImageContainer}>
         <Image
@@ -97,6 +99,7 @@ const AddRoles = () => {
         </View>
       </View>
     </View>
+            </ScrollView>
   );
 };
 

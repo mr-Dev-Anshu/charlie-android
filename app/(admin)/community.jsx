@@ -229,56 +229,57 @@ const Community = () => {
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
+    backgroundColor: "#fff",
   },
   loaderContainer: {
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    width: "100%",
-    height: "100%",
   },
   scrollContainer: {
-    paddingBottom: height * 0.1,
+    paddingBottom: 20,
   },
   postsContainer: {
-    paddingHorizontal: width * 0.05,
-    paddingTop: height * 0.08,
+    paddingHorizontal: "5%",
+    paddingTop: 20,
   },
   shareButtonContainer: {
     position: "absolute",
-    bottom: 10,
-    left: width * 0.05,
-    right: width * 0.05,
+    bottom: 20,
+    left: "5%",
+    right: "5%",
   },
   shareButton: {
     backgroundColor: "green",
-    height: height * 0.045,
+    paddingVertical: 12,
+    borderRadius: 8,
     justifyContent: "center",
     alignItems: "center",
-    borderRadius: 8,
   },
   shareButtonText: {
     color: "white",
     fontWeight: "bold",
+    fontSize: 16,
   },
   modalStyle: {
     width: "100%",
+    padding: 16,
   },
   modalContainer: {
-    paddingHorizontal: width * 0.05,
+    paddingHorizontal: "5%",
   },
   modalScrollContent: {
-    paddingBottom: height * 0.02,
+    paddingBottom: 20,
   },
   modalContent: {
     alignItems: "center",
-    width: "100%",
   },
   modalTitle: {
-    fontSize: width * 0.05,
+    fontSize: 18,
     fontWeight: "bold",
-    paddingBottom: height * 0.02,
+    paddingBottom: 20,
     marginTop: 10,
+    textAlign: "center",
   },
   textInput: {
     borderWidth: 1,
@@ -286,14 +287,15 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     padding: 10,
     width: "100%",
-    marginTop: height * 0.002,
-    height: height * 0.15,
+    height: 150,
+    marginTop: 10,
+    textAlignVertical: "top",
   },
   imagesContainer: {
     flexDirection: "row",
     flexWrap: "wrap",
     justifyContent: "center",
-    paddingTop: height * 0.02,
+    paddingTop: 20,
     width: "100%",
   },
   imageWrapper: {
@@ -301,9 +303,9 @@ const styles = StyleSheet.create({
     margin: 5,
   },
   image: {
-    width: width * 0.25,
-    height: width * 0.25,
-    borderRadius: 10,
+    width: 80,
+    height: 80,
+    borderRadius: 8,
   },
   imageCloseButton: {
     position: "absolute",
@@ -318,40 +320,42 @@ const styles = StyleSheet.create({
     borderColor: "green",
     borderRadius: 8,
     width: "100%",
-    height: height * 0.15,
+    height: 150,
     justifyContent: "center",
     alignItems: "center",
-    marginTop: height * 0.02,
-  },
-  postButtonContainer: {
-    width: "100%",
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  postButton: {
-    backgroundColor: "green",
-    width: width * 0.6,
-    paddingVertical: height * 0.01,
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-    borderRadius: 10,
-  },
-  postButtonText: {
-    color: "white",
-    fontSize: height * 0.02,
+    marginTop: 20,
   },
   addImagesButton: {
     backgroundColor: "green",
     paddingHorizontal: 24,
-    marginTop: 10,
     paddingVertical: 10,
     borderRadius: 12,
+    marginTop: 10,
   },
   addImagesButtonText: {
     color: "white",
+    fontWeight: "bold",
+  },
+  postButtonContainer: {
+    width: "100%",
+    alignItems: "center",
+    justifyContent: "center",
+    marginTop: 20,
+  },
+  postButton: {
+    backgroundColor: "green",
+    width: "60%",
+    paddingVertical: 12,
+    borderRadius: 10,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  postButtonText: {
+    color: "white",
+    fontSize: 16,
+    fontWeight: "bold",
   },
 });
+
 
 export default Community;

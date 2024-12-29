@@ -439,37 +439,43 @@ const BookingMembers = ({
   handleRemoveMembers,
 }) => {
   return (
-    <View style={styles.memberCardStyle}>
-      <View className="w-full flex flex-row justify-between items-center">
-        <Text className={`text-lg font-semibold `}>{member.name}</Text>
-        <TouchableOpacity
-          activeOpacity={0.8}
-          onPress={() => handleRemoveMembers(member.id)}
-        >
-          <Ionicons name="close-circle-outline" size={20} color={"red"} />
-        </TouchableOpacity>
-      </View>
-      <View className="flex flex-row w-full justify-between mt-2">
-        <View className="flex flex-row space-x-2 justify-center items-center">
-          <Checkbox
-            status={member.isTrekker ? "checked" : "unchecked"}
-            onPress={() => handleCheckboxChange(member.id, "isTrekker")}
-            style={{ height: 16, width: 16 }}
-            color={"green"}
-          />
-          <Text className={``}>I am a Trekker</Text>
+    <ScrollView
+      contentContainerStyle={{ flex: 1 }}
+      showsVerticalScrollIndicator={false}
+      scrollEventThrottle={16}
+    >
+      <View style={styles.memberCardStyle}>
+        <View className="w-full flex flex-row justify-between items-center">
+          <Text className={`text-lg font-semibold `}>{member.name}</Text>
+          <TouchableOpacity
+            activeOpacity={0.8}
+            onPress={() => handleRemoveMembers(member.id)}
+          >
+            <Ionicons name="close-circle-outline" size={20} color={"red"} />
+          </TouchableOpacity>
         </View>
-        <View className="flex flex-row space-x-2 justify-center items-center">
-          <Checkbox
-            status={member.noAccommodation ? "checked" : "unchecked"}
-            onPress={() => handleCheckboxChange(member.id, "noAccommodation")}
-            style={{ height: 16, width: 16 }}
-            color={"green"}
-          />
-          <Text className={``}>No Accommodation</Text>
+        <View className="flex flex-row w-full justify-between mt-2">
+          <View className="flex flex-row space-x-2 justify-center items-center">
+            <Checkbox
+              status={member.isTrekker ? "checked" : "unchecked"}
+              onPress={() => handleCheckboxChange(member.id, "isTrekker")}
+              style={{ height: 16, width: 16 }}
+              color={"green"}
+            />
+            <Text className={``}>I am a Trekker</Text>
+          </View>
+          <View className="flex flex-row space-x-2 justify-center items-center">
+            <Checkbox
+              status={member.noAccommodation ? "checked" : "unchecked"}
+              onPress={() => handleCheckboxChange(member.id, "noAccommodation")}
+              style={{ height: 16, width: 16 }}
+              color={"green"}
+            />
+            <Text className={``}>No Accommodation</Text>
+          </View>
         </View>
       </View>
-    </View>
+    </ScrollView>
   );
 };
 

@@ -27,19 +27,19 @@ const UpdateProfile = () => {
 
   const dispatch = useDispatch();
 
-  const [name, setName] = useState(profile.name);
-  const [dob, setDob] = useState(profile.dob);
-  const [age, setAge] = useState(profile.age);
-  const [contact, setContact] = useState(profile.contact);
+  const [name, setName] = useState(profile?.name);
+  const [dob, setDob] = useState(profile?.dob);
+  const [age, setAge] = useState(profile?.age);
+  const [contact, setContact] = useState(profile?.contact);
   const [emergencyContact, setEmergencyContact] = useState(
-    profile.emergency_contact
+    profile?.emergency_contact
   );
-  const [address, setAddress] = useState(profile.address);
+  const [address, setAddress] = useState(profile?.address);
   const [identityProofNumber, setIdentityProofNumber] = useState(
-    profile.id_number
+    profile?.id_number
   );
-  const [gender, setGender] = useState(profile.gender);
-  const [idProofType, setIdProofType] = useState(profile.id_type);
+  const [gender, setGender] = useState(profile?.gender);
+  const [idProofType, setIdProofType] = useState(profile?.id_type);
 
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
@@ -78,7 +78,7 @@ const UpdateProfile = () => {
             "Content-Type": "application/json",
           },
           body: JSON.stringify({
-            id: profile._id,
+            id: profile?._id,
             name,
             dob,
             age,
@@ -159,7 +159,7 @@ const UpdateProfile = () => {
                 editable={false}
                 className={`border py-3 mt-3 w-full border-slate-500/50 rounded-lg text-black placeholder:text-base  px-3 `}
                 value={dob && format(dob, "yyyy-MM-dd")}
-                placeholder={format(profile.dob, "yyyy-MM-dd")}
+                placeholder={dob ? format(profile?.dob, "yyyy-MM-dd") : ""}
               />
             </TouchableOpacity>
             {showDatePicker && (
@@ -172,7 +172,7 @@ const UpdateProfile = () => {
             )}
           </View>
           <TextInput
-            placeholder={profile.age}
+            placeholder={profile?.age}
             keyboardType="numeric"
             onChangeText={setAge}
             style={styles.input}
@@ -185,25 +185,25 @@ const UpdateProfile = () => {
             </Picker>
           </View>
           <TextInput
-            placeholder={profile.contact}
+            placeholder={profile?.contact}
             keyboardType="phone-pad"
             onChangeText={setContact}
             style={styles.input}
           />
           <TextInput
-            placeholder={profile.emergency_contact}
+            placeholder={profile?.emergency_contact}
             keyboardType="phone-pad"
             onChangeText={setEmergencyContact}
             style={styles.input}
           />
           <TextInput
-            placeholder={profile.address}
+            placeholder={profile?.address}
             onChangeText={setAddress}
             style={styles.input}
           />
           <View style={styles.pickerContainer}>
             <Picker
-              selectedValue={profile.idProofType}
+              selectedValue={profile?.idProofType}
               onValueChange={setIdProofType}
             >
               <Picker.Item label="Select tour type" value={null} />
@@ -214,7 +214,7 @@ const UpdateProfile = () => {
             </Picker>
           </View>
           <TextInput
-            placeholder={profile.id_number}
+            placeholder={profile?.id_number}
             onChangeText={setIdentityProofNumber}
             style={styles.input}
           />

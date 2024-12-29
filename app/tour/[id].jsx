@@ -120,106 +120,114 @@ const tourDetails = () => {
   }
 
   return (
-    <View className="flex flex-1 flex-col w-full h-full justify-between items-center">
-      <StatusBar
-        style="dark"
-        backgroundColor="#fff"
-        translucent={true}
-        animated
-      />
-      <View className="mt-2 w-full px-4">
-        <LinearGradient
-          start={{ x: 0, y: 0 }}
-          end={{ x: 1, y: 0 }}
-          colors={["rgba(240, 101, 2, 0.2)", "rgba(0, 174, 255, 0.2)"]}
-          className="rounded-xl"
-        >
-          <View
-            className={`flex flex-row justify-between py-3 px-4 rounded-lg `}
+    <ScrollView
+      contentContainerStyle={{ flex: 1 }}
+      nestedScrollEnabled={true}
+      showsVerticalScrollIndicator={false}
+      scrollEventThrottle={16}
+    >
+      <View className="flex flex-1 flex-col w-full h-full justify-between items-center">
+        <StatusBar
+          style="dark"
+          backgroundColor="#fff"
+          translucent={true}
+          animated
+        />
+        <View className="mt-2 w-full px-4">
+          <LinearGradient
+            start={{ x: 0, y: 0 }}
+            end={{ x: 1, y: 0 }}
+            colors={["rgba(240, 101, 2, 0.2)", "rgba(0, 174, 255, 0.2)"]}
+            className="rounded-xl"
           >
-            <View className="space-y-2">
-              <Text className={`font-semibold `}>{tourDetail.name}</Text>
-              <Text>{formatDate(tourDetail.tour_start)}</Text>
+            <View
+              className={`flex flex-row justify-between py-3 px-4 rounded-lg `}
+            >
+              <View className="space-y-2">
+                <Text className={`font-semibold `}>{tourDetail.name}</Text>
+                <Text>{formatDate(tourDetail.tour_start)}</Text>
+              </View>
+              <View className="space-y-2">
+                <Text
+                  className={`font-semibold text-right`}
+                >{`${tourDetail.total_seats} Seats`}</Text>
+                <Text className={`text-right`}>
+                  {formatDate(tourDetail.tour_end)}
+                </Text>
+              </View>
             </View>
-            <View className="space-y-2">
-              <Text
-                className={`font-semibold text-right`}
-              >{`${tourDetail.total_seats} Seats`}</Text>
-              <Text className={`text-right`}>
-                {formatDate(tourDetail.tour_end)}
-              </Text>
-            </View>
-          </View>
-        </LinearGradient>
-      </View>
-      <ScrollView
-        contentContainerStyle={{
-          marginTop: 10,
-          width: "100%",
-          paddingBottom: 80,
-          paddingHorizontal: 25,
-        }}
-        showsVerticalScrollIndicator={false}
-      >
-        <View className="flex space-y-5 w-full">
-          {DetailTitle.map((detail) => (
-            <DetailScreenButton
-              key={detail.id}
-              title={detail.title}
-              href={detail.href}
-              id={id}
-            />
-          ))}
+          </LinearGradient>
         </View>
-      </ScrollView>
-      <View className="w-full flex flex-row justify-between items-center h-16 bg-transparent px-6">
-        <TouchableOpacity
-          activeOpacity={0.8}
-          disabled={unPublishLoading}
-          onPress={handleTourStatus}
-          style={{
-            width: 165,
-            backgroundColor: tourDetail.status === false ? "green" : "#414141",
-            height: 44,
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-            borderRadius: 8,
+        <ScrollView
+          contentContainerStyle={{
+            marginTop: 10,
+            width: "100%",
+            paddingBottom: 80,
+            paddingHorizontal: 25,
           }}
+          showsVerticalScrollIndicator={false}
         >
-          {unPublishLoading ? (
-            <ActivityIndicator size={"small"} color="white" />
-          ) : (
-            <Text style={{ textAlign: "center", color: "white" }}>
-              {tourDetail.status === false ? "Publish" : "Unpublish"} Tour
-            </Text>
-          )}
-        </TouchableOpacity>
-        <TouchableOpacity
-          activeOpacity={0.8}
-          disabled={loading}
-          onPress={handleDeleteTour}
-          style={{
-            width: 165,
-            height: 44,
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-            borderRadius: 8,
-            borderWidth: 1,
-            borderColor: "red",
-          }}
-        >
-          {loading ? (
-            <ActivityIndicator size={"small"} color="red" />
-          ) : (
-            <Text style={{ textAlign: "center", color: "red" }}>
-              Delete Tour
-            </Text>
-          )}
-        </TouchableOpacity>
+          <View className="flex space-y-5 w-full">
+            {DetailTitle.map((detail) => (
+              <DetailScreenButton
+                key={detail.id}
+                title={detail.title}
+                href={detail.href}
+                id={id}
+              />
+            ))}
+          </View>
+        </ScrollView>
+        <View className="w-full flex flex-row justify-between items-center h-16 bg-transparent px-6">
+          <TouchableOpacity
+            activeOpacity={0.8}
+            disabled={unPublishLoading}
+            onPress={handleTourStatus}
+            style={{
+              width: 165,
+              backgroundColor:
+                tourDetail.status === false ? "green" : "#414141",
+              height: 44,
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              borderRadius: 8,
+            }}
+          >
+            {unPublishLoading ? (
+              <ActivityIndicator size={"small"} color="white" />
+            ) : (
+              <Text style={{ textAlign: "center", color: "white" }}>
+                {tourDetail.status === false ? "Publish" : "Unpublish"} Tour
+              </Text>
+            )}
+          </TouchableOpacity>
+          <TouchableOpacity
+            activeOpacity={0.8}
+            disabled={loading}
+            onPress={handleDeleteTour}
+            style={{
+              width: 165,
+              height: 44,
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              borderRadius: 8,
+              borderWidth: 1,
+              borderColor: "red",
+            }}
+          >
+            {loading ? (
+              <ActivityIndicator size={"small"} color="red" />
+            ) : (
+              <Text style={{ textAlign: "center", color: "red" }}>
+                Delete Tour
+              </Text>
+            )}
+          </TouchableOpacity>
+        </View>
       </View>
-    </View>
+    </ScrollView>
   );
 };
 

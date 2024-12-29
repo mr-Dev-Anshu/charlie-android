@@ -243,7 +243,11 @@ const GuestsEnrolled = () => {
   }, []);
 
   return (
-    <>
+    <ScrollView
+      contentContainerStyle={{ flex: 1 }}
+      showsVerticalScrollIndicator={false}
+      scrollEventThrottle={16}
+    >
       <View className={`px-3 h-full flex items-center`}>
         <View className={`px-5 w-full flex justify-center items-center`}>
           <View className={`flex flex-row justify-between`}>
@@ -443,7 +447,7 @@ const GuestsEnrolled = () => {
           </View>
         </View>
       </Modalize>
-    </>
+    </ScrollView>
   );
 };
 

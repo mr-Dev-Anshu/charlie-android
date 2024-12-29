@@ -9,6 +9,7 @@ import {
   StyleSheet,
   Modal,
   TouchableOpacity,
+  ScrollView,
 } from "react-native";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -72,7 +73,6 @@ export default function HomeScreen() {
     }
   }, [isFocused]);
 
-
   // useEffect(() => {
   //   requestLocationPermissions();
   // }, []);
@@ -85,9 +85,14 @@ export default function HomeScreen() {
         translucent={true}
         animated
       />
-      <View style={styles.container}>
-        <Image source={v1} style={styles.image} />
 
+      <ScrollView
+        contentContainerStyle={styles.scrollViewContent}
+        showsVerticalScrollIndicator={false}
+        nestedScrollEnabled
+        scrollEventThrottle={16}
+      >
+        <Image source={v1} style={styles.image} />
         <Modal
           animationType="slide"
           transparent={true}
@@ -111,16 +116,18 @@ export default function HomeScreen() {
           </View>
         </Modal>
 
-        {isConnected === false ? (
-          <View style={styles.centeredContainer}>
-            <Text style={styles.offlineText}>Mobile data off</Text>
-          </View>
-        ) : (
-          <View style={styles.carouselContainer}>
-            <CarouselComponent />
-          </View>
-        )}
-      </View>
+        <View style={styles.mainContent}>
+          {isConnected ? (
+            <View style={styles.carouselContainer}>
+              <CarouselComponent />
+            </View>
+          ) : (
+            <View style={styles.offlineContainer}>
+              <Text style={styles.offlineText}>Mobile data is off</Text>
+            </View>
+          )}
+        </View>
+      </ScrollView>
     </SafeAreaView>
   );
 }
@@ -130,30 +137,40 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "#fff",
   },
-  container: {
-    flex: 1,
+  scrollViewContent: {
+    flexGrow: 1,
     justifyContent: "flex-start",
     alignItems: "center",
+    paddingBottom: 20,
   },
   image: {
     width: "100%",
     height: height * 0.45,
-    contentFit: "cover",
-    position: "absolute",
+    resizeMode: "cover",
   },
-  centeredContainer: {
+  mainContent: {
     flex: 1,
+    width: "100%",
+    alignItems: "center",
+  },
+  carouselContainer: {
+    width: "100%",
+    alignItems: "center",
     justifyContent: "center",
+  },
+  carouselText: {
+    fontSize: 18,
+    fontWeight: "600",
+    color: "#333",
+  },
+  offlineContainer: {
+    marginTop: 30,
     alignItems: "center",
   },
   offlineText: {
-    fontSize: width * 0.05,
+    fontSize: 16,
     color: "red",
-  },
-  carouselContainer: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
+    fontWeight: "500",
   },
   modalOverlay: {
     flex: 1,
@@ -165,16 +182,16 @@ const styles = StyleSheet.create({
     width: "80%",
     backgroundColor: "white",
     padding: 20,
-    borderRadius: 10,
+    borderRadius: 15,
     alignItems: "center",
     shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.25,
-    shadowRadius: 4,
-    elevation: 5,
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.3,
+    shadowRadius: 5,
+    elevation: 10,
   },
   modalText: {
-    fontSize: 24,
+    fontSize: 22,
     fontWeight: "bold",
     color: "red",
     marginTop: 10,
@@ -186,10 +203,10 @@ const styles = StyleSheet.create({
     marginTop: 10,
   },
   retryButton: {
-    backgroundColor: "blue",
-    paddingVertical: 10,
-    paddingHorizontal: 20,
-    borderRadius: 5,
+    backgroundColor: "#007BFF",
+    paddingVertical: 12,
+    paddingHorizontal: 25,
+    borderRadius: 8,
     marginTop: 20,
   },
   retryButtonText: {
