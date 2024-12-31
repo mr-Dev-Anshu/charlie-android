@@ -81,7 +81,7 @@ const Index = () => {
 
   if (loading) return <Loader />;
 
-  return <Redirect href={authenticated ? "/Menu" : "/login"} />;
+  return <Redirect href={authenticated ? "/(tabs)" : "/login"} />;
 
 };
 
